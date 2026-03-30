@@ -4,9 +4,117 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mid Game - The Ultimate Mel Compendium</title>
-  <meta name="description" content="Mel mid game strategy including objective rotation, teamfight positioning, and ultimate usage.">
+  <meta name="description" content="Mel mid game strategy including sidelaning, global threat awareness, warding, and teamfighting.">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── VIDEO EMBED ── */
+    .video-label {
+      font-size: 0.68rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .video-label::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 12px;
+      background: var(--brand);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--navy);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 16px;
+    }
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    .video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--navy-light);
+      border: 1px dashed rgba(255,255,255,0.12);
+    }
+    .video-placeholder-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(76,187,110,0.15);
+      border: 2px solid var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--brand);
+    }
+    .video-placeholder-text {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 1px;
+      text-align: center;
+      line-height: 1.5;
+    }
+    /* two-col layout: card left, video right */
+    .card-video-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .card-video-grid { grid-template-columns: 1fr; }
+    }
+    /* threat / safe pills */
+    .threat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      background: var(--red-bg);
+      border: 1px solid #e0b0b0;
+      color: var(--red);
+      font-size: 0.78rem;
+      font-family: 'Source Serif 4', serif;
+      font-weight: 600;
+      margin: 3px 4px 3px 0;
+    }
+    .threat-pill::before { content: '⚠'; font-size: 0.68rem; }
+    .safe-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      background: var(--brand-pale);
+      border: 1px solid var(--brand-mid);
+      color: var(--brand-deeper);
+      font-size: 0.78rem;
+      font-family: 'Source Serif 4', serif;
+      font-weight: 600;
+      margin: 3px 4px 3px 0;
+    }
+  </style>
 </head>
 <body>
 
@@ -36,7 +144,6 @@
 
 <!-- TOP NAV -->
 <header class="topnav-header" id="topnav">
-  <!-- Brand bar -->
   <div class="topnav-brand-bar">
     <div class="topnav-brand-left">
       <div>
@@ -50,99 +157,263 @@
       <button class="lang-switch-btn" onclick="openLang()">🌐 <span id="lang-label">English</span></button>
     </div>
   </div>
-
-  <!-- Nav links -->
   <nav class="topnav-nav">
     <a href="index.html" class="nav-item">Intro / Home</a>
     <a href="abilities.html" class="nav-item">Abilities</a>
     <a href="laning.html" class="nav-item">Laning / Early Game</a>
     <a href="pregame.html" class="nav-item">Pregame</a>
-    <a href="midgame.html" class="nav-item">Mid Game</a>
+    <a href="midgame.html" class="nav-item active">Mid Game</a>
     <a href="lategame.html" class="nav-item">Late Game</a>
     <a href="matchups.html" class="nav-item">Matchups</a>
   </nav>
 </header>
 
+<!-- IN-PAGE SUBNAV -->
+<nav class="page-subnav">
+  <div class="subnav-item active" onclick="subnavScroll(this,'sidelaning-sec')">Sidelaning</div>
+  <div class="subnav-item" onclick="subnavScroll(this,'global-threats-sec')">Global Threats</div>
+  <div class="subnav-item" onclick="subnavScroll(this,'toplaner-sec')">vs. Toplaners</div>
+  <div class="subnav-item" onclick="subnavScroll(this,'warding-sec')">Warding</div>
+  <div class="subnav-item" onclick="subnavScroll(this,'teamfighting-sec')">Teamfighting</div>
+</nav>
+
 <div class="layout">
   <main class="main">
-
     <div class="page active" id="page-midgame">
+
       <div class="page-hero">
-        <div class="hero-eyebrow">Mid Game &amp; Teamfighting</div>
         <h2>Mid Game &amp; Teamfighting</h2>
-        <p class="hero-desc">Objective rotation, teamfight positioning, and ult usage for dominant mid game performance.</p>
+        <p class="hero-desc">Once towers fall around the 14–15 minute mark, the structured laning phase gives way to a fluid, dangerous mid game. Learn how to sideline safely, respect global threats, and position correctly in teamfights.</p>
       </div>
+
       <div class="page-body">
 
-        <div id="objectives-sec" style="margin-bottom:36px;scroll-margin-top:130px">
-          <div class="section-head"><h3>Objective Control</h3><div class="section-rule"></div></div>
-          <div class="section-sub">Dragon, Herald, and tower priorities</div>
+        <!-- ══════════ SIDELANING ══════════ -->
+        <div id="sidelaning-sec" style="margin-bottom:44px;scroll-margin-top:140px">
+          <div class="section-head"><h3>Sidelaning</h3><div class="section-rule"></div></div>
+          <div class="section-sub">Your role once the lane phase ends</div>
 
-          <div class="card">
-            <div class="card-title">Dragon Priority</div>
-            <p>Cloud, Infernal, and Mountain dragons are your top priorities. Ocean and Hextech are secondary. Elder is always a take if available.</p>
-            <ul class="tip-list">
-              <li><span class="tip-num">1</span><span>Cloud Dragon: Essential for wave clear and poke</span></li>
-              <li><span class="tip-num">2</span><span>Infernal Dragon: Boosts your damage output significantly</span></li>
-              <li><span class="tip-num">3</span><span>Mountain Dragon: Provides tankiness for teamfights</span></li>
-            </ul>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">The Role Swap</div>
+            <p>During the mid-game, your bot-lane duo will typically rotate to farm the midwave while you take either the bot or top sidelane. Your playstyle shifts dramatically — you are no longer an oppressive lane bully. You are a long-range poke mage trying to farm safely in a much longer, more exposed lane.</p>
+            <p style="margin-top:10px;">Assassins are online with their first items. The lanes are longer. One mistake means death. Your job is to clear waves efficiently, avoid overextending, and return to your team before any major objective spawns.</p>
+            <div class="info-box" style="margin-top:14px;">
+              <strong>Priority:</strong> Getting extra gold from farming is great — but dying in the sidelane is always worse. When in doubt, clear and back.
+            </div>
           </div>
 
-          <div class="card">
-            <div class="card-title">Herald Control</div>
-            <p>Secure Rift Herald for Baron pressure. Use it to push towers and create space.</p>
-            <p>Herald is crucial for mid game tower pressure. Coordinate with your team to take it safely.</p>
-          </div>
-        </div>
-
-        <div id="teamfights-sec" style="margin-bottom:36px;scroll-margin-top:130px">
-          <div class="section-head"><h3>Teamfighting</h3><div class="section-rule"></div></div>
-          <div class="section-sub">Positioning, engagement, and ult usage</div>
-
-          <div class="card">
-            <div class="card-title">Positioning</div>
-            <p>Stay in the backline to poke and stack. Use your range advantage to control the fight.</p>
-            <p>Position behind your tanks but with clear line of sight for your abilities.</p>
-          </div>
-
-          <div class="card">
-            <div class="card-title">Engagement</div>
-            <p>Look for picks with E into Q. Use W to reflect key abilities.</p>
-            <p>Engage when you have W up or when the enemy is grouped.</p>
-          </div>
-
-          <div class="card">
-            <div class="card-title">Ultimate Usage</div>
-            <p>Save R for when enemies are in execute range. Prioritize high-priority targets.</p>
-            <p>Use R to finish off low-health enemies or to secure kills in teamfights.</p>
+          <div class="video-label">Video — Sidelaning Fundamentals</div>
+          <div class="video-wrap">
+            <div class="video-placeholder">
+              <div class="video-placeholder-icon">▶</div>
+              <div class="video-placeholder-text">Sidelaning Fundamentals<br><span style="font-size:0.65rem;opacity:0.5;">Replace placeholder with YouTube iframe</span></div>
+            </div>
+            <!-- TO ACTIVATE: replace the placeholder div above with:
+            <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
           </div>
         </div>
 
-        <div id="upgrades-sec" style="scroll-margin-top:130px">
-          <div class="section-head"><h3>Item Upgrades</h3><div class="section-rule"></div></div>
-          <div class="section-sub">When to upgrade and what to build</div>
+        <!-- ══════════ GLOBAL THREATS ══════════ -->
+        <div id="global-threats-sec" style="margin-bottom:44px;scroll-margin-top:140px">
+          <div class="section-head"><h3>Global Threats</h3><div class="section-rule"></div></div>
+          <div class="section-sub">Ultimates that can reach you across the entire map</div>
 
-          <div class="card">
-            <div class="card-title">Upgrade Timings</div>
-            <p>Upgrade around 15-20 minutes depending on game state. Focus on AP items.</p>
-            <ul class="tip-list">
-              <li><span class="tip-num">1</span><span>Rabadon's at 15-18 min if ahead</span></li>
-              <li><span class="tip-num">2</span><span>Void Staff against MR teams</span></li>
-              <li><span class="tip-num">3</span><span>Zhonya's for survivability</span></li>
-            </ul>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">Check Before You Extend</div>
+            <p>Before farming deep in the sidelane, always ask: does the enemy have a global ultimate that is currently available? If you don't know their location and their ult is up, assume they are already on the way to you and play accordingly.</p>
+            <div style="margin-top:14px;">
+              <span class="threat-pill">Twisted Fate</span>
+              <span class="threat-pill">Nocturne</span>
+              <span class="threat-pill">Ashe</span>
+              <span class="threat-pill">Pantheon</span>
+              <span class="threat-pill">Shen</span>
+              <span class="threat-pill">Ezreal R</span>
+            </div>
+            <p style="margin-top:14px;">Track their cooldowns on the scoreboard. Most global ultimates have a 120–150 second cooldown. Once you see it used, you have a clean window to extend and farm safely.</p>
+          </div>
+
+          <div class="card-video-grid">
+            <div class="card" style="margin-bottom:0;">
+              <div class="card-title">How to Play Around Globals</div>
+              <ul class="tip-list">
+                <li><span class="tip-num">01</span><span>Keep a ward in the river so you see the jungler rotating — this also catches some global cast animations early.</span></li>
+                <li><span class="tip-num">02</span><span>Hug closer to your tower whenever global ults are up and you cannot see the enemy.</span></li>
+                <li><span class="tip-num">03</span><span>Ping your team the instant you see a global ultimate fire — they need the warning too.</span></li>
+                <li><span class="tip-num">04</span><span>Note the cooldown once used. Farm aggressively in that window, then pull back again before it comes back up.</span></li>
+              </ul>
+            </div>
+            <div>
+              <div class="video-label">Video — Tracking Global Ultimates</div>
+              <div class="video-wrap">
+                <div class="video-placeholder">
+                  <div class="video-placeholder-icon">▶</div>
+                  <div class="video-placeholder-text">Global Threat Awareness<br><span style="font-size:0.65rem;opacity:0.5;">Replace placeholder with YouTube iframe</span></div>
+                </div>
+                <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+              </div>
+            </div>
           </div>
         </div>
 
-      </div>
-    </div>
+        <!-- ══════════ VS TOPLANERS ══════════ -->
+        <div id="toplaner-sec" style="margin-bottom:44px;scroll-margin-top:140px">
+          <div class="section-head"><h3>Laning vs. Toplaners</h3><div class="section-rule"></div></div>
+          <div class="section-sub">When their toplaner swaps into your sidelane</div>
 
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">Bruisers in the Sidelane</div>
+            <p>If the enemy toplaner swaps into your sidelane during the mid-game, this becomes significantly more dangerous than facing any midlaner. Most toplaners are melee bruisers who can kill you extremely quickly if you ever enter their melee range. Mel does not have the burst to kill these tanky champions unless she is very far ahead.</p>
+            <p style="margin-top:10px;">The correct play is straightforward but strict: clear waves from maximum range, stay safe under your tower, poke when free, and never play aggressive unless a teammate is present or a kill is guaranteed.</p>
+          </div>
+
+          <div class="card-video-grid">
+            <div>
+              <div class="video-label">Video — Playing vs. Bruisers in Sidelane</div>
+              <div class="video-wrap">
+                <div class="video-placeholder">
+                  <div class="video-placeholder-icon">▶</div>
+                  <div class="video-placeholder-text">vs. Toplaners<br><span style="font-size:0.65rem;opacity:0.5;">Replace placeholder with YouTube iframe</span></div>
+                </div>
+                <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+              </div>
+            </div>
+            <div class="card" style="margin-bottom:0;">
+              <div class="card-title">Champions to Respect Most</div>
+              <div style="margin-bottom:14px;">
+                <span class="threat-pill">Fiora</span>
+                <span class="threat-pill">Renekton</span>
+                <span class="threat-pill">Riven</span>
+                <span class="threat-pill">Ambessa</span>
+                <span class="threat-pill">Darius</span>
+                <span class="threat-pill">Irelia</span>
+              </div>
+              <div class="never-item"><span class="never-x">✕</span><span>Do not step into melee range of a bruiser — they will always win that trade.</span></div>
+              <div class="never-item"><span class="never-x">✕</span><span>Do not stay extended when the enemy jungler is also missing — you can be collapsed on from two directions.</span></div>
+              <div class="never-item"><span class="never-x">✕</span><span>Do not waste W on them unless it prevents a lethal burst — save it for teamfights.</span></div>
+              <div class="info-box" style="margin-top:12px;">Clear fast, crash the wave, and back off. Dying once here erases your entire laning phase lead.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════ WARDING ══════════ -->
+        <div id="warding-sec" style="margin-bottom:44px;scroll-margin-top:140px">
+          <div class="section-head"><h3>Mid-Game Warding</h3><div class="section-rule"></div></div>
+          <div class="section-sub">Vision control as the map opens up</div>
+
+          <div class="card-video-grid">
+            <div>
+              <div class="card" style="margin-bottom:16px;">
+                <div class="card-title">Clearing the Midwave</div>
+                <p>When you are catching the wave as it crashes mid-lane, place wards in both river entrances. This prevents the enemy jungler from sneaking up behind you while you clear.</p>
+                <div class="ward-card" style="margin-top:12px;">
+                  <div class="ward-badge">River Wards</div>
+                  <div class="ward-title">Standard River Coverage</div>
+                  <p>Ward both the top and bottom river bushes. The jungler can approach from either side — cover both if you have the wards available.</p>
+                </div>
+              </div>
+              <div class="card" style="margin-bottom:0;">
+                <div class="card-title">Farming Near Your T2 Tower</div>
+                <p>If you are catching the wave closer to your own T2, shift wards into your own jungle. This gives you warning if the enemy team rotates to dive you under tower.</p>
+                <div class="ward-card" style="margin-top:12px;">
+                  <div class="ward-badge">Jungle Wards</div>
+                  <div class="ward-title">Defensive Coverage</div>
+                  <p>Wards in your own jungle reveal enemies coordinating a dive — buying you time to back off before they reach tower.</p>
+                </div>
+                <div class="info-box-amber" style="margin-top:12px;">
+                  <strong>Honest reality:</strong> You will never have enough wards to cover every angle. Supplement vision with active minimap tracking. Successful sidelaning is mostly about knowing where the enemy team is.
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="video-label">Video — Mid-Game Ward Placements</div>
+              <div class="video-wrap">
+                <div class="video-placeholder">
+                  <div class="video-placeholder-icon">▶</div>
+                  <div class="video-placeholder-text">Warding Locations<br><span style="font-size:0.65rem;opacity:0.5;">Replace placeholder with YouTube iframe</span></div>
+                </div>
+                <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+              </div>
+              <div class="video-label">Video — Minimap Tracking</div>
+              <div class="video-wrap">
+                <div class="video-placeholder">
+                  <div class="video-placeholder-icon">▶</div>
+                  <div class="video-placeholder-text">Reading the Minimap<br><span style="font-size:0.65rem;opacity:0.5;">Replace placeholder with YouTube iframe</span></div>
+                </div>
+                <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════ TEAMFIGHTING ══════════ -->
+        <div id="teamfighting-sec" style="scroll-margin-top:140px">
+          <div class="section-head"><h3>Mid-Game Teamfighting</h3><div class="section-rule"></div></div>
+          <div class="section-sub">Positioning, priority targets, and when to commit</div>
+
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">Rule #1 — Should We Even Fight?</div>
+            <p>Too many games are thrown in objective fights that are clearly unwinnable. Before committing, assess the state of the game. If the enemy has a player with two full items and nobody on your team can kill them in a reasonable window, you will lose that fight unless they make a catastrophic error. Do not be afraid to cede an objective when the math does not work in your favor.</p>
+            <p style="margin-top:10px;"><strong>Example:</strong> Enemy Ezreal has 2 full items and your team has no realistic way to kill him → concede the dragon and reset. Forcing this fight is one of the fastest ways to throw a winning game.</p>
+          </div>
+
+          <div class="card-video-grid">
+            <div>
+              <div class="video-label">Video — Teamfight Positioning</div>
+              <div class="video-wrap">
+                <div class="video-placeholder">
+                  <div class="video-placeholder-icon">▶</div>
+                  <div class="video-placeholder-text">Positioning Guide<br><span style="font-size:0.65rem;opacity:0.5;">Replace placeholder with YouTube iframe</span></div>
+                </div>
+                <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+              </div>
+              <div class="video-label">Video — When to Concede Objectives</div>
+              <div class="video-wrap">
+                <div class="video-placeholder">
+                  <div class="video-placeholder-icon">▶</div>
+                  <div class="video-placeholder-text">Objective Decision Making<br><span style="font-size:0.65rem;opacity:0.5;">Replace placeholder with YouTube iframe</span></div>
+                </div>
+                <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+              </div>
+            </div>
+            <div class="card" style="margin-bottom:0;">
+              <div class="card-title">How to Teamfight as Mel</div>
+              <ul class="tip-list">
+                <li><span class="tip-num">01</span><span><strong>Stay in the backline.</strong> Let your frontline engage and absorb damage. You are a backline poke mage — do not be the first to enter the fight.</span></li>
+                <li><span class="tip-num">02</span><span><strong>Target the highest priority in range.</strong> Focus a fed carry or their damage dealer — not the tank walking toward you.</span></li>
+                <li><span class="tip-num">03</span><span><strong>Match your team's focus.</strong> If your ADC is hitting the same target, collapse together for a fast kill. Splitting targets extends the fight unnecessarily.</span></li>
+                <li><span class="tip-num">04</span><span><strong>Watch your flanks.</strong> Standing far back means nothing if an assassin like Qiyana comes from behind. Always track where the enemy dive threat is before the fight starts.</span></li>
+                <li><span class="tip-num">05</span><span><strong>Communicate.</strong> Ping fights you cannot win. Tell your team when to retreat. Calm, clear information wins more games than mechanics alone.</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:4px;margin-bottom:16px;">
+            <div class="card-title">Identifying Priority Targets</div>
+            <p>At any given point in the mid-game, one player on each team typically has a significant gold lead. Stay aware of who this is on both sides. A fed enemy is simultaneously the highest kill priority and the most dangerous person to be near. A useless enemy is the lowest priority — do not waste cooldowns on a 0/5 support when their ADC is fed and chasing your carry.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
+              <span class="threat-pill">Fed carries → highest kill priority, highest danger</span>
+              <span class="safe-pill">0/5 enemies → ignore if possible, do not waste spells</span>
+            </div>
+          </div>
+
+          <div class="video-label">Video — Identifying Priority Targets</div>
+          <div class="video-wrap">
+            <div class="video-placeholder">
+              <div class="video-placeholder-icon">▶</div>
+              <div class="video-placeholder-text">Priority Targets in Teamfights<br><span style="font-size:0.65rem;opacity:0.5;">Replace placeholder with YouTube iframe</span></div>
+            </div>
+            <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+          </div>
+        </div>
+
+      </div><!-- /page-body -->
+    </div><!-- /page -->
   </main>
 
-  <!-- FOOTER -->
-  <footer style="background: var(--navy); color: rgba(255,255,255,0.6); padding: 24px 48px; text-align: center; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1);">
-    <div style="max-width: 800px; margin: 0 auto;">
+  <footer style="background:var(--navy);color:rgba(255,255,255,0.6);padding:24px 48px;text-align:center;font-size:0.85rem;border-top:1px solid rgba(255,255,255,0.1);">
+    <div style="max-width:800px;margin:0 auto;">
       <p>The Ultimate Mel Compendium by evandabank • © 2026</p>
-      <p style="margin-top: 8px; font-size: 0.75rem;">Built with ❤️ for the League of Legends community</p>
+      <p style="margin-top:8px;font-size:0.75rem;">Built with ❤️ for the League of Legends community</p>
     </div>
   </footer>
 </div>
