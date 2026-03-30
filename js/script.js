@@ -174,21 +174,33 @@ function transformMatchupCards() {
     xayah: 5, yunara: 6, zeri: 6, ziggs: 4, zyra: 4
   };
 
-  const calcDifficultyBar = (score) => {
-    const total = 8;
-    const normalized = Math.min(Math.max(score, 1), total);
-    const colors = ['#31cc45', '#2ebf47', '#26ab3c', '#c6d12d', '#f7c94f', '#ffb944', '#ff7a1d', '#ff2d00'];
+  const tierMap = {
+    aphelios: 'heavily-mel-favored', draven: 'heavily-mel-favored', jinx: 'heavily-mel-favored',
+    nilah: 'heavily-mel-favored', varus: 'heavily-mel-favored', twitch: 'heavily-mel-favored', seraphine: 'heavily-mel-favored',
+    ashe: 'mel-favored', caitlyn: 'mel-favored', corki: 'mel-favored', kalista: 'mel-favored', ziggs: 'mel-favored',
+    'miss-fortune': 'mel-favored', senna: 'mel-favored', samira: 'mel-favored', hwei: 'mel-favored', xayah: 'mel-favored',
+    'aurelion-sol': 'mel-favored', brand: 'mel-favored', heimerdinger: 'mel-favored', karma: 'mel-favored', 'kogmaw': 'mel-favored',
+    lux: 'mel-favored', morgana: 'mel-favored', smolder: 'mel-favored', yunara: 'mel-favored', zeri: 'mel-favored',
+    ezreal: 'even', jhin: 'even', 'kaisa': 'even', tristana: 'even', vayne: 'even', zyra: 'even', mel: 'even',
+    lucian: 'enemy-favored', karthus: 'enemy-favored',
+    sivir: 'unfavorable'
+  };
+  const tierLabels = {
+    'heavily-mel-favored': 'Heavily Favored', 'mel-favored': 'Mel Favored',
+    'even': 'Even', 'enemy-favored': 'Enemy Favored', 'unfavorable': 'Unfavorable'
+  };
 
-    const segments = [];
-    for (let i = 1; i <= total; i++) {
-      const idx = i - 1;
-      if (i <= normalized) {
-        segments.push(`<div class="matchup-difficulty-step" style="background:${colors[idx]};"></div>`);
-      } else {
-        segments.push(`<div class="matchup-difficulty-step inactive"></div>`);
-      }
-    }
-    return segments.join('');
+  const getDifficultyColor = (score) => {
+    if (score <= 2) return '#31cc45';
+    if (score <= 4) return '#c6d12d';
+    if (score <= 6) return '#ff9b1a';
+    if (score <= 8) return '#ff5733';
+    return '#cc0000';
+  };
+
+  const calcDifficultyBox = (score) => {
+    const color = getDifficultyColor(score);
+    return `<div class="matchup-difficulty-box" style="background:${color};">${score}</div>`;
   };
 
   const cards = document.querySelectorAll('#matchup-cards .card');
@@ -197,21 +209,31 @@ function transformMatchupCards() {
     const name = titleEl ? titleEl.textContent.trim() : '';
     const id = card.id || name.toLowerCase().replace(/[^a-z\d]+/g, '-');
     const difficultyValue = difficultyMap[id] || 4;
-    const difficultySteps = calcDifficultyBar(difficultyValue);
+    const difficultySteps = calcDifficultyBox(difficultyValue);
 
     const existingDetails = Array.from(card.children).filter(el => !el.classList.contains('card-title'));
     const strategyHtml = existingDetails.map(el => el.outerHTML).join('');
 
     const imageKey = idToImage[id] || name.replace(/[^a-zA-Z]/g,'');
     const imagePath = `images/champions/${imageKey}.png`;
+    const tierClass = tierMap[id] || 'even';
+    const tierLabel = tierLabels[tierClass] || 'Even';
 
     card.classList.add('matchup-card');
     card.innerHTML = `
       <div class="matchup-entry">
+        <img class="matchup-image" src="${imagePath}" alt="${name}">
         <div class="matchup-meta">
-          <h3 class="matchup-name">${name}</h3>
-          <div class="matchup-difficulty-title">Matchup Difficulty</div>
-          <div class="matchup-difficulty-bar">${difficultySteps}</div>
+          <div class="matchup-header-row">
+            <div class="matchup-name-group">
+              <h3 class="matchup-name">${name}</h3>
+              <span class="matchup-tier-badge ${tierClass}">${tierLabel}</span>
+            </div>
+            <div class="matchup-diff-badge">
+              <div class="matchup-difficulty-title">Difficulty</div>
+              ${difficultySteps}
+            </div>
+          </div>
           <div class="matchup-stats">
             <div class="matchup-block">
               <span>Summoners</span>
@@ -227,7 +249,6 @@ function transformMatchupCards() {
             </div>
           </div>
         </div>
-        <img class="matchup-image" src="${imagePath}" alt="${name}">
       </div>
       <div class="matchup-strategy">
         <h4>Strategy</h4>

@@ -7,6 +7,7 @@
   <meta name="description" content="Complete Mel pregame setup including summoner spells, rune pages, item builds, and upgrade priorities.">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
@@ -82,20 +83,22 @@
           <div class="section-sub">The only recommended combination for Mel</div>
 
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;align-items:stretch">
-            <!-- LEFT: stacked spell cards -->
-            <div style="display:flex;flex-direction:column;gap:12px">
-              <div class="card summoner-card" style="border-top:3px solid var(--brand);margin-bottom:0">
+            <!-- LEFT: combined spell card -->
+            <div class="card" style="border-top:3px solid var(--brand);margin-bottom:0;display:flex;flex-direction:row;align-items:center;gap:24px">
+              <!-- icons + plus stacked together -->
+              <div style="display:flex;flex-direction:column;align-items:center;gap:0;flex-shrink:0">
                 <div class="spell-icon-wrapper"><img src="images/Flash.png" alt="Flash"></div>
-                <div class="summoner-text">
-                  <div class="card-title">Flash — Must Use Every Game</div>
-                  <p style="font-size:.92rem;line-height:1.7">Flash is the best summoner spell in the game, hands down. Especially on mages — which have intentionally low mobility — it's essential to have an escape option. <strong>This is a MUST USE in every single game. No exceptions.</strong></p>
-                </div>
-              </div>
-              <div class="card summoner-card" style="border-top:3px solid var(--brand);margin-bottom:0">
+                <i class="fa-solid fa-plus" style="font-size:1rem;color:var(--brand);opacity:0.75;padding:10px 0"></i>
                 <div class="spell-icon-wrapper"><img src="images/teleport.png" alt="Teleport"></div>
-                <div class="summoner-text">
-                  <div class="card-title">Teleport — Only Recommended Second Spell</div>
-                  <p style="font-size:.92rem;line-height:1.7">TP is the only second summoner evandabank recommends on Mel. Almost all midlaners run it, and crucially, <strong>you are not in range to use Ignite for the majority of fights</strong> — Mel plays from too far away for short-range summoners to be reliable.</p>
+              </div>
+              <!-- text stacked -->
+              <div style="display:flex;flex-direction:column;gap:0">
+                <div>
+                  <div class="card-title">Flash & Teleport Combination Every Game</div>
+                  <p style="font-size:.92rem;line-height:1.7">Flash is the best summoner spell in the game, hands down. Especially on mages which have intentionally low mobility. <strong>This is a MUST USE in every single game. No exceptions.</strong> With that said, ensure that you don't waste your flash late game for a single kill (unless in a team fight) AND if you burn flash AND die, that is terrible. PLEASE don't waste flash when you will die regardless.</p>
+                </div>
+                <div style="margin-top:20px">
+                  <p style="font-size:.92rem;line-height:1.7">Teleport is the only secondary summoner spell that I run. Other players use barrier & ghost on occassion, but I find telport to be the most reliable in all situations. With that said, these runes (along with exhaust) are definitely viable. Personally though, I find teleport to be such an overpowered summoner spell when you utilize it properly. Watch the video for more details on how to actually use this spell.</p>
                 </div>
               </div>
             </div>
@@ -109,7 +112,7 @@
             </div>
           </div>
 
-          <div class="info-box-amber">⚠️ Do not take Ignite — Mel plays from too far away to reliably use it in most fights. Flash + TP is the standard in every game without exception.</div>
+          <div class="info-box-amber">⚠️ Do not take Ignite! Mel is almost never in range of the enemy to use this spell. IT IS TERRIBLE.</div>
         </div>
 
         <!-- ── RUNES ── -->
@@ -134,20 +137,20 @@
           </div>
           <div class="g2">
             <div class="card">
-              <div class="card-title">Why Arcane Comet?</div>
-              <p style="font-size:.9rem;line-height:1.7">Mel's long range makes it nearly guaranteed that Q will proc Comet and Scorch on every trade — providing roughly 50 bonus damage early. This heavily outshines First Strike and Summon Aery. Comet is the only keystone Mel should ever run.</p>
+              <div class="card-title">Why First Strike?</div>
+              <p style="font-size:.9rem;line-height:1.7">The alternative to First Strike is Arcane Comet. Mel plays like a burst mage, and First Strike gives 7% bonus damage for 3 seconds. This is VERY effective for a burst mage (Mel uses all her spells within this windows). This combined with the fact that we can always hit the enemy first (AND INSPIRATION IS OP ASF), makes it the best</p>
             </div>
             <div class="card">
-              <div class="card-title">Why Scorch?</div>
-              <p style="font-size:.9rem;line-height:1.7">Scorch can feel like a second Keystone in lane — 20 damage every 10 seconds is enormous early on. Hold an ability to proc it on cooldown. By your first reset, Scorch may have already dealt 200+ damage. It provides nothing late game, but the early lane dominance it enables is unmatched.</p>
+              <div class="card-title">Why Cash Back, Triple Tonic & JOAT?</div>
+              <p style="font-size:.9rem;line-height:1.7">Cash Back is literally 1300 gold. No brainer unless you want 10MS from free boots (high elo only). Triple Tonic has no alternatives (rest of runes in this row suck). Jack of all trades is 6ish free ability haste. Not great but pretty good. Can definitely be swapped for cosmic insight.</p>
             </div>
             <div class="card">
-              <div class="card-title">Why Presence of Mind?</div>
-              <p style="font-size:.9rem;line-height:1.7">Mel is one of the most mana-hungry mages — Radiant Volley costs 110 mana at max rank. Presence of Mind gives back mana on procs and restores 15% max mana on takedowns. Not the strongest secondary rune, but it enables extra casts in the early game that other options can't match.</p>
+              <div class="card-title">Why Manaflow & Transcendence?</div>
+              <p style="font-size:.9rem;line-height:1.7"> Mel (and most mages) NEED a mana rune. Manaflow band is really really strong, and essentially gives us infinite mana if we play properly. Transcendece is 10 free ability haste and is significantly stronger than gathering storm (due to spiking earlier and more reliable). The only change we might make is Manaflow > Gathering Storm if you find you don't go OOM</p>
             </div>
             <div class="card">
-              <div class="card-title">Why Legend: Haste?</div>
-              <p style="font-size:.9rem;line-height:1.7">Running a burn build (Blackfire Torch + Liandry's) means having abilities off cooldown to stack burns is critical. 15 ability haste from Legend: Haste is a genuine game-changer. Current mage items make it almost impossible to reach meaningful haste without this rune.</p>
+              <div class="card-title">Why These Stat Shards?</div>
+              <p style="font-size:.9rem;line-height:1.7">We are running scaling stat shards in this page. Mages outscale ADCs, BUT they do win lane convincingly. To offset this, we can be greedy with our runes. 8 Ability haste is worse than adaptive force early, but it scales significantly better. We also go health scaling instead of flat since our lane phase should be relatively safe.</p>
             </div>
           </div>
         </div>
@@ -176,7 +179,6 @@
                 <button class="tab-btn active" onclick="switchTab(this,'t-start')">Starting Items</button>
                 <button class="tab-btn" onclick="switchTab(this,'t-boots')">Boots</button>
                 <button class="tab-btn" onclick="switchTab(this,'t-core')">Core Build</button>
-                <button class="tab-btn" onclick="switchTab(this,'t-situational')">Situational</button>
               </div>
 
               <div id="t-start" class="tab-pane active">
@@ -197,7 +199,7 @@
                     <div class="note">Must purchase on every champion. Swap to Farsight Alteration in the late game.</div>
                   </div>
                 </div>
-                <div class="info-box" style="margin-top:12px"><strong>First reset priority:</strong> Spend ALL your gold — do not leave base with 300g unspent. Build toward Lost Chapter first (it builds into all mage starting items and gives mana on level-up). Only buy generic boots before completing your first full item.</div>
+                <div class="info-box" style="margin-top:12px"><strong>First reset priority:</strong> Spend ALL your gold and do not leave base with 300g unspent. Build toward Lost Chapter first (it builds into all mage starting items and gives mana on level-up). Only buy generic boots before completing your first full item. Video will contain all the details</div>
               </div>
 
               <div id="t-boots" class="tab-pane">
@@ -249,26 +251,6 @@
                 </div>
               </div>
 
-              <div id="t-situational" class="tab-pane">
-                <div style="display:flex;flex-direction:column;gap:10px">
-                  <div class="card" style="margin-bottom:0">
-                    <div class="card-title">Bloodletter's Curse</div>
-                    <p style="font-size:.9rem;line-height:1.65">Extremely underrated. Two Mel ability casts can apply full stacks — a near-instant 30% magic shred. If you have 3 AP champions on your team, this becomes a must-buy third item. <strong>Only one champion per team should build it.</strong></p>
-                  </div>
-                  <div class="card" style="margin-bottom:0">
-                    <div class="card-title">Crypt Bloom</div>
-                    <p style="font-size:.9rem;line-height:1.65">Very situational — hard to tell when you're getting real value. Not much different from Void Staff; both are anti-MR items. Build whichever is stronger in the current meta, or just default to Void Staff (simpler).</p>
-                  </div>
-                  <div class="card" style="margin-bottom:0">
-                    <div class="card-title">Cosmic Drive</div>
-                    <p style="font-size:.9rem;line-height:1.65">Gives movespeed on ability hits — a unique stat that requires skill to use properly. evandabank personally does not build this and recommends most players avoid it unless they're confident in kiting with the speed bonus.</p>
-                  </div>
-                  <div class="card" style="margin-bottom:0">
-                    <div class="card-title">Null-Magic Mantle (Early)</div>
-                    <p style="font-size:.9rem;line-height:1.65">Buy this on your first reset in lanes where magic burst is a death threat — Annie, LeBlanc, Sylas. Upgrade into Verdant Barrier / Banshee's later. Never buy Mercury Treads — they are a bait on mages.</p>
-                  </div>
-                </div>
-              </div>
             </div><!-- end right col -->
 
           </div><!-- end grid -->
