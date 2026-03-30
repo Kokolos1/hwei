@@ -4,9 +4,148 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Late Game - The Ultimate Mel Compendium</title>
-  <meta name="description" content="Mel late game strategy including win conditions, Baron/Elder setups, and closing out games.">
+  <meta name="description" content="Mel late game strategy: overview, ADC management, teamfighting, and Farsight warding.">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── VIDEO EMBED ── */
+    .video-label {
+      font-size: 0.68rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .video-label::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 12px;
+      background: var(--brand);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--navy);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 16px;
+    }
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    .video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--navy-light);
+      border: 1px dashed rgba(255,255,255,0.12);
+    }
+    .video-placeholder-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(76,187,110,0.15);
+      border: 2px solid var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--brand);
+    }
+    .video-placeholder-text {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 1px;
+      text-align: center;
+      line-height: 1.5;
+    }
+    /* two-col layout */
+    .card-video-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .card-video-grid { grid-template-columns: 1fr; }
+    }
+    /* farsight alteration card */
+    .trinket-card {
+      background: var(--navy);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-left: 4px solid var(--brand);
+      padding: 18px 20px;
+      margin-bottom: 12px;
+    }
+    .trinket-card .trinket-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .trinket-card p {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.65;
+    }
+    .trinket-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      font-size: 0.68rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: rgba(76,187,110,0.15);
+      color: var(--brand);
+      border: 1px solid rgba(76,187,110,0.3);
+      margin-bottom: 8px;
+      font-family: 'Source Serif 4', serif;
+    }
+    /* mistake callout */
+    .mistake-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 11px 14px;
+      background: var(--red-bg);
+      border-left: 3px solid var(--red);
+      margin-bottom: 8px;
+      font-size: 0.93rem;
+      line-height: 1.55;
+    }
+    .mistake-x { color: var(--red); font-weight: 700; flex-shrink: 0; font-size: 1rem; }
+    /* gold stat pill */
+    .gold-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      background: var(--gold-pale);
+      border: 1px solid #e0c47a;
+      color: var(--amber);
+      font-size: 0.8rem;
+      font-family: 'Source Serif 4', serif;
+      font-weight: 700;
+      margin: 3px 4px 3px 0;
+    }
+  </style>
 </head>
 <body>
 
@@ -36,7 +175,6 @@
 
 <!-- TOP NAV -->
 <header class="topnav-header" id="topnav">
-  <!-- Brand bar -->
   <div class="topnav-brand-bar">
     <div class="topnav-brand-left">
       <div>
@@ -50,93 +188,212 @@
       <button class="lang-switch-btn" onclick="openLang()">🌐 <span id="lang-label">English</span></button>
     </div>
   </div>
-
-  <!-- Nav links -->
   <nav class="topnav-nav">
     <a href="index.html" class="nav-item">Intro / Home</a>
     <a href="abilities.html" class="nav-item">Abilities</a>
     <a href="laning.html" class="nav-item">Laning / Early Game</a>
     <a href="pregame.html" class="nav-item">Pregame</a>
     <a href="midgame.html" class="nav-item">Mid Game</a>
-    <a href="lategame.html" class="nav-item">Late Game</a>
+    <a href="lategame.html" class="nav-item active">Late Game</a>
     <a href="matchups.html" class="nav-item">Matchups</a>
   </nav>
 </header>
 
+<!-- IN-PAGE SUBNAV -->
+<nav class="page-subnav">
+  <div class="subnav-item active" onclick="subnavScroll(this,'overview-sec')">Overview</div>
+  <div class="subnav-item" onclick="subnavScroll(this,'adc-sec')">ADC Management</div>
+  <div class="subnav-item" onclick="subnavScroll(this,'teamfighting-sec')">Teamfighting</div>
+  <div class="subnav-item" onclick="subnavScroll(this,'warding-sec')">Farsight Warding</div>
+</nav>
+
 <div class="layout">
   <main class="main">
-
     <div class="page active" id="page-lategame">
+
       <div class="page-hero">
-        <div class="hero-eyebrow">Late Game</div>
         <h2>Late Game</h2>
-        <p class="hero-desc">Win conditions, Baron/Elder setups, and closing out games with Mel's scaling potential.</p>
+        <p class="hero-desc">Most towers have fallen. Champions have 4–6 items. A single teamfight decides the game. Every decision carries maximum consequence — minimize your mistakes and capitalize on the enemy's.</p>
       </div>
+
       <div class="page-body">
 
-        <div id="baron-elder-sec" style="margin-bottom:36px;scroll-margin-top:130px">
-          <div class="section-head"><h3>Baron &amp; Elder</h3><div class="section-rule"></div></div>
-          <div class="section-sub">Objective execution and setups</div>
+        <!-- ══════════ OVERVIEW ══════════ -->
+        <div id="overview-sec" style="margin-bottom:44px;scroll-margin-top:140px">
+          <div class="section-head"><h3>Late Game Overview</h3><div class="section-rule"></div></div>
+          <div class="section-sub">The state of the game when towers are gone</div>
 
-          <div class="card">
-            <div class="card-title">Baron Strategy</div>
-            <p>Baron is the primary objective in late game. Use your poke to control vision and stack.</p>
-            <ul class="tip-list">
-              <li><span class="tip-num">1</span><span>Control vision around Baron with wards</span></li>
-              <li><span class="tip-num">2</span><span>Use Q to poke and stack from range</span></li>
-              <li><span class="tip-num">3</span><span>Coordinate with team for dives if needed</span></li>
-            </ul>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">What Changes in Late Game</div>
+            <p>When the game reaches this phase, the structure of the mid-game completely dissolves. Sidelaning is essentially over. Everyone is grouping or should be. Death timers are now so long that losing a single teamfight will likely result in losing the entire game — an inhibitor, a Baron, or the nexus itself.</p>
+            <p style="margin-top:10px;">At this point, you should have 4–5 items. The damage across both teams becomes extreme. Tanky frontliners become nearly unkillable, while mages, assassins, and ADCs are one-shotting each other. One mistake on either side can immediately end the game.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;">
+              <span class="gold-pill">4–5 Items</span>
+              <span class="gold-pill">Long Death Timers</span>
+              <span class="gold-pill">1–2 Teamfights = Game Over</span>
+              <span class="gold-pill">No More Sidelaning</span>
+            </div>
           </div>
 
-          <div class="card">
-            <div class="card-title">Elder Dragon</div>
-            <p>Elder provides massive buffs. Prioritize taking it when available.</p>
-            <p>Elder is a game-changer. Use your ultimate to secure kills during Elder fights.</p>
-          </div>
-        </div>
-
-        <div id="endgame-sec" style="margin-bottom:36px;scroll-margin-top:130px">
-          <div class="section-head"><h3>End Game</h3><div class="section-rule"></div></div>
-          <div class="section-sub">Closing out victories</div>
-
-          <div class="card">
-            <div class="card-title">Win Conditions</div>
-            <p>Focus on teamfights and inhibitor pressure. Your scaling makes you dominant in prolonged fights.</p>
-            <p>Look for engages where you can use W to reflect and R to execute.</p>
-          </div>
-
-          <div class="card">
-            <div class="card-title">Base Racing</div>
-            <p>If ahead, push inhibitors. If behind, defend and look for picks.</p>
-            <p>Use your mobility and poke to control the pace.</p>
-          </div>
-        </div>
-
-        <div id="scaling-sec" style="scroll-margin-top:130px">
-          <div class="section-head"><h3>Late Game Scaling</h3><div class="section-rule"></div></div>
-          <div class="section-sub">Maximizing Mel's potential</div>
-
-          <div class="card">
-            <div class="card-title">Item Completion</div>
-            <p>Finish your build with AP items and survivability.</p>
-            <ul class="tip-list">
-              <li><span class="tip-num">1</span><span>Rabadon's Deathcap for damage</span></li>
-              <li><span class="tip-num">2</span><span>Zhonya's Hourglass for defense</span></li>
-              <li><span class="tip-num">3</span><span>Mercurial Scimitar vs CC</span></li>
-            </ul>
+          <div class="card-video-grid">
+            <div class="card" style="margin-bottom:0;">
+              <div class="card-title">Your Job in Late Game</div>
+              <ul class="tip-list">
+                <li><span class="tip-num">01</span><span><strong>Stay with your team.</strong> Do not split off to farm a sidelane unless it is absolutely necessary. The risk of dying alone far outweighs a wave of CS.</span></li>
+                <li><span class="tip-num">02</span><span><strong>Minimize your own mistakes.</strong> In late game, it is more important to not throw than it is to make big plays. Every death is disproportionately punished.</span></li>
+                <li><span class="tip-num">03</span><span><strong>Capitalize on theirs.</strong> One overstep from the enemy carry is your opportunity to collapse and finish the game. Be ready to move the moment you see it.</span></li>
+                <li><span class="tip-num">04</span><span><strong>Defend before farming.</strong> If your team is in danger, protecting them from dying is a higher priority than catching a sidewave.</span></li>
+              </ul>
+            </div>
+            <div>
+              <div class="video-label">Video — Late Game Overview</div>
+              <div class="video-wrap">
+                <div class="video-placeholder">
+                  <div class="video-placeholder-icon">▶</div>
+                  <div class="video-placeholder-text">Late Game Overview<br><span style="font-size:0.65rem;opacity:0.5;">Replace placeholder with YouTube iframe</span></div>
+                </div>
+                <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+              </div>
+            </div>
           </div>
         </div>
 
-      </div>
-    </div>
+        <!-- ══════════ ADC MANAGEMENT ══════════ -->
+        <div id="adc-sec" style="margin-bottom:44px;scroll-margin-top:140px">
+          <div class="section-head"><h3>ADC Management &amp; Soloqueue Reality</h3><div class="section-rule"></div></div>
+          <div class="section-sub">The thing that kills more games than bad teamfighting</div>
 
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">The ADC Problem</div>
+            <p>In soloqueue, there is one thing that ends late games more reliably than poor teamfighting: your ADC will randomly walk into midlane and immediately die. This happens constantly at every elo. It is not something you can prevent directly — but you can position yourself to respond to it, and you can be aware enough to ping and discourage it before it happens.</p>
+            <div class="mistake-item" style="margin-top:14px;"><span class="mistake-x">✕</span><span>Do not leave your team alone to catch a sidewave when the enemy team is grouped and looking for a fight. The wave is not worth the risk.</span></div>
+            <div class="mistake-item"><span class="mistake-x">✕</span><span>Do not follow your ADC into a stupid position. If they are walking toward danger, ping them back and hold your own ground.</span></div>
+            <div class="mistake-item"><span class="mistake-x">✕</span><span>Do not engage a fight 4v5 because you want to "make a play." Wait for your full team or for a clear opportunity.</span></div>
+          </div>
+
+          <div class="card-video-grid">
+            <div>
+              <div class="video-label">Video — Protecting Your Team in Late Game</div>
+              <div class="video-wrap">
+                <div class="video-placeholder">
+                  <div class="video-placeholder-icon">▶</div>
+                  <div class="video-placeholder-text">ADC Management<br><span style="font-size:0.65rem;opacity:0.5;">Replace placeholder with YouTube iframe</span></div>
+                </div>
+                <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+              </div>
+            </div>
+            <div class="card" style="margin-bottom:0;">
+              <div class="card-title">When Catching Waves IS Worth It</div>
+              <p>There are moments where catching a sidewave in late game is correct — but the bar is high. Only extend alone if:</p>
+              <ul class="tip-list">
+                <li><span class="tip-num">✓</span><span>You have full vision of the enemy team's location and they are on the opposite side of the map.</span></li>
+                <li><span class="tip-num">✓</span><span>No major objective (Baron, Dragon, Elder) is spawning in the next 60–90 seconds.</span></li>
+                <li><span class="tip-num">✓</span><span>The wave will crash or decay otherwise — losing the CS and the push simultaneously.</span></li>
+              </ul>
+              <div class="info-box" style="margin-top:10px;">When in doubt, group. A missed wave is recoverable. A lost teamfight in late game often is not.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════ TEAMFIGHTING ══════════ -->
+        <div id="teamfighting-sec" style="margin-bottom:44px;scroll-margin-top:140px">
+          <div class="section-head"><h3>Late-Game Teamfighting</h3><div class="section-rule"></div></div>
+          <div class="section-sub">Same principles as mid game — but with far higher stakes</div>
+
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">Everything Is More Extreme</div>
+            <p>Late-game teamfighting follows the same principles as the mid-game — stay in the backline, target priority enemies, communicate — but all of the stakes are multiplied. Tanky champions with 4–5 items can feel completely unkillable. Mages, ADCs, and assassins are one-shotting each other. A single positioning mistake can immediately lose you the game.</p>
+            <p style="margin-top:10px;">This is not the time for flashy plays. Minimize your own mistakes and wait for the enemy to make theirs. You will have more opportunities to capitalize on their errors if you are still alive to see them.</p>
+          </div>
+
+          <div class="card-video-grid">
+            <div class="card" style="margin-bottom:0;">
+              <div class="card-title">Late-Game Teamfight Checklist</div>
+              <ul class="tip-list">
+                <li><span class="tip-num">01</span><span><strong>Full team before engaging.</strong> Never start a fight 4v5 in late game. The numbers advantage is worth more here than at any other point.</span></li>
+                <li><span class="tip-num">02</span><span><strong>Know who can kill you instantly.</strong> At 4–6 items, the enemy carry or assassin likely one-shots you. Track their position before the fight starts.</span></li>
+                <li><span class="tip-num">03</span><span><strong>Save W for the most dangerous spell.</strong> In late game, one reflected ultimate can instantly swing the entire fight. Do not waste it on a small poke ability.</span></li>
+                <li><span class="tip-num">04</span><span><strong>R only when the execute icon glows.</strong> Your passive stacks are worth significantly more at 4+ items. Wait for the golden glow on your HUD before pressing R.</span></li>
+                <li><span class="tip-num">05</span><span><strong>Disengage when it goes wrong.</strong> If two teammates die in the first three seconds, the fight is likely lost. Flash out and regroup rather than dying trying to 3v5.</span></li>
+              </ul>
+            </div>
+            <div>
+              <div class="video-label">Video — Late Game Teamfight Positioning</div>
+              <div class="video-wrap">
+                <div class="video-placeholder">
+                  <div class="video-placeholder-icon">▶</div>
+                  <div class="video-placeholder-text">Late Game Teamfighting<br><span style="font-size:0.65rem;opacity:0.5;">Replace placeholder with YouTube iframe</span></div>
+                </div>
+                <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+              </div>
+              <div class="video-label">Video — W Usage in High-Stakes Fights</div>
+              <div class="video-wrap">
+                <div class="video-placeholder">
+                  <div class="video-placeholder-icon">▶</div>
+                  <div class="video-placeholder-text">W Reflect Timing<br><span style="font-size:0.65rem;opacity:0.5;">Replace placeholder with YouTube iframe</span></div>
+                </div>
+                <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════ FARSIGHT WARDING ══════════ -->
+        <div id="warding-sec" style="scroll-margin-top:140px">
+          <div class="section-head"><h3>Late-Game Warding</h3><div class="section-rule"></div></div>
+          <div class="section-sub">Swapping to Farsight Alteration</div>
+
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">The Trinket Swap</div>
+            <p>At this point in the game, swap your Warding Totem for <strong>Farsight Alteration</strong>. This blue trinket has a much longer range than a regular ward, allowing you to check dangerous bushes and contested areas from the safety of your backline. It does not last as long as a yellow ward, but its range makes it invaluable for objective setup and ambush detection.</p>
+          </div>
+
+          <div class="card-video-grid">
+            <div>
+              <div class="trinket-card">
+                <div class="trinket-badge">Objective Setup</div>
+                <div class="trinket-title">Before Baron / Dragon Spawns</div>
+                <p>Keep Farsight off cooldown for each objective that is about to spawn. Use it to check the bushes where the enemy team might be hiding for an ambush. Your jungler can also use your blue ward vision to smite-steal a low-health objective without needing to walk into range first.</p>
+              </div>
+              <div class="trinket-card">
+                <div class="trinket-badge">Objective Not Spawning</div>
+                <div class="trinket-title">When the Map is Quiet</div>
+                <p>If no major objective will spawn for more than 2 minutes and Farsight is ready, use it like a yellow ward — place it anywhere that might save a teammate from a gank, or in a position that reveals an overextended enemy for a potential pick.</p>
+              </div>
+              <div class="info-box-amber">
+                <strong>Key habit:</strong> Never waste Farsight on an area you can see with normal vision. Save the charge for blind spots near objectives, enemy jungle entrances, or choke points before a fight.
+              </div>
+            </div>
+            <div>
+              <div class="video-label">Video — Farsight Alteration Usage</div>
+              <div class="video-wrap">
+                <div class="video-placeholder">
+                  <div class="video-placeholder-icon">▶</div>
+                  <div class="video-placeholder-text">Farsight Warding Spots<br><span style="font-size:0.65rem;opacity:0.5;">Replace placeholder with YouTube iframe</span></div>
+                </div>
+                <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+              </div>
+              <div class="video-label">Video — Baron &amp; Dragon Setup Vision</div>
+              <div class="video-wrap">
+                <div class="video-placeholder">
+                  <div class="video-placeholder-icon">▶</div>
+                  <div class="video-placeholder-text">Objective Vision Control<br><span style="font-size:0.65rem;opacity:0.5;">Replace placeholder with YouTube iframe</span></div>
+                </div>
+                <!-- <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div><!-- /page-body -->
+    </div><!-- /page -->
   </main>
 
-  <!-- FOOTER -->
-  <footer style="background: var(--navy); color: rgba(255,255,255,0.6); padding: 24px 48px; text-align: center; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1);">
-    <div style="max-width: 800px; margin: 0 auto;">
+  <footer style="background:var(--navy);color:rgba(255,255,255,0.6);padding:24px 48px;text-align:center;font-size:0.85rem;border-top:1px solid rgba(255,255,255,0.1);">
+    <div style="max-width:800px;margin:0 auto;">
       <p>The Ultimate Mel Compendium by evandabank • © 2026</p>
-      <p style="margin-top: 8px; font-size: 0.75rem;">Built with ❤️ for the League of Legends community</p>
+      <p style="margin-top:8px;font-size:0.75rem;">Built with ❤️ for the League of Legends community</p>
     </div>
   </footer>
 </div>
