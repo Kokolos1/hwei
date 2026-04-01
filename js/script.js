@@ -167,11 +167,11 @@ function transformMatchupCards() {
   const standardBuild = ['blackfireTorch.jpg','sorcBoots.jpg','cosmicDrive.jpg','Shadowflame.jpg','rabadons.jpg','voidStaff.jpg','zhonyas.jpg'];
 
   const difficultyMap = {
-    aphelios: 3, ashe: 3, 'aurelion-sol': 4, brand: 5, caitlyn: 4, corki: 4, draven: 5, ezreal: 3,
-    heimerdinger: 6, hwei: 6, jhin: 4, jinx: 4, 'kaisa': 5, kalista: 5, karma: 2, karthus: 4,
-    'kogmaw': 5, lucian: 4, lux: 3, mel: 2, 'miss-fortune': 4, morgana: 3, nilah: 5, samira: 5,
-    senna: 3, seraphine: 4, sivir: 4, smolder: 5, tristana: 4, twitch: 5, varus: 5, vayne: 7,
-    xayah: 5, yunara: 6, zeri: 6, ziggs: 4, zyra: 4
+    aphelios: 2, ashe: 3, 'aurelion-sol': 3, brand: 3, caitlyn: 4, corki: 4, draven: 2, ezreal: 5,
+    heimerdinger: 3, hwei: 4, jhin: 5, jinx: 2, 'kaisa': 5, kalista: 5, karma: 3, karthus: 7,
+    'kogmaw': 4, lucian: 6, lux: 3, mel: 2, 'miss-fortune': 4, morgana: 3, nilah: 1, samira: 4,
+    senna: 3, syndra: 8, seraphine: 1, sivir: 10, smolder: 3, tristana: 5, twitch: 2, varus: 2,
+    vayne: 5, xayah: 4, yunara: 4, zeri: 4, ziggs: 3, zyra: 5
   };
 
   const tierMap = {
@@ -182,7 +182,7 @@ function transformMatchupCards() {
     'aurelion-sol': 'mel-favored', brand: 'mel-favored', heimerdinger: 'mel-favored', karma: 'mel-favored', 'kogmaw': 'mel-favored',
     lux: 'mel-favored', morgana: 'mel-favored', smolder: 'mel-favored', yunara: 'mel-favored', zeri: 'mel-favored',
     ezreal: 'even', jhin: 'even', 'kaisa': 'even', tristana: 'even', vayne: 'even', zyra: 'even', mel: 'even',
-    lucian: 'enemy-favored', karthus: 'enemy-favored',
+    lucian: 'enemy-favored', syndra: 'enemy-favored', karthus: 'enemy-favored',
     sivir: 'unfavorable'
   };
   const tierLabels = {
