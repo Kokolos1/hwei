@@ -118,11 +118,27 @@
         <!-- ── RUNES ── -->
         <div id="runes-sec" style="margin-bottom:36px;scroll-margin-top:130px">
           <div class="section-head"><h3>Runes</h3><div class="section-rule"></div></div>
-          <div class="section-sub">Standard rune page — Arcane Comet every game</div>
+          <div class="section-sub">Standard rune page- I run this EVERY game</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;align-items:start">
             <!-- LEFT: Runes image -->
-            <div style="border:1px solid var(--border);border-top:3px solid var(--brand);overflow:hidden">
-              <img src="images/RunesV3.png" alt="Mel Rune Page" style="width:100%;display:block">
+            <div style="border:1px solid var(--border);border-top:3px solid var(--brand);overflow:hidden;background:var(--white)">
+              <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border);background:var(--paper)">
+                <button
+                  id="runes-toggle-v3"
+                  type="button"
+                  onclick="switchRunePage('v3')"
+                  style="padding:6px 10px;border:1px solid var(--brand);background:var(--brand);color:var(--white);font-size:.76rem;font-weight:700;letter-spacing:.5px;cursor:pointer;">
+                  Recommended Page
+                </button>
+                <button
+                  id="runes-toggle-v2"
+                  type="button"
+                  onclick="switchRunePage('v2')"
+                  style="padding:6px 10px;border:1px solid var(--border-dark);background:var(--white);color:var(--text-body);font-size:.76rem;font-weight:700;letter-spacing:.5px;cursor:pointer;">
+                  Comet (Not Recommended)
+                </button>
+              </div>
+              <img id="runes-page-image" src="images/RunesV3.png" alt="Mel Rune Page 1" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block">
             </div>
             <!-- RIGHT: YouTube video -->
             <div style="border:1px solid var(--border);border-top:3px solid var(--brand);overflow:hidden">
@@ -270,5 +286,25 @@
 </div>
 
 <script src="js/script.js"></script>
+<script>
+  function switchRunePage(page) {
+    const image = document.getElementById('runes-page-image');
+    const btnV3 = document.getElementById('runes-toggle-v3');
+    const btnV2 = document.getElementById('runes-toggle-v2');
+    if (!image || !btnV3 || !btnV2) return;
+
+    const isV3 = page === 'v3';
+    image.src = isV3 ? 'images/RunesV3.png' : 'images/CometRunes.png';
+    image.alt = isV3 ? 'Mel Rune Page 1' : 'Mel Rune Page 2';
+
+    btnV3.style.background = isV3 ? 'var(--brand)' : 'var(--white)';
+    btnV3.style.color = isV3 ? 'var(--white)' : 'var(--text-body)';
+    btnV3.style.borderColor = isV3 ? 'var(--brand)' : 'var(--border-dark)';
+
+    btnV2.style.background = isV3 ? 'var(--white)' : 'var(--brand)';
+    btnV2.style.color = isV3 ? 'var(--text-body)' : 'var(--white)';
+    btnV2.style.borderColor = isV3 ? 'var(--border-dark)' : 'var(--brand)';
+  }
+</script>
 </body>
 </html>
