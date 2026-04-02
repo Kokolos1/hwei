@@ -441,13 +441,10 @@
 <!-- IN-PAGE SUBNAV -->
 <nav class="page-subnav">
   <div class="subnav-item active" onclick="subnavScroll(this,'sec-lanes')">Lane Assignments</div>
-  <div class="subnav-item" onclick="subnavScroll(this,'sec-globals')">Global Threats</div>
   <div class="subnav-item" onclick="subnavScroll(this,'sec-matchup')">Matchup Assessment</div>
   <div class="subnav-item" onclick="subnavScroll(this,'sec-threats')">Assessing Threats</div>
   <div class="subnav-item" onclick="subnavScroll(this,'sec-golden')">Golden Rule</div>
   <div class="subnav-item" onclick="subnavScroll(this,'sec-pos-photo')">Positioning (Visual)</div>
-  <div class="subnav-item" onclick="subnavScroll(this,'sec-pos-text')">Positioning (Guide)</div>
-  <div class="subnav-item" onclick="subnavScroll(this,'sec-comms')">Communication</div>
   <div class="subnav-item" onclick="subnavScroll(this,'sec-forgot1')">Mid Game Note 1</div>
   <div class="subnav-item" onclick="subnavScroll(this,'sec-forgot2')">Mid Game Note 2</div>
 </nav>
@@ -476,7 +473,6 @@
           <div class="mg-sub">Where you farm and who you face in the sidelanes</div>
 
           <div class="split-left">
-            <!-- Photo -->
             <div class="media-block">
               <div class="media-block-label">
                 <span class="icon">🗺</span> Mid Game Lane Map
@@ -492,7 +488,6 @@
               </div>
             </div>
 
-            <!-- Text -->
             <div class="content-block">
               <div class="card" style="margin-bottom:0;">
                 <div class="card-title">How Lanes Change at Mid Game</div>
@@ -501,7 +496,7 @@
 
               <div class="card" style="margin-bottom:0;">
                 <div class="card-title">Midlaner vs. Toplaner — Very Different Threats</div>
-                <p>First, identify <strong>who you are laning against</strong>. If it's the enemy midlaner, we need to know their kit and how they can trade. Syndra is much scarier (due to her CC) than a Jayce for instance. If it's the enemy <strong>toplaner</strong>, this becomes much trickier. The majority of toplaners are melee bruisers (Fiora, Renekton, Riven, Ambessa) who can kill us quickly in melee range. Usually though, you will lane against the enemy botlaner which will make getting mid priority relatively easy. Watch the video in the next section for a full rundown on this. </p>
+                <p>First, identify <strong>who you are laning against</strong>. If it's the enemy midlaner, we need to know their kit and how they can trade. Syndra is much scarier (due to her CC) than a Jayce for instance. If it's the enemy <strong>toplaner</strong>, this becomes much trickier. The majority of toplaners are melee bruisers (Fiora, Renekton, Riven, Ambessa) who can kill us quickly in melee range. Usually though, you will lane against the enemy botlaner which will make getting mid priority relatively easy. Watch the video in the next section for a full rundown on this.</p>
                 <div class="info-box" style="margin-top: 10px;">
                   On mid waves, USE CAUTION <strong> clear waves, stay under tower, land poke from safety if needed. </strong> Midwaves are where most botlaners die wayyy too much. Do NOT step up without confidence that you won't die on the wave.
                 </div>
@@ -516,69 +511,12 @@
           </div>
         </div>
 
-
-        <!-- ══════════════════════════════════════
-             02 — GLOBAL ULTIMATE THREATS  (text only)
-        ══════════════════════════════════════ -->
-        <div class="mg-section" id="sec-globals">
-          <div class="mg-section-head">
-            <div class="mg-num">02</div>
-            <h3>Global Ultimate Threats</h3>
-            <div class="mg-rule"></div>
-          </div>
-          <div class="mg-sub">Champions that punish you for overextending in the sidelane</div>
-
-          <div class="card" style="margin-bottom: 14px;">
-            <div class="card-title">Always Check: Does the Enemy Have a Global?</div>
-            <p>Before farming any sidelane, ask yourself whether the enemy team has a <strong>global ultimate</strong> that can reach you while extended. If so, <strong>you must never overextend while these abilities are off cooldown.</strong> Track them on the minimap and note the cooldown the moment you see them used.</p>
-          </div>
-
-          <ul class="threat-list">
-            <li class="threat-item">
-              <div>
-                <div class="threat-champ">Twisted Fate</div>
-                <span class="threat-badge danger">Extreme Danger</span>
-                <div class="threat-note">Destiny reveals you and teleports him to a nearby location. He will show up with a stun card and you will die. <strong>Never farm a sidelane when his ult is up and you have no vision.</strong></div>
-              </div>
-            </li>
-            <li class="threat-item">
-              <div>
-                <div class="threat-champ">Nocturne</div>
-                <span class="threat-badge danger">Extreme Danger</span>
-                <div class="threat-note">Paranoia blinds the entire map and he dives from a massive range. If you are alone in a sidelane without a ward, assume he will come for you. Recall or hug your tower the moment he hits 6.</div>
-              </div>
-            </li>
-            <li class="threat-item">
-              <div>
-                <div class="threat-champ">Ashe</div>
-                <span class="threat-badge">Notable Threat</span>
-                <div class="threat-note">Her Enchanted Crystal Arrow travels globally. A well-aimed arrow from across the map while you are farming under tower can stun you long enough for her team to collapse on you.</div>
-              </div>
-            </li>
-            <li class="threat-item">
-              <div>
-                <div class="threat-champ">Pantheon</div>
-                <span class="threat-badge">Notable Threat</span>
-                <div class="threat-note">Grand Starfall lands after a travel delay. You will see the indicator — move immediately. Ping his ult to your team every time you see it cast.</div>
-              </div>
-            </li>
-            <li class="threat-item">
-              <div>
-                <div class="threat-champ">Shen</div>
-                <span class="threat-badge">Team Threat</span>
-                <div class="threat-note">Stand United does not threaten you directly, but turns a losing fight for your bot lane or jungle into a win. Track when he uses it and exploit the 1v1 window while he is channeling.</div>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-
         <!-- ══════════════════════════════════════
              03 — MATCHUP ASSESSMENT  (video)
         ══════════════════════════════════════ -->
         <div class="mg-section" id="sec-matchup">
           <div class="mg-section-head">
-            <div class="mg-num">03</div>
+            <div class="mg-num">02</div>
             <h3>Matchup Assessment</h3>
             <div class="mg-rule"></div>
           </div>
@@ -589,14 +527,14 @@
             <div class="content-block">
               <div class="card" style="margin-bottom:0;">
                 <div class="card-title">Reading the Enemy Laner</div>
-                <p>Even after laning phase ends, you need to evaluate how threatening your current lane opponent is. Have they finished their first item? Are they fed? Are they a champion who spikes at this point in the game?</p>
+                <p>Even after laning phase ends, you need to evaluate how threatening your current lane opponent is. Have they finished their first item? Are they fed? Are they a champion who spikes at this point in the game? Honing this skill will come with playing more games of Mel and League in general, but it's important to always be thinking of your opponents current strength.</p>
               </div>
 
               <div class="card" style="margin-bottom:0;">
                 <div class="card-title">How Aggressively Can You Trade?</div>
-                <p>If you have been <strong>winning lane</strong> and know your opponent's kit, you can take confident short trades — poke, back off, repeat. If you are <strong>laning against an unfamiliar toplaner</strong>, respect their damage completely. Many bruisers will all-in you the moment you overstep by even one step.</p>
+                <p>If you have been <strong>winning lane</strong> and know your opponent's kit, you can take confident short trades. Poke, back off, repeat. If you are <strong>laning against an unfamiliar opponents</strong>, respect their damage completely. For instance, many bruisers will all-in you the moment you overstep even an inch. A good example is Renekton who can flash stun and kill you without any counterplay.</p>
                 <div class="info-box" style="margin-top:10px;">
-                  Mel's strength in the sidelane is her <strong>range</strong>. Use it to poke from distances where your opponent simply cannot respond. If they close the gap, that's when you E, W, and back away.
+                  The strength of any mage, including Mel, is their <strong>range</strong>. Use it to poke and clear waves from a distance. If they close the gap, that's when you E, W, and back away or all-in them.
                 </div>
               </div>
 
@@ -607,7 +545,7 @@
                   <li>Do I know where their jungler is?</li>
                   <li>Is the enemy laner ahead or behind in gold?</li>
                   <li>Am I close enough to my tower if they engage?</li>
-                  <li>Does killing them here actually help my team?</li>
+                  <li><strong>Does killing them here actually help my team?</strong></li>
                 </ul>
               </div>
             </div>
@@ -637,7 +575,7 @@
         ══════════════════════════════════════ -->
         <div class="mg-section" id="sec-threats">
           <div class="mg-section-head">
-            <div class="mg-num">04</div>
+            <div class="mg-num">03</div>
             <h3>Assessing Threats</h3>
             <div class="mg-rule"></div>
           </div>
@@ -665,7 +603,7 @@
             <div class="content-block">
               <div class="card" style="margin-bottom:0;">
                 <div class="card-title">Who Is the Biggest Threat Right Now?</div>
-                <p>In almost every mid game, one player on each team will have a clear gold lead and be a genuine threat to end the game on their own — whether it's the enemy toplaner with 10 kills or the enemy ADC with two full items. <strong>You must always know who that player is.</strong></p>
+                <p>In almost every mid game, one player on each team will have a clear gold lead and be a genuine threat to end the game on their own. Whether it's the enemy toplaner with 10 kills or the enemy ADC with two full items. <strong>You must always know who that player is.</strong> In tandem with their strength, they will usually have a shutdown. Your goal is to shut this player down, saving spells for them and always being cognisent of their position on the map.</p>
               </div>
 
               <div class="card" style="margin-bottom:0;">
@@ -680,10 +618,10 @@
               </div>
               <div class="never-item" style="margin-bottom:6px;">
                 <span class="never-x">✕</span>
-                <span>Do not ignore a fed enemy just because they are across the map — they will rotate</span>
+                <span>Do not burn flash to kill a useless opponent. Your flash is your most valuable tool.</span>
               </div>
               <div class="info-box" style="margin-top:4px;">
-                <strong>Every fight:</strong> before casting a spell, locate the fed enemy. If you cannot see them on the minimap, assume they are flanking.
+                <strong>Every fight:</strong> Think about the locations of the enemies that matter. If you don't know where their strongest member is (fed Riven, Zed, etc.), then position conservatively and assume they are flanking.
               </div>
             </div>
           </div>
@@ -695,7 +633,7 @@
         ══════════════════════════════════════ -->
         <div class="mg-section" id="sec-golden">
           <div class="mg-section-head">
-            <div class="mg-num">05</div>
+            <div class="mg-num">04</div>
             <h3>The Golden Rule: Should I Fight?</h3>
             <div class="mg-rule"></div>
           </div>
@@ -708,19 +646,19 @@
             <div class="rule-examples">
               <div class="rule-ex">
                 <span class="verdict fight">FIGHT ✓</span>
-                <span>Your team has two items each, the enemy ADC is split farming top, and Dragon is about to spawn. 5v4 with vision — contest it.</span>
+                <span>Your team has two items each, the enemy ADC is split farming top, and Dragon is about to spawn. 5v4 with vision- contest it.</span>
               </div>
               <div class="rule-ex">
                 <span class="verdict fight">FIGHT ✓</span>
-                <span>The enemy jungler just died bot, Baron spawned 20 seconds ago. Free Baron — take it.</span>
+                <span>The enemy jungler just died bot, Baron spawned 20 seconds ago. Free Baron- take it.</span>
               </div>
               <div class="rule-ex">
                 <span class="verdict give">GIVE ✗</span>
-                <span>Enemy Ezreal is 8/1 with Luden's + Shadowflame. Nobody on your team can kill him. Give Dragon — it's not worth 5 deaths.</span>
+                <span>Enemy Syndra is 8/1 with Luden's + Shadowflame. Nobody on your team can kill her. Give Dragon- it's not worth 5 deaths.</span>
               </div>
               <div class="rule-ex">
                 <span class="verdict give">GIVE ✗</span>
-                <span>Your ADC has zero items because they died 4 times in lane. Fighting Dragon in a 5v5 is a loss — you are playing 4v5 effectively.</span>
+                <span>Your have zero items because you died 4 times in lane. Fighting Dragon in a 5v5 is a loss- you are playing 4v5 effectively.</span>
               </div>
             </div>
           </div>
@@ -737,24 +675,25 @@
         ══════════════════════════════════════ -->
         <div class="mg-section" id="sec-pos-photo">
           <div class="mg-section-head">
-            <div class="mg-num">06</div>
+            <div class="mg-num">05</div>
             <h3>Mage Positioning &amp; Targeting</h3>
             <div class="mg-rule"></div>
           </div>
-          <div class="mg-sub">Where to stand and who to hit — visualized</div>
+          <div class="mg-sub">Where to stand and who to hit</div>
 
           <div class="media-block" style="margin-bottom: 16px; max-height: 420px;">
             <div class="media-block-label">
-              <span class="icon">📸</span> Teamfight Positioning Diagram
+              <span class="icon">▶</span> Teamfight Positioning Video
             </div>
             <div class="media-inner" style="aspect-ratio: 21/9; max-height: 380px;">
-              <img src="images/midgame-positioning.jpg" alt="Teamfight positioning diagram"
-                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-              <div class="media-placeholder" style="display:none;">
-                <div class="ph-icon">📸</div>
-                <div class="ph-label">Photo Placeholder</div>
-                <div class="ph-hint">images/midgame-positioning.jpg</div>
-              </div>
+              <iframe
+                src="https://www.youtube.com/embed/KN5VwQOP2qs"
+                title="Teamfight Positioning Video"
+                style="width:100%;height:100%;border:0;display:block;"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen>
+              </iframe>
             </div>
           </div>
 
@@ -774,103 +713,12 @@
             </div>
           </div>
         </div>
-
-
-        <!-- ══════════════════════════════════════
-             07 — MAGE POSITIONING & TARGETING  (text)
-        ══════════════════════════════════════ -->
-        <div class="mg-section" id="sec-pos-text">
-          <div class="mg-section-head">
-            <div class="mg-num">07</div>
-            <h3>Mage Positioning &amp; Targeting</h3>
-            <div class="mg-rule"></div>
-          </div>
-          <div class="mg-sub">The full written breakdown of how to play teamfights as Mel</div>
-
-          <div class="g2" style="margin-bottom: 14px;">
-            <div class="card">
-              <div class="card-title">The Backline Principle</div>
-              <p>Mel's role in every teamfight is the same: she is a <strong>long-range damage dealer who should never be in melee range</strong>. Use your Q and E from maximum distance. Your passive stacks build up naturally when you are casting on cooldown. Do not panic and walk forward — the stacks will come.</p>
-              <p style="margin-top:10px;">If your frontline is getting destroyed and the enemy is inside your team, do not try to be a hero. Back off, reset the position, and look for a second engagement. Dying never helps your team.</p>
-            </div>
-
-            <div class="card">
-              <div class="card-title">When to Use W in Teamfights</div>
-              <p>Your W is a <strong>reactive tool</strong>, not a proactive one. Do not use it at the start of a fight "just in case." Save it for the most dangerous incoming ability — the Malphite ult flying at your face, the Orianna shockwave, the Nautilus hook.</p>
-              <p style="margin-top:10px;">Used at the right moment, your W turns a fight completely. Used too early, you become vulnerable for 35 seconds while every enemy ability is still available to hit you.</p>
-            </div>
-          </div>
-
-          <div class="g2">
-            <div class="card">
-              <div class="card-title">Ultimate Timing — Wait for the Glow</div>
-              <p>Your R executes enemies who have hit Mel's passive threshold. <strong>Wait for the golden glow on your HUD and the glowing icon above the enemy's head</strong> before casting. Outside of very rare situations where your stacks are about to expire, never cast R early. A wasted ultimate is 100+ seconds of no execute threat.</p>
-            </div>
-
-            <div class="card">
-              <div class="card-title">What to Do When You Get Caught</div>
-              <p>If an assassin or bruiser gets on top of you, the priority order is: <strong>1)</strong> Cast W to block their next ability. <strong>2)</strong> Use E to root them or create distance. <strong>3)</strong> Flash away if needed. <strong>4)</strong> Only auto attack while retreating if it is safe to do so. Do not stand and trade — that is never your win condition.</p>
-            </div>
-          </div>
-        </div>
-
-
-        <!-- ══════════════════════════════════════
-             08 — COMMUNICATION & FLEXIBILITY  (video)
-        ══════════════════════════════════════ -->
-        <div class="mg-section" id="sec-comms">
-          <div class="mg-section-head">
-            <div class="mg-num">08</div>
-            <h3>Communication &amp; Flexibility</h3>
-            <div class="mg-rule"></div>
-          </div>
-          <div class="mg-sub">Pings, callouts, and adapting your plan as the game evolves</div>
-
-          <div class="split-equal">
-            <!-- Text left -->
-            <div class="content-block">
-              <div class="card" style="margin-bottom:0;">
-                <div class="card-title">Communicate Before the Fight</div>
-                <p>Ping the target before the fight starts. Ping your intention — are you engaging or retreating? Ping danger if you spot the enemy jungler collapsing. Mage teamfighting requires everyone to be on the same page far more than mechanical individual play.</p>
-              </div>
-
-              <div class="card" style="margin-bottom:0;">
-                <div class="card-title">Be Willing to Adapt</div>
-                <p>The mid game is the most chaotic phase of the game. Your plan from 10 minutes will not survive contact with a 0/8 Garen who just finished Warmog's. <strong>Adapt constantly.</strong> If a fight is going badly, ping retreat and regroup. If the enemy is falling apart, push the advantage immediately — do not wait for your "ideal" position.</p>
-              </div>
-
-              <div class="card" style="margin-bottom:0; border-left:4px solid var(--brand);">
-                <div class="card-title">Ping Her Roams</div>
-                <p>Every time the enemy midlaner disappears from lane — whether it's Katarina, Talon, or anyone with roam potential — <strong>ping immediately and track their movement</strong>. Type it in chat if needed. Your teammates will not always look at the minimap. Your warning can save a kill, a tower, or the game.</p>
-              </div>
-            </div>
-
-            <!-- Video right -->
-            <div class="media-block">
-              <div class="media-block-label">
-                <span class="icon">▶</span> Communication &amp; Flexibility in Play
-              </div>
-              <div class="media-inner" style="flex:1; aspect-ratio:unset; min-height:280px;">
-                <video controls style="width:100%;height:100%;object-fit:cover;display:block;">
-                  <source src="videos/midgame-comms.mp4" type="video/mp4">
-                </video>
-                <div class="media-placeholder">
-                  <div class="ph-icon">📹</div>
-                  <div class="ph-label">Video Coming Soon</div>
-                  <div class="ph-hint">videos/midgame-comms.mp4</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
         <!-- ══════════════════════════════════════
              09 — MID GAME FORGOT 1  (video)
         ══════════════════════════════════════ -->
         <div class="mg-section" id="sec-forgot1">
           <div class="mg-section-head">
-            <div class="mg-num">09</div>
+            <div class="mg-num">06</div>
             <h3>Mid Game Note 1</h3>
             <div class="mg-rule"></div>
           </div>
@@ -911,7 +759,7 @@
         ══════════════════════════════════════ -->
         <div class="mg-section" id="sec-forgot2">
           <div class="mg-section-head">
-            <div class="mg-num">10</div>
+            <div class="mg-num">07</div>
             <h3>Mid Game Note 2</h3>
             <div class="mg-rule"></div>
           </div>
