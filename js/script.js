@@ -113,6 +113,70 @@ function toggleAccordion(header) {
   body.classList.toggle('open', !isOpen);
 }
 
+const MATCHUP_DIFFICULTY_MAP = {
+  aphelios: 2, ashe: 3, 'aurelion-sol': 3, brand: 3, caitlyn: 4, corki: 4, draven: 2, ezreal: 5,
+  heimerdinger: 3, hwei: 4, jhin: 5, jinx: 2, 'kaisa': 5, kalista: 5, karma: 3, karthus: 7,
+  'kogmaw': 4, lucian: 6, lux: 3, mel: 2, 'miss-fortune': 4, morgana: 3, nilah: 1, samira: 4,
+  senna: 3, syndra: 8, seraphine: 1, sivir: 10, smolder: 3, tristana: 5, twitch: 2, varus: 2,
+  vayne: 5, xayah: 4, yunara: 4, zeri: 4, ziggs: 3, zyra: 5
+};
+
+function getMatchupCardName(card) {
+  return card.querySelector('.matchup-name')?.textContent?.trim()
+    || card.querySelector('.card-title')?.textContent?.trim()
+    || '';
+}
+
+function getMatchupCardDifficulty(card) {
+  const id = card.id || '';
+  return MATCHUP_DIFFICULTY_MAP[id] || 4;
+}
+
+function sortMatchupCards(mode) {
+  const container = document.getElementById('matchup-cards');
+  if (!container) return;
+
+  const cards = Array.from(container.querySelectorAll(':scope > .card'));
+  if (!cards.length) return;
+
+  cards.sort((a, b) => {
+    if (mode === 'difficulty') {
+      const diffDelta = getMatchupCardDifficulty(a) - getMatchupCardDifficulty(b);
+      if (diffDelta !== 0) return diffDelta;
+    }
+    return getMatchupCardName(a).localeCompare(getMatchupCardName(b));
+  });
+
+  cards.forEach(card => container.appendChild(card));
+}
+
+function setMatchupSortMode(mode) {
+  const btn = document.getElementById('matchup-sort-btn');
+  if (!btn) return;
+
+  const normalizedMode = mode === 'difficulty' ? 'difficulty' : 'alphabetical';
+  btn.dataset.sortMode = normalizedMode;
+  btn.textContent = normalizedMode === 'difficulty'
+    ? 'Sort By: Difficulty (Easy -> Hard)'
+    : 'Sort By: Alphabetical (A-Z)';
+
+  sortMatchupCards(normalizedMode);
+}
+
+function toggleMatchupSort() {
+  const btn = document.getElementById('matchup-sort-btn');
+  if (!btn) return;
+  const nextMode = btn.dataset.sortMode === 'difficulty' ? 'alphabetical' : 'difficulty';
+  setMatchupSortMode(nextMode);
+}
+
+function initMatchupSortControls() {
+  const btn = document.getElementById('matchup-sort-btn');
+  if (!btn) return;
+  btn.addEventListener('click', toggleMatchupSort);
+  setMatchupSortMode('alphabetical');
+}
+
 // ── TABS ──
 function switchTab(btn, id) {
   const sec = btn.closest('section, .page-body, div');
@@ -153,6 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   transformMatchupCards();
+  initMatchupSortControls();
 });
 
 function transformMatchupCards() {
@@ -169,14 +234,6 @@ function transformMatchupCards() {
     'teleport.png'
   ];
   const standardBuild = ['blackfireTorch.jpg','sorcBoots.jpg','cosmicDrive.jpg','Shadowflame.jpg','rabadons.jpg','voidStaff.jpg','zhonyas.jpg'];
-
-  const difficultyMap = {
-    aphelios: 2, ashe: 3, 'aurelion-sol': 3, brand: 3, caitlyn: 4, corki: 4, draven: 2, ezreal: 5,
-    heimerdinger: 3, hwei: 4, jhin: 5, jinx: 2, 'kaisa': 5, kalista: 5, karma: 3, karthus: 7,
-    'kogmaw': 4, lucian: 6, lux: 3, mel: 2, 'miss-fortune': 4, morgana: 3, nilah: 1, samira: 4,
-    senna: 3, syndra: 8, seraphine: 1, sivir: 10, smolder: 3, tristana: 5, twitch: 2, varus: 2,
-    vayne: 5, xayah: 4, yunara: 4, zeri: 4, ziggs: 3, zyra: 5
-  };
 
   const tierMap = {
     aphelios: 'heavily-mel-favored', draven: 'heavily-mel-favored', jinx: 'heavily-mel-favored',
@@ -212,7 +269,7 @@ function transformMatchupCards() {
     const titleEl = card.querySelector('.card-title');
     const name = titleEl ? titleEl.textContent.trim() : '';
     const id = card.id || name.toLowerCase().replace(/[^a-z\d]+/g, '-');
-    const difficultyValue = difficultyMap[id] || 4;
+    const difficultyValue = MATCHUP_DIFFICULTY_MAP[id] || 4;
     const difficultySteps = calcDifficultyBox(difficultyValue);
 
     const existingDetails = Array.from(card.children).filter(el => !el.classList.contains('card-title'));
