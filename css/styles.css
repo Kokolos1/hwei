@@ -785,8 +785,9 @@ body {
 .ability-row {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
-  margin-bottom: 0;
+  gap: 40px;
+  max-width: 1180px;
+  margin: 0 auto;
 }
  
 .abl-card {
@@ -807,18 +808,23 @@ body {
   width: 100%;
   aspect-ratio: 1/1;
   overflow: hidden;
-  background: var(--navy);
+  background: var(--brand-mid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
 }
  
 .abl-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
   display: block;
   transition: transform 0.3s ease;
 }
  
 .abl-card:hover .abl-img { transform: scale(1.05); }
+.abl-card:hover .abl-img-wrap { background: var(--brand-deeper); }
  
 .abl-key-overlay {
   position: absolute;
@@ -841,20 +847,20 @@ body {
 .abl-footer {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
+  gap: 8px;
+  padding: 10px 12px;
   border-top: 1px solid var(--border);
   background: var(--white);
 }
  
 .abl-letter {
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   background: var(--navy);
   color: var(--gold-light);
   font-family: 'Playfair Display', serif;
   font-weight: 900;
-  font-size: 0.85rem;
+  font-size: 0.74rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -863,7 +869,7 @@ body {
  
 .abl-name {
   font-family: 'Playfair Display', serif;
-  font-size: 0.82rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--navy);
   flex: 1;
@@ -871,7 +877,7 @@ body {
 }
  
 .abl-chevron {
-  font-size: 0.75rem;
+  font-size: 0.66rem;
   color: var(--text-light);
   transition: transform 0.25s;
   flex-shrink: 0;
