@@ -602,7 +602,7 @@ body {
  
 /* ── TIP LIST ── */
 .tip-list { list-style:none; }
-.tip-list li { display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.08); font-size:0.95rem; line-height:1.6; align-items:flex-start; color: rgba(255,255,255,0.85); }
+.tip-list li { display:flex; gap:14px; padding:12px 0; border-bottom:1px solid var(--border); font-size:0.95rem; line-height:1.6; align-items:flex-start; color: var(--text-body); }
 .tip-list li:last-child { border-bottom:none; }
 .tip-num { font-family:'Playfair Display',serif; font-size:0.75rem; font-weight:700; color:var(--brand); min-width:28px; padding-top:2px; flex-shrink:0; }
  
