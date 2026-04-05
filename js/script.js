@@ -177,6 +177,61 @@ function initMatchupSortControls() {
   setMatchupSortMode('alphabetical');
 }
 
+function smoothScrollElementToCenter(target) {
+  if (!target) return;
+  const targetRect = target.getBoundingClientRect();
+  const targetHeight = targetRect.height;
+  const viewportHeight = window.innerHeight;
+  const centerOffset = Math.max((viewportHeight - targetHeight) / 2, 0);
+  const top = Math.max(window.scrollY + targetRect.top - centerOffset, 0);
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
+function initMatchupDifficultyJump() {
+  document.addEventListener('click', (event) => {
+    const jumpLink = event.target.closest('.matchup-diff-badge-link');
+    if (!jumpLink) return;
+
+    event.preventDefault();
+    const target = document.getElementById('botlane-toc');
+    smoothScrollElementToCenter(target);
+  });
+}
+
+function initTierListSmoothJump() {
+  document.addEventListener('click', (event) => {
+    const tierLink = event.target.closest('#tierlist-sec a.tier-champ');
+    if (!tierLink) return;
+
+    const href = tierLink.getAttribute('href') || '';
+    if (!href.startsWith('#')) return;
+
+    const targetId = href.slice(1);
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    event.preventDefault();
+    smoothScrollElementToCenter(target);
+  });
+}
+
+function initTocSmoothJump() {
+  document.addEventListener('click', (event) => {
+    const tocLink = event.target.closest('#botlane-toc a.toc-link');
+    if (!tocLink) return;
+
+    const href = tocLink.getAttribute('href') || '';
+    if (!href.startsWith('#')) return;
+
+    const targetId = href.slice(1);
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    event.preventDefault();
+    smoothScrollElementToCenter(target);
+  });
+}
+
 // ── TABS ──
 function switchTab(btn, id) {
   const sec = btn.closest('section, .page-body, div');
@@ -218,6 +273,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   transformMatchupCards();
   initMatchupSortControls();
+  initMatchupDifficultyJump();
+  initTierListSmoothJump();
+  initTocSmoothJump();
 });
 
 function transformMatchupCards() {
@@ -294,10 +352,10 @@ function transformMatchupCards() {
               <h3 class="matchup-name">${name}</h3>
               <span class="matchup-tier-badge ${tierClass}">${tierLabel}</span>
             </div>
-            <div class="matchup-diff-badge">
+            <a class="matchup-diff-badge matchup-diff-badge-link" href="#botlane-toc" aria-label="Jump to champions table of contents" title="Jump to champions list">
               <div class="matchup-difficulty-title">Difficulty</div>
               ${difficultySteps}
-            </div>
+            </a>
           </div>
           <div class="matchup-stats">
             <div class="matchup-block">

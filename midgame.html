@@ -438,17 +438,6 @@
   </nav>
 </header>
 
-<!-- IN-PAGE SUBNAV -->
-<nav class="page-subnav">
-  <div class="subnav-item active" onclick="subnavScroll(this,'sec-lanes')">Lane Assignments</div>
-  <div class="subnav-item" onclick="subnavScroll(this,'sec-matchup')">Matchup Assessment</div>
-  <div class="subnav-item" onclick="subnavScroll(this,'sec-threats')">Assessing Threats</div>
-  <div class="subnav-item" onclick="subnavScroll(this,'sec-golden')">Golden Rule</div>
-  <div class="subnav-item" onclick="subnavScroll(this,'sec-pos-photo')">Positioning (Visual)</div>
-  <div class="subnav-item" onclick="subnavScroll(this,'sec-forgot1')">Mid Game Note 1</div>
-  <div class="subnav-item" onclick="subnavScroll(this,'sec-forgot2')">Mid Game Note 2</div>
-</nav>
-
 <div class="layout">
   <main class="main">
     <div class="page active" id="page-midgame">
@@ -458,6 +447,15 @@
         <h2>Mid Game &amp; Teamfighting</h2>
         <p class="hero-desc">Lane assignments shift, objectives define the flow, and one good teamfight can swing the entire game. Master every piece of the mid game as Mel.</p>
       </div>
+
+      <!-- IN-PAGE SUBNAV -->
+      <nav class="page-subnav">
+        <div class="subnav-item active" onclick="subnavScroll(this,'sec-lanes')">Lane Assignments</div>
+        <div class="subnav-item" onclick="subnavScroll(this,'sec-matchup')">Matchup Assessment</div>
+        <div class="subnav-item" onclick="subnavScroll(this,'sec-threats')">Assessing Threats</div>
+        <div class="subnav-item" onclick="subnavScroll(this,'sec-golden')">Choosing to Fight</div>
+        <div class="subnav-item" onclick="subnavScroll(this,'sec-pos-photo')">Positioning</div>
+      </nav>
 
       <div class="page-body">
 
@@ -700,125 +698,14 @@
             </div>
             <div class="pos-card">
               <div class="pos-title"><div class="pos-dot" style="background:var(--gold);"></div> Watch the Flanks</div>
-              <p style="font-size:0.88rem; line-height:1.6; color:var(--text-body);">Standing far back is worthless if Qiyana, Zed, or Kat comes from the side or behind. Before every fight, rotate to face a wall if possible and always know where stealth champions are.</p>
+              <p style="font-size:0.88rem; line-height:1.6; color:var(--text-body);">Standing far back is worthless if a champion like Qiyana, Zed, or Kat comes from the side or behind. Before every fight, position yourself to be close to your teamates, far from the enemy backline, and away from any enemy flank angles.</p>
             </div>
             <div class="pos-card">
               <div class="pos-title"><div class="pos-dot" style="background:var(--red);"></div> Prioritize Targets</div>
-              <p style="font-size:0.88rem; line-height:1.6; color:var(--text-body);">Hit the fed carry or the squishy that is most overextended. Dumping your entire rotation into the enemy tank is one of the most common mistakes mage players make.</p>
+              <p style="font-size:0.88rem; line-height:1.6; color:var(--text-body);">Hit the fed carry or the squishy that is most overextended. Dumping your entire rotation into the enemy tank is one of the most common mistakes mage players make. Don't die/ move out of position for one kill in a fight.</p>
             </div>
           </div>
         </div>
-        <!-- ══════════════════════════════════════
-             09 — MID GAME FORGOT 1  (video)
-        ══════════════════════════════════════ -->
-        <div class="mg-section" id="sec-forgot1">
-          <div class="mg-section-head">
-            <div class="mg-num">06</div>
-            <h3>Mid Game Note 1</h3>
-            <div class="mg-rule"></div>
-          </div>
-          <div class="mg-sub">Replace this section title with your topic</div>
-
-          <div class="split-equal">
-            <!-- Text left -->
-            <div class="forgot-dark">
-              <div class="fd-label">📝 Section Content</div>
-              <div class="fd-body">
-                <p>This section is reserved for a mid game topic you want to cover. Add your written content here — strategy notes, tips, a breakdown of a specific mechanic, or anything else relevant to the mid game phase.</p>
-                <p style="margin-top: 12px;">Replace <strong>"Mid Game Note 1"</strong> in the subnav and section header with your actual topic name once you know what goes here.</p>
-              </div>
-            </div>
-
-            <!-- Video right -->
-            <div class="media-block">
-              <div class="media-block-label">
-                <span class="icon">▶</span> Mid Game Note 1 — Video
-              </div>
-              <div class="media-inner" style="flex:1; aspect-ratio:unset; min-height:220px;">
-                <video controls style="width:100%;height:100%;object-fit:cover;display:block;">
-                  <source src="videos/midgame-forgot1.mp4" type="video/mp4">
-                </video>
-                <div class="media-placeholder">
-                  <div class="ph-icon">📹</div>
-                  <div class="ph-label">Video Coming Soon</div>
-                  <div class="ph-hint">videos/midgame-forgot1.mp4</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        <!-- ══════════════════════════════════════
-             10 — MID GAME FORGOT 2  (photo + video)
-        ══════════════════════════════════════ -->
-        <div class="mg-section" id="sec-forgot2">
-          <div class="mg-section-head">
-            <div class="mg-num">07</div>
-            <h3>Mid Game Note 2</h3>
-            <div class="mg-rule"></div>
-          </div>
-          <div class="mg-sub">Replace this section title with your topic</div>
-
-          <!-- Three-column: photo | text | video -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; align-items: stretch;">
-
-            <!-- Photo -->
-            <div class="media-block">
-              <div class="media-block-label">
-                <span class="icon">📸</span> Mid Game Note 2 — Photo
-              </div>
-              <div class="media-inner" style="flex:1; aspect-ratio:unset; min-height:240px;">
-                <img src="images/midgame-forgot2.jpg" alt="Mid game note 2"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="media-placeholder" style="display:none;">
-                  <div class="ph-icon">📸</div>
-                  <div class="ph-label">Photo Placeholder</div>
-                  <div class="ph-hint">images/midgame-forgot2.jpg</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Text center -->
-            <div class="forgot-dark" style="display:flex; flex-direction:column;">
-              <div class="fd-label">📝 Section Content</div>
-              <div class="fd-body" style="flex:1;">
-                <p>This section is reserved for another mid game topic — one that benefits from both a photo reference and a video demonstration.</p>
-                <p style="margin-top:12px;">Add your written breakdown here. Replace <strong>"Mid Game Note 2"</strong> with your actual section name.</p>
-                <p style="margin-top:12px; font-size:0.82rem; color:rgba(255,255,255,0.4);">Tip: if the text is short, the photo and video will carry the section visually. If it's long, consider splitting this into its own full-width section.</p>
-              </div>
-            </div>
-
-            <!-- Video -->
-            <div class="media-block">
-              <div class="media-block-label">
-                <span class="icon">▶</span> Mid Game Note 2 — Video
-              </div>
-              <div class="media-inner" style="flex:1; aspect-ratio:unset; min-height:240px;">
-                <video controls style="width:100%;height:100%;object-fit:cover;display:block;">
-                  <source src="videos/midgame-forgot2.mp4" type="video/mp4">
-                </video>
-                <div class="media-placeholder">
-                  <div class="ph-icon">📹</div>
-                  <div class="ph-label">Video Coming Soon</div>
-                  <div class="ph-hint">videos/midgame-forgot2.mp4</div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Responsive fallback for mobile — stack all three -->
-          <style>
-            @media (max-width: 860px) {
-              #sec-forgot2 > div[style*="grid-template-columns: 1fr 1fr 1fr"] {
-                grid-template-columns: 1fr !important;
-              }
-            }
-          </style>
-
-        </div><!-- /sec-forgot2 -->
-
       </div><!-- /page-body -->
     </div><!-- /page -->
   </main>

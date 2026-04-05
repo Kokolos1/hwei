@@ -12,7 +12,7 @@
     .ward-section {
       display: flex;
       flex-direction: column;
-      gap: 0;
+      gap: 16px;
       max-width: 1200px;
       margin: 0 auto;
       margin-top: 16px;
@@ -22,34 +22,25 @@
     .ward-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 64px;
+      gap: 24px;
       align-items: start;
-      padding: 0;
-      overflow: visible;
-      position: relative;
-      margin-top: 0;
+      padding: 16px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
     }
-
-    .ward-row + .ward-row {
-      margin-top: -32px;
-    }
-
-    .ward-row:nth-child(odd) { z-index: 1; }
-    .ward-row:nth-child(even) { z-index: 2; }
 
     .ward-row.img-left .ward-img-wrap { order: 1; }
     .ward-row.img-left .ward-text     { order: 2; }
-    .ward-row.img-right .ward-text    { order: 1; transform: translateY(16px); }
+    .ward-row.img-right .ward-text    { order: 1; }
     .ward-row.img-right .ward-img-wrap{ order: 2; }
 
     .ward-img-wrap {
       height: 320px;
       overflow: hidden;
       transform: none;
-    }
-
-    .ward-row.img-right .ward-img-wrap {
-      transform: translateY(-16px);
+      border: 1px solid var(--border);
     }
 
     .ward-map {
@@ -63,8 +54,8 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      max-width: 520px;
-      padding: 24px 16px 0;
+      max-width: none;
+      padding: 8px 8px 0;
     }
 
     .ward-text h4 {
@@ -102,12 +93,8 @@
       }
       .ward-row {
         grid-template-columns: 1fr;
-        margin-top: 0;
-        gap: 24px;
-        padding: 0;
-      }
-      .ward-row:nth-child(even) {
-        margin-top: 0;
+        gap: 16px;
+        padding: 14px;
       }
       .ward-img-wrap,
       .ward-text {
@@ -186,7 +173,7 @@
       <div class="page-hero">
         <div class="hero-eyebrow">Laning &amp; Early Game</div>
         <h2>Laning &amp; Early Game</h2>
-        <p class="hero-desc">A level-by-level laning plan covering spacing, poke windows, tempo shifts, and warding positions to control vision.</p>
+        <p class="hero-desc">Laning Phase & Warding (sort of)</p>
       </div>
       <div class="page-subnav">
         <div class="subnav-item active" onclick="subnavScroll(this,'laning-sec')">Early Game</div>
@@ -258,11 +245,12 @@
             <div class="card-title">Level 6-10</div>
             <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:stretch">
               <div>
-                <p style="font-size:.92rem;line-height:1.75;margin-bottom:14px">Play around ultimate windows, objective timers, and wave tempo. Your focus shifts from pure lane chip to coordinated pressure and conversion.</p>
-                <ul class="tip-list">
-                  <li><span class="tip-num">All-In</span><span>Look for kill setups when key enemy cooldowns are burned or when your support can lock targets.</span></li>
-                  <li><span class="tip-num">Tempo</span><span>Shove safely before river movement so you reach skirmishes first.</span></li>
-                  <li><span class="tip-num">Discipline</span><span>If no clean angle exists, maintain control through poke and vision instead of forcing.</span></li>
+                <p style="font-size:.92rem;line-height:1.75;margin-bottom:12px"><strong>Level 6-10 plan:</strong> THIS is the period of the game where you can really abuse your champion to the fullest. Even against a champion such as Draven, Mel should be winning at this point.</p>
+                <ul class="tip-list" style="margin-bottom:14px">
+                  <li><span class="tip-num"></span><span>Starting around level 6-7, you have everything that you need to succeed. Points in all of your spells, several points in your Q, and a mana item such that you will NEVER be worried about going OOM if you aren't excessively spamming.</span></li>
+                  <li><span class="tip-num"></span><span>We need to play from range and know our matchup. Against most champions, we can simply 1v1 them even if we are tanking autos. Check the matchup section of this guide for more information.</span></li>
+                  <li><span class="tip-num"></span><span>In low elo this lane is still going to be a 2v2, in which case we want to play off our opponents CC and take almost all fights. Be sure that you don't get caught by the enemy support though, as that's really the only way for you to die.</span></li>
+                  <li><span class="tip-num"></span><span>In high-elo, both supports will often be roaming, and this is our time to shove waves and poke the enemy under tower, abusing our superior 1v1.</span></li>
                 </ul>
               </div>
               <div style="background:var(--navy);border:1px solid var(--border);border-top:3px solid var(--brand);overflow:hidden;display:flex;flex-direction:column">
@@ -285,57 +273,53 @@
           <div class="section-head"><h3>Warding</h3><div class="section-rule"></div></div>
           <div class="section-sub">Vision control as mid lane</div>
 
+          <div class="never-item" style="margin-bottom:20px"><span class="never-x">⚠</span><span>I'm going to be honest, I average a 12 vision score. I bought 2 control wards in 2025 across 4000 games. I'm definitely not a warding expert and I lowkey think warding is fake lol. But here are the wards that I do place (whenever I remember).</span></div>
+
           <div class="ward-section">
 
             <!-- ROW 1: image left · text right -->
             <div class="ward-row img-left">
               <div class="ward-img-wrap">
-                <img src="images/cryptbloom.jpg" alt="Ward placement map" class="ward-map">
+                <img src="images/lvl1Ward.png" alt="Ward placement map" class="ward-map">
               </div>
               <div class="ward-text">
-                <h4>Ward Placement Philosophy</h4>
-                <p>Warding can be a very confusing concept for most people, and at the most advanced forms of play, can require a lot of coordination. Let's try to keep it simple. <strong>We always place a ward that we think can keep us alive if we see the enemy jungler.</strong></p>
+                <h4>Level 1 Ward</h4>
+                <p>We drop this ward level 1 at the start of every game. This prevents the enemy from bush cheesing us and allows us to poke them easier level 1. Immediately sprint to botlane at game start to drop this ward ASAP.</strong></p>
               </div>
             </div>
 
             <!-- ROW 2: text left · image right -->
             <div class="ward-row img-right">
               <div class="ward-text">
-                <h4>Stealth Champion Warding</h4>
-                <p>For example, warding the river bushes against Shaco doesn't do anything. He is just going to use his Q over the wall. Instead, we want to ward his jungle camps (usually raptors). The same is true for champions like Evelynn and Twitch.</p>
+                <h4>Boring ass river ward</h4>
+                <p>I'm going to be real, junglers can gank you from a lot of angles that aren't straight through river. BUT combining this with a tri-bush ward CAN keep you safe. This ward is especially effective at using the faelight to get vision on drake/enemy jungler taking the scuttle crab.</p>
               </div>
               <div class="ward-img-wrap">
-                <img src="images/cryptbloom.jpg" alt="Stealth champion warding map" class="ward-map">
+                <img src="images/standardRiverWard.png" alt="Stealth champion warding map" class="ward-map">
               </div>
             </div>
 
             <!-- ROW 3: image left · text right -->
             <div class="ward-row img-left">
               <div class="ward-img-wrap">
-                <img src="images/cryptbloom.jpg" alt="Standard jungler warding map" class="ward-map">
+                <img src="images/triBushWard.png" alt="Standard jungler warding map" class="ward-map">
               </div>
               <div class="ward-text">
-                <h4>Standard Jungler Warding</h4>
-                <p>Against more typical junglers, we want to ward the river bush that the enemy jungler is expected to come from. If we believe that the enemy is clearing from top to bot (80% of games this is true), then we can place a ward on the bottom river bush at 3:00. Why 3:00? Most junglers will fullclear or take 5 camps before ganking, this typically happens around the 3:00–3:30 mark.</p>
+                <h4>Tri-bush Ward</h4>
+                <p>Now, I've shown these bushes on blue side, but they also work on red-side with the opposite ward. Dropping a ward like this can give you vision of an enemy jungler ganking you from this angle. If you're pushed under tower, you can also drop this on your tri-bush to spot if the enemy jungler is moving to dive you. Combine this with the ward above and you can keep yourself safe. </p>
               </div>
             </div>
 
             <!-- ROW 4: text left · image right -->
             <div class="ward-row img-right">
               <div class="ward-text">
-                <h4>Early Game Gankers</h4>
-                <p>Lastly, if we are against an enemy jungler that loves to level 3 gank (Ex. Rek'Sai, Elise) then we want to place an early ward on the side that the enemy jungler begins clearing on (place a ward in top river bush if they start topside).</p>
+                <h4>Stealth Champion Warding</h4>
+                <p>For example, warding the river bushes against Shaco doesn't do anything. He is just going to use his Q over the wall. Instead, we want to ward his jungle camps (usually raptors). The same is true for champions like Evelynn and Twitch.</p>
               </div>
               <div class="ward-img-wrap">
-                <img src="images/cryptbloom.jpg" alt="Early game ganker warding map" class="ward-map">
+                <img src="images/stealthChampWard.png" alt="Early game ganker warding map" class="ward-map">
               </div>
             </div>
-
-            <!-- Sweeping tip -->
-            <div class="ward-sweep-note">
-              <strong>Sweeping:</strong> Always sweep the mid river and lane bushes before extended trades or all-ins. A hidden enemy ward tips off your opponent and lets them dodge your combo setup.
-            </div>
-
           </div><!-- /.ward-section -->
         </div><!-- /#warding-sec -->
 

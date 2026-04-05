@@ -570,6 +570,10 @@ body {
 .matchup-tier-badge.enemy-favored { background:#6b4a1a; }
 .matchup-tier-badge.unfavorable { background:#8b1a1a; }
 .matchup-diff-badge { display:flex; flex-direction:column; align-items:center; flex-shrink:0; gap:4px; }
+.matchup-diff-badge-link { text-decoration:none; cursor:pointer; }
+.matchup-diff-badge-link:hover .matchup-difficulty-box,
+.matchup-diff-badge-link:focus-visible .matchup-difficulty-box { filter:brightness(0.9); }
+.matchup-diff-badge-link:focus-visible { outline:2px solid var(--brand); outline-offset:4px; border-radius:8px; }
 .matchup-difficulty-title { font-size:0.85rem; font-weight:700; color:var(--brand); text-transform:uppercase; letter-spacing:0.05em; }
 .matchup-difficulty-box {
   display:inline-flex;
