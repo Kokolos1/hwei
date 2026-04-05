@@ -13,82 +13,116 @@
     .ward-section {
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+      margin-top: 16px;
     }
 
-    /* ── EACH ROW: one image + one text block ── */
+    /* ── EACH ROW: two-column minimal layout ── */
     .ward-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 32px;
-      align-items: center;       /* text vertically centered to image */
-      background: var(--white);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      overflow: hidden;
+      gap: 64px;
+      align-items: start;
+      padding: 0;
+      overflow: visible;
+      position: relative;
+      margin-top: 0;
     }
 
-    /* Rows 1 & 3: image LEFT, text RIGHT */
+    .ward-row + .ward-row {
+      margin-top: -32px;
+    }
+
+    .ward-row:nth-child(odd) { z-index: 1; }
+    .ward-row:nth-child(even) { z-index: 2; }
+
     .ward-row.img-left .ward-img-wrap { order: 1; }
     .ward-row.img-left .ward-text     { order: 2; }
+    .ward-row.img-right .ward-text    { order: 1; transform: translateY(16px); }
+    .ward-row.img-right .ward-img-wrap{ order: 2; }
 
-    /* Rows 2 & 4: text LEFT, image RIGHT */
-    .ward-row.img-right .ward-text     { order: 1; }
-    .ward-row.img-right .ward-img-wrap { order: 2; }
-
-    /* ── IMAGE: fills full height of its column ── */
     .ward-img-wrap {
-      align-self: stretch;
+      height: 320px;
+      overflow: hidden;
+      transform: none;
+    }
+
+    .ward-row.img-right .ward-img-wrap {
+      transform: translateY(-16px);
     }
 
     .ward-map {
       width: 100%;
       height: 100%;
-      min-height: 280px;
       object-fit: cover;
       display: block;
     }
 
-    /* ── TEXT: padded, centered in its column ── */
     .ward-text {
-      padding: 32px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      max-width: 520px;
+      padding: 24px 16px 0;
     }
 
     .ward-text h4 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: 700;
       color: var(--navy);
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .ward-text p {
-      font-size: 0.93rem;
-      line-height: 1.78;
+      font-size: 0.95rem;
+      line-height: 1.75;
       color: var(--text-body);
     }
 
     .ward-text p strong { color: var(--text-dark); }
 
-    /* ── SWEEP NOTE ── */
     .ward-sweep-note {
-      background: var(--amber-bg);
-      border: 1px solid #e0c47a;
+      background: none;
+      border: none;
       border-left: 4px solid var(--gold);
-      padding: 16px 18px;
+      padding: 18px 20px 18px 16px;
       font-size: 0.92rem;
       line-height: 1.6;
       color: var(--text-body);
+      margin-top: 24px;
+      position: relative;
+      z-index: 3;
     }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
+      .ward-section {
+        gap: 32px;
+      }
       .ward-row {
         grid-template-columns: 1fr;
+        margin-top: 0;
+        gap: 24px;
+        padding: 0;
       }
-      .ward-img-wrap { order: 1 !important; }
-      .ward-text     { order: 2 !important; padding: 24px 20px; }
-      .ward-map      { min-height: 220px; height: 220px; }
+      .ward-row:nth-child(even) {
+        margin-top: 0;
+      }
+      .ward-img-wrap,
+      .ward-text {
+        min-height: auto;
+      }
+      .ward-text {
+        padding: 0 0 0 0;
+        justify-content: flex-start;
+      }
+      .ward-map {
+        min-height: 260px;
+        height: 260px;
+      }
     }
   </style>
 </head>
