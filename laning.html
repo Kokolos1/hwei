@@ -7,6 +7,122 @@
   <meta name="description" content="Master Mel's laning phase with level-by-level lane plans, poke windows, and optimal warding positions.">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── WARDING SECTION ── */
+    .ward-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+      margin-top: 16px;
+    }
+
+    /* ── EACH ROW: two-column minimal layout ── */
+    .ward-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+      padding: 0;
+      overflow: visible;
+      position: relative;
+      margin-top: 0;
+    }
+
+    .ward-row + .ward-row {
+      margin-top: -32px;
+    }
+
+    .ward-row:nth-child(odd) { z-index: 1; }
+    .ward-row:nth-child(even) { z-index: 2; }
+
+    .ward-row.img-left .ward-img-wrap { order: 1; }
+    .ward-row.img-left .ward-text     { order: 2; }
+    .ward-row.img-right .ward-text    { order: 1; transform: translateY(16px); }
+    .ward-row.img-right .ward-img-wrap{ order: 2; }
+
+    .ward-img-wrap {
+      height: 320px;
+      overflow: hidden;
+      transform: none;
+    }
+
+    .ward-row.img-right .ward-img-wrap {
+      transform: translateY(-16px);
+    }
+
+    .ward-map {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .ward-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      max-width: 520px;
+      padding: 24px 16px 0;
+    }
+
+    .ward-text h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+
+    .ward-text p {
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: var(--text-body);
+    }
+
+    .ward-text p strong { color: var(--text-dark); }
+
+    .ward-sweep-note {
+      background: none;
+      border: none;
+      border-left: 4px solid var(--gold);
+      padding: 18px 20px 18px 16px;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--text-body);
+      margin-top: 24px;
+      position: relative;
+      z-index: 3;
+    }
+
+    @media (max-width: 768px) {
+      .ward-section {
+        gap: 32px;
+      }
+      .ward-row {
+        grid-template-columns: 1fr;
+        margin-top: 0;
+        gap: 24px;
+        padding: 0;
+      }
+      .ward-row:nth-child(even) {
+        margin-top: 0;
+      }
+      .ward-img-wrap,
+      .ward-text {
+        min-height: auto;
+      }
+      .ward-text {
+        padding: 0 0 0 0;
+        justify-content: flex-start;
+      }
+      .ward-map {
+        min-height: 260px;
+        height: 260px;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -164,32 +280,63 @@
         <div id="warding-sec" style="scroll-margin-top:130px">
           <div class="section-head"><h3>Warding</h3><div class="section-rule"></div></div>
           <div class="section-sub">Vision control as mid lane</div>
-          <div class="ward-card">
-            <div class="ward-badge">River Bush</div>
-            <div class="ward-title">Top River Bush (Dragon Side)</div>
-            <p>Ward the top side river bush at 1:30 before the wave hits. This covers the standard level 2 invade path and gives you early warning on jungle position to plan your level 2 trade.</p>
-          </div>
-          <div class="ward-card">
-            <div class="ward-badge">Pixel Bush</div>
-            <div class="ward-title">Pixel Bush (Both Sides)</div>
-            <p>Pixel bushes on both sides of mid river give you full vision of enemy jungle pathing. Drop these when you have priority. Critical for tracking invades and roam timing.</p>
-          </div>
-          <div class="ward-card">
-            <div class="ward-badge">Enemy Jungle</div>
-            <div class="ward-title">Enemy Blue/Red Side Jungle Entrance</div>
-            <p>When your team has mid priority and you're shoving the wave, deep ward into the enemy jungle entrance to track camps and predict ganks before they arrive at mid.</p>
-          </div>
-          <div class="ward-card">
-            <div class="ward-badge">Dragon / Baron</div>
-            <div class="ward-title">Objective Vision Control</div>
-            <p>At 4:30 start building vision toward Dragon. Ward the dragon pit entrance and the connecting bushes. Having vision here 30 seconds before objective spawn gives your team full control of the fight setup.</p>
-          </div>
-          <div class="info-box">
-            <strong>Sweeping:</strong> Always sweep the mid river and lane bushes before extended trades or all-ins. A hidden enemy ward tips off your opponent and lets them dodge your combo setup.
-          </div>
-        </div>
-      </div>
-    </div>
+
+          <div class="ward-section">
+
+            <!-- ROW 1: image left · text right -->
+            <div class="ward-row img-left">
+              <div class="ward-img-wrap">
+                <img src="images/cryptbloom.jpg" alt="Ward placement map" class="ward-map">
+              </div>
+              <div class="ward-text">
+                <h4>Ward Placement Philosophy</h4>
+                <p>Warding can be a very confusing concept for most people, and at the most advanced forms of play, can require a lot of coordination. Let's try to keep it simple. <strong>We always place a ward that we think can keep us alive if we see the enemy jungler.</strong></p>
+              </div>
+            </div>
+
+            <!-- ROW 2: text left · image right -->
+            <div class="ward-row img-right">
+              <div class="ward-text">
+                <h4>Stealth Champion Warding</h4>
+                <p>For example, warding the river bushes against Shaco doesn't do anything. He is just going to use his Q over the wall. Instead, we want to ward his jungle camps (usually raptors). The same is true for champions like Evelynn and Twitch.</p>
+              </div>
+              <div class="ward-img-wrap">
+                <img src="images/cryptbloom.jpg" alt="Stealth champion warding map" class="ward-map">
+              </div>
+            </div>
+
+            <!-- ROW 3: image left · text right -->
+            <div class="ward-row img-left">
+              <div class="ward-img-wrap">
+                <img src="images/cryptbloom.jpg" alt="Standard jungler warding map" class="ward-map">
+              </div>
+              <div class="ward-text">
+                <h4>Standard Jungler Warding</h4>
+                <p>Against more typical junglers, we want to ward the river bush that the enemy jungler is expected to come from. If we believe that the enemy is clearing from top to bot (80% of games this is true), then we can place a ward on the bottom river bush at 3:00. Why 3:00? Most junglers will fullclear or take 5 camps before ganking, this typically happens around the 3:00–3:30 mark.</p>
+              </div>
+            </div>
+
+            <!-- ROW 4: text left · image right -->
+            <div class="ward-row img-right">
+              <div class="ward-text">
+                <h4>Early Game Gankers</h4>
+                <p>Lastly, if we are against an enemy jungler that loves to level 3 gank (Ex. Rek'Sai, Elise) then we want to place an early ward on the side that the enemy jungler begins clearing on (place a ward in top river bush if they start topside).</p>
+              </div>
+              <div class="ward-img-wrap">
+                <img src="images/cryptbloom.jpg" alt="Early game ganker warding map" class="ward-map">
+              </div>
+            </div>
+
+            <!-- Sweeping tip -->
+            <div class="ward-sweep-note">
+              <strong>Sweeping:</strong> Always sweep the mid river and lane bushes before extended trades or all-ins. A hidden enemy ward tips off your opponent and lets them dodge your combo setup.
+            </div>
+
+          </div><!-- /.ward-section -->
+        </div><!-- /#warding-sec -->
+
+      </div><!-- /.page-body -->
+    </div><!-- /#page-laning -->
 
   </main>
 
