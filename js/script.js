@@ -159,6 +159,10 @@ function transformMatchupCards() {
   const idToImage = {
     aphelios:'Aphelios', ashe:'Ashe', 'aurelion-sol':'AurelionSol', brand:'Brand', caitlyn:'Caitlyn', corki:'Corki', draven:'Draven', ezreal:'Ezreal', heimerdinger:'Heimerdinger', hwei:'Hwei', jhin:'Jhin', jinx:'Jinx', 'kaisa':'KaiSa', kalista:'Kalista', karma:'Karma', karthus:'Karthus', 'kogmaw':'KogMaw', lucian:'Lucian', lux:'Lux', mel:'Mel', 'miss-fortune':'MissFortune', morgana:'Morgana', nilah:'Nilah', samira:'Samira', senna:'Senna', seraphine:'Seraphine', sivir:'Sivir', smolder:'Smolder', tristana:'Tristana', twitch:'Twitch', varus:'Varus', vayne:'Vayne', xayah:'Xayah', yunara:'Yunara', zeri:'Zeri', ziggs:'Ziggs', zyra:'Zyra'
   };
+  const wikiById = {
+    aphelios:'Aphelios', ashe:'Ashe', 'aurelion-sol':'Aurelion_Sol', brand:'Brand', caitlyn:'Caitlyn', corki:'Corki', draven:'Draven', ezreal:'Ezreal', heimerdinger:'Heimerdinger', hwei:'Hwei', jhin:'Jhin', jinx:'Jinx', kaisa:"Kai'Sa", kalista:'Kalista', karma:'Karma', karthus:'Karthus', kogmaw:"Kog'Maw", lucian:'Lucian', lux:'Lux', mel:'Mel', 'miss-fortune':'Miss_Fortune', morgana:'Morgana', nilah:'Nilah', samira:'Samira', senna:'Senna', syndra:'Syndra', seraphine:'Seraphine', sivir:'Sivir', smolder:'Smolder', tristana:'Tristana', twitch:'Twitch', varus:'Varus', vayne:'Vayne', xayah:'Xayah', yunara:'Yunara', zeri:'Zeri', ziggs:'Ziggs', zyra:'Zyra'
+  };
+  const wikiBase = 'https://wiki.leagueoflegends.com/en-us/';
 
   const standardSummoners = [
     'Flash.png',
@@ -216,13 +220,17 @@ function transformMatchupCards() {
 
     const imageKey = idToImage[id] || name.replace(/[^a-zA-Z]/g,'');
     const imagePath = `images/champions/${imageKey}.png`;
+    const wikiSlug = wikiById[id];
+    const wikiUrl = wikiSlug ? `${wikiBase}${wikiSlug}` : '#';
     const tierClass = tierMap[id] || 'even';
     const tierLabel = tierLabels[tierClass] || 'Even';
 
     card.classList.add('matchup-card');
     card.innerHTML = `
       <div class="matchup-entry">
-        <img class="matchup-image" src="${imagePath}" alt="${name}">
+        <a class="matchup-image-link" href="${wikiUrl}" target="_blank" rel="noopener" aria-label="Open ${name} wiki page" title="Open ${name} wiki page">
+          <img class="matchup-image" src="${imagePath}" alt="${name}">
+        </a>
         <div class="matchup-meta">
           <div class="matchup-header-row">
             <div class="matchup-name-group">
