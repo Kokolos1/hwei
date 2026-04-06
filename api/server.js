@@ -7,10 +7,31 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const webRoot = path.join(__dirname, '..');
+const HOME_FILE = path.join(webRoot, 'index.html');
+const SIGNIN_FILE = path.join(webRoot, 'signin.html');
+const PROTECTED_PAGE_FILES = new Set([
+  'index.html',
+  'abilities.html',
+  'laning.html',
+  'lategame.html',
+  'matchups.html',
+  'midgame.html',
+  'pregame.html'
+]);
+const PROTECTED_ROOT_FILES = new Set(['versions.json']);
+const PROTECTED_STATIC_DIRS = ['css', 'images', 'js', 'shared'];
 
 const IN_PROD = process.env.NODE_ENV === 'production';
+const CLIENT_ID = process.env.PATREON_CLIENT_ID;
+const CLIENT_SECRET = process.env.PATREON_CLIENT_SECRET;
+const REDIRECT_URI = process.env.PATREON_REDIRECT_URI;
+const FRONTEND_URL = process.env.FRONTEND_URL || `http://localhost:${PORT}`;
+const SCOPES = 'identity identity.memberships';
+const REQUIRED_TIER_ID = (process.env.PATREON_ALLOWED_TIER_ID || '').trim();
+const REQUIRED_TIER_NAME = (process.env.PATREON_ALLOWED_TIER_NAME || 'Mel Apprentice').trim();
 
-if (!process.env.PATREON_CLIENT_ID || !process.env.PATREON_CLIENT_SECRET || !process.env.PATREON_REDIRECT_URI) {
+if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
   console.warn('Warning: PATREON_CLIENT_ID, PATREON_CLIENT_SECRET and PATREON_REDIRECT_URI should be set in environment.');
 }
 
@@ -18,36 +39,169 @@ if (!process.env.PATREON_CLIENT_ID || !process.env.PATREON_CLIENT_SECRET || !pro
 app.use(session({
   secret: process.env.SESSION_SECRET || 'change-me',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: { secure: IN_PROD, httpOnly: true, sameSite: 'lax' }
 }));
-
-// Serve the static frontend from the repo root — registered after routes
-const webRoot = path.join(__dirname, '..');
-
-// Root handler: if authenticated serve the main site, otherwise show signin page
-app.get('/', (req, res) => {
-  if (req.session && req.session.user) {
-    return res.sendFile(path.join(webRoot, 'index.html'));
-  }
-  return res.sendFile(path.join(webRoot, 'signin.html'));
-});
-
-// Serve static assets (CSS, JS, images, other pages)
-app.use(express.static(webRoot));
-
-const CLIENT_ID = process.env.PATREON_CLIENT_ID;
-const CLIENT_SECRET = process.env.PATREON_CLIENT_SECRET;
-const REDIRECT_URI = process.env.PATREON_REDIRECT_URI;
-const FRONTEND_URL = process.env.FRONTEND_URL || `http://localhost:${PORT}`;
-const SCOPES = 'identity identity.memberships';
 
 function makeState() {
   return crypto.randomBytes(16).toString('hex');
 }
 
+function normalizeTierName(value) {
+  return String(value || '').trim().toLowerCase();
+}
+
+function hasSiteAccess(req) {
+  return Boolean(req.session && req.session.user && req.session.user.has_access);
+}
+
+function clearPatreonSession(req, keepReturnTo = false) {
+  if (!req.session) return;
+  delete req.session.oauthState;
+  delete req.session.tokens;
+  delete req.session.user;
+  if (!keepReturnTo) delete req.session.returnTo;
+}
+
+function rememberReturnTo(req) {
+  if (!req.session || req.method !== 'GET') return;
+
+  const requestPath = req.path || '/';
+  const originalUrl = req.originalUrl || requestPath;
+  const ext = path.extname(requestPath).toLowerCase();
+  const isHtmlRequest = requestPath === '/' || !ext || ext === '.html';
+
+  if (!isHtmlRequest) return;
+  if (originalUrl === '/signin' || originalUrl.startsWith('/auth/') || originalUrl.startsWith('/api/')) return;
+  if (originalUrl.startsWith('//')) return;
+
+  req.session.returnTo = originalUrl;
+}
+
+function consumeReturnTo(req) {
+  if (!req.session) return null;
+
+  const returnTo = req.session.returnTo;
+  delete req.session.returnTo;
+
+  if (typeof returnTo !== 'string') return null;
+  if (!returnTo.startsWith('/') || returnTo.startsWith('//')) return null;
+  return returnTo;
+}
+
+function buildSigninRedirect(reason) {
+  const params = new URLSearchParams();
+  if (reason) params.set('error', reason);
+  const query = params.toString();
+  return query ? `/signin?${query}` : '/signin';
+}
+
+function getEntitledTierRefs(memberResource) {
+  const tierData = memberResource
+    && memberResource.relationships
+    && memberResource.relationships.currently_entitled_tiers
+    && memberResource.relationships.currently_entitled_tiers.data;
+
+  return Array.isArray(tierData) ? tierData : [];
+}
+
+function extractPatreonAccess(identityJson) {
+  const included = Array.isArray(identityJson && identityJson.included) ? identityJson.included : [];
+  const tiersById = new Map();
+
+  included.forEach((resource) => {
+    if (!resource || resource.type !== 'tier' || !resource.id) return;
+    tiersById.set(resource.id, {
+      id: resource.id,
+      title: resource.attributes && resource.attributes.title ? resource.attributes.title : '',
+      amount_cents: resource.attributes && resource.attributes.amount_cents
+    });
+  });
+
+  const entitledTiers = [];
+  included.forEach((resource) => {
+    if (!resource || (resource.type !== 'member' && resource.type !== 'membership')) return;
+    getEntitledTierRefs(resource).forEach((tierRef) => {
+      if (!tierRef || !tierRef.id) return;
+      entitledTiers.push(tiersById.get(tierRef.id) || { id: tierRef.id, title: '' });
+    });
+  });
+
+  const uniqueEntitledTiers = Array.from(new Map(
+    entitledTiers.map((tier) => [tier.id || normalizeTierName(tier.title), tier])
+  ).values());
+
+  const matchedTier = uniqueEntitledTiers.find((tier) => {
+    if (REQUIRED_TIER_ID) return tier.id === REQUIRED_TIER_ID;
+    return normalizeTierName(tier.title) === normalizeTierName(REQUIRED_TIER_NAME);
+  }) || null;
+
+  return {
+    entitledTiers: uniqueEntitledTiers,
+    matchedTier,
+    hasAccess: Boolean(matchedTier)
+  };
+}
+
+function denyAccess(req, res, reason) {
+  rememberReturnTo(req);
+
+  const requestPath = req.path || '/';
+  const ext = path.extname(requestPath).toLowerCase();
+  const requestUrl = req.originalUrl || requestPath;
+  const isApiRequest = requestUrl.startsWith('/api/');
+
+  if (isApiRequest) {
+    return res.status(401).json({ authenticated: false, error: reason });
+  }
+
+  if (ext && ext !== '.html') {
+    return res.status(403).send('Forbidden');
+  }
+
+  return res.redirect(buildSigninRedirect(reason));
+}
+
+function requireSiteAccess(req, res, next) {
+  if (hasSiteAccess(req)) return next();
+  return denyAccess(req, res, 'sign_in_required');
+}
+
+function sendProtectedRootFile(req, res, next) {
+  const fileName = req.params.fileName;
+  if (!PROTECTED_PAGE_FILES.has(fileName) && !PROTECTED_ROOT_FILES.has(fileName)) {
+    return next();
+  }
+
+  if (!hasSiteAccess(req)) {
+    return denyAccess(req, res, 'sign_in_required');
+  }
+
+  return res.sendFile(path.join(webRoot, fileName));
+}
+
+app.get('/', (req, res) => {
+  if (hasSiteAccess(req)) {
+    return res.sendFile(HOME_FILE);
+  }
+  return res.redirect('/signin');
+});
+
+app.get('/signin', (req, res) => {
+  if (hasSiteAccess(req)) {
+    return res.redirect('/');
+  }
+  return res.sendFile(SIGNIN_FILE);
+});
+
 // Start OAuth flow
 app.get('/auth/patreon', (req, res) => {
+  if (typeof req.query.next === 'string' && req.query.next.startsWith('/') && !req.query.next.startsWith('//')) {
+    req.session.returnTo = req.query.next;
+  } else if (!req.session.returnTo) {
+    req.session.returnTo = '/';
+  }
+
   const state = makeState();
   req.session.oauthState = state;
   const params = new URLSearchParams({
@@ -69,6 +223,8 @@ app.get('/auth/patreon/callback', async (req, res) => {
   if (!code) return res.status(400).send('Missing code');
   if (!state || state !== req.session.oauthState) return res.status(400).send('Invalid state');
 
+  delete req.session.oauthState;
+
   try {
     const params = new URLSearchParams();
     params.append('grant_type', 'authorization_code');
@@ -86,55 +242,65 @@ app.get('/auth/patreon/callback', async (req, res) => {
 
     if (!tokenJson.access_token) {
       console.error('Token exchange error', tokenJson);
-      return res.status(500).json({ error: 'Token exchange failed', details: tokenJson });
+      clearPatreonSession(req, true);
+      return res.redirect(buildSigninRedirect('oauth_failed'));
     }
 
     // store tokens in session (for dev). In production persist encrypted.
     req.session.tokens = tokenJson;
 
-    // fetch identity with memberships
-    const identityRes = await fetch('https://www.patreon.com/api/oauth2/v2/identity?include=memberships', {
+    // fetch identity with entitled tiers so access can be matched to an exact Patreon tier
+    const identityParams = new URLSearchParams({
+      include: 'memberships.currently_entitled_tiers',
+      'fields[member]': 'patron_status,is_free_trial,is_gifted',
+      'fields[tier]': 'title,amount_cents'
+    });
+
+    const identityRes = await fetch(`https://www.patreon.com/api/oauth2/v2/identity?${identityParams.toString()}`, {
       headers: { Authorization: `Bearer ${tokenJson.access_token}` }
     });
     const identityJson = await identityRes.json();
 
-    // determine patron status from included membership resources
-    let isPatron = false;
-    if (Array.isArray(identityJson.included)) {
-      for (const inc of identityJson.included) {
-        const type = inc.type || '';
-        const attrs = inc.attributes || {};
-        if (type === 'member' || type === 'membership') {
-          if (attrs.patron_status === 'active_patron') {
-            isPatron = true;
-            break;
-          }
-          if (Array.isArray(attrs.currently_entitled_tiers) && attrs.currently_entitled_tiers.length > 0) {
-            isPatron = true;
-            break;
-          }
-        }
-      }
+    const access = extractPatreonAccess(identityJson);
+
+    if (!access.hasAccess) {
+      const entitledTierSummary = access.entitledTiers.map((tier) => tier.title || tier.id).filter(Boolean);
+      console.warn('Patreon login denied: required tier missing.', {
+        requiredTierId: REQUIRED_TIER_ID || null,
+        requiredTierName: REQUIRED_TIER_NAME,
+        entitledTiers: entitledTierSummary
+      });
+      clearPatreonSession(req, true);
+      return res.redirect(buildSigninRedirect('tier_required'));
     }
 
     req.session.user = {
       id: identityJson.data && identityJson.data.id,
       attributes: identityJson.data && identityJson.data.attributes,
-      is_patron: isPatron,
+      entitled_tiers: access.entitledTiers,
+      matched_tier: access.matchedTier,
+      has_access: true,
       raw: identityJson
     };
 
-    // redirect back to frontend (if provided) or root
-    const dest = FRONTEND_URL || '/';
+    // redirect back to the protected page the visitor originally requested, or home
+    const dest = consumeReturnTo(req) || FRONTEND_URL || '/';
     res.redirect(dest);
   } catch (err) {
     console.error(err);
-    res.status(500).send('OAuth callback failed');
+    clearPatreonSession(req, true);
+    res.redirect(buildSigninRedirect('oauth_failed'));
   }
 });
 
+PROTECTED_STATIC_DIRS.forEach((dirName) => {
+  app.use(`/${dirName}`, requireSiteAccess, express.static(path.join(webRoot, dirName)));
+});
+
+app.get('/:fileName', sendProtectedRootFile);
+
 // Refresh endpoint
-app.post('/auth/patreon/refresh', express.json(), async (req, res) => {
+app.post('/auth/patreon/refresh', requireSiteAccess, express.json(), async (req, res) => {
   const refreshToken = req.session.tokens && req.session.tokens.refresh_token;
   if (!refreshToken) return res.status(400).json({ error: 'no refresh token' });
 
@@ -160,8 +326,7 @@ app.post('/auth/patreon/refresh', express.json(), async (req, res) => {
 });
 
 // API for frontend to check current user
-app.get('/api/me', (req, res) => {
-  if (!req.session.user) return res.status(401).json({ authenticated: false });
+app.get('/api/me', requireSiteAccess, (req, res) => {
   res.json({ authenticated: true, user: req.session.user });
 });
 
