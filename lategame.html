@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Late Game - The Ultimate Mel Compendium</title>
-  <meta name="description" content="Mel late game strategy including overview, teamfighting, and late game warding.">
+  <meta name="description" content="Mel late game strategy including overview, teamfighting, and priorities.">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -67,13 +67,12 @@
       <!-- HERO -->
       <div class="page-hero">
         <h2>Late Game</h2>
-        <p class="hero-desc">Towers have fallen, death timers are punishing, and one mistake can end it all. Here's how to close out games as Mel.</p>
+        <p class="hero-desc">Here's how to close out games as Mel. This phase starts around the 30-minute mark.</p>
       </div>
 
       <!-- IN-PAGE SUBNAV -->
       <nav class="page-subnav">
         <div class="subnav-item active" onclick="subnavScroll(this,'overview-sec')">Late Game Overview</div>
-        <div class="subnav-item" onclick="subnavScroll(this,'warding-sec')">Late Game Warding</div>
       </nav>
 
       <div class="page-body">
@@ -91,8 +90,28 @@
           <!-- Intro prose card -->
           <div class="card" style="margin-bottom: 16px;">
             <div class="card-title">The State of the Game</div>
-            <p>At this point in the game, most towers have fallen and the game will be over in 1–2 teamfights. Sidelaning is essentially over. Your biggest concern — especially in soloqueue — is that your ADC will randomly run into midlane and immediately get killed. <strong>This happens ALL THE TIME.</strong> Do not leave your team alone. Only defend or catch sidewaves when absolutely necessary.</p>
-            <p style="margin-top: 10px;">You should have 4–5 items at this point. Getting more gold from farming is great, but protecting your team from dying is the highest priority. One mistake can lose the game, so we need to minimize our own while capitalizing on the enemy's.</p>
+            <p>At this point in the game, most towers have fallen and the game will be over in 1–2 teamfights. Sidelaning is essentially over. Your biggest concern — especially in soloqueue — is that everyone will just be sittinga around midlane and trying to kill you.<strong> This happens ALL THE TIME.</strong> Do not leave your team alone. And especially do not BE alone. We need to stay with our teamates from this point onward. Only defend or catch sidewaves when absolutely necessary.</p>
+            <p style="margin-top: 10px;">You should have 4–5 items at this point. Getting more gold from farming is great, but protecting your team from dying is the highest priority. One mistake can lose the game, so we need to minimize our own while capitalizing on the enemy's. The same rules as midgame apply in this section, except every death can be game ending. As always, I have one main piece of advice. DON'T DIE. Seriously. Just don't die. That is all you need to do. An extra 200 gold is not going to win the game at this point, but not dieing probably will.</p>
+          </div>
+
+          <!-- Game duration context -->
+          <div class="card" style="margin-bottom: 16px; border-left: 4px solid var(--brand); background: rgba(80, 180, 100, 0.12);">
+            <div class="card-title">Game Length by Elo: Why It Changes Late Game Priorities</div>
+            <div style="display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center;">
+              <div style="flex-shrink: 0;">
+                <img
+                  src="images/gameDuration.png"
+                  alt="Game duration by rank"
+                  style="width: auto; max-width: 100%; max-height: 460px; display: block; border: 1px solid rgba(255,255,255,0.12);"
+                >
+              </div>
+              <div style="font-size: 1.85rem;">
+                <p>The image to the left is a 3-month-old snapshot of game duration by rank. These numbers are basically the exact same today (and I did steal it from a random Reddit post). The important thing to note: <strong>games last longer the more you climb.</strong></p>
+                <p style="margin-top: 10px;">Why does this matter? Well, ADCs tend to outscale mages, and <strong>longer games give them more time to scale.</strong> But Evan... doesn't this mean mages are <em>bad</em> in low elo? <strong>WRONG.</strong></p>
+                <p style="margin-top: 10px;">While it is true that ADCs can outscale mages, <strong>mages are a lot safer than ADCs.</strong> In a scrappy environment (which lower elo is <em>certainly</em> scrappier), mages have a much easier time surviving. They simply have more tools — and better defensive items — to keep themselves safe.</p>
+                <p style="margin-top: 10px; color: rgba(0,0,0,0.45); font-style: italic;">I just wanted to share this chart with you. It doesn't really change the way you play — I just find it interesting.</p>
+              </div>
+            </div>
           </div>
 
           <!-- 2-col: Teamfighting + Priority -->
@@ -102,7 +121,7 @@
               <div class="card-title">Teamfighting — Same Rules, More Extreme</div>
               <p>Teamfighting in the late game is the same as mid game, but with bigger stakes. Tanky champions will be nearly unkillable while mages, assassins, and ADCs deal <em>crazy</em> amounts of damage to each other.</p>
               <div class="info-box" style="margin-top: 12px;">
-                <strong>Core rule:</strong> Stand far back, use spells from range, and only target squishy enemies who overextend. Let your frontline engage and absorb damage — do not go in first.
+                <strong>Core rule:</strong> Stand far back, use spells from range, and only target squishy enemies who overextend. Let your frontline engage and absorb damage. NEVER go in first (including to any bushes, objectives, or the jungle).
               </div>
             </div>
 
@@ -114,117 +133,13 @@
 
           </div>
 
-          <!-- When to fight card -->
-          <div class="card" style="border-left: 4px solid var(--brand); margin-bottom: 16px;">
-            <div class="card-title">Do I Even Need to Fight?</div>
-            <p>The first rule of late game: <strong>ask yourself if you should be fighting at all.</strong> It is too often that games are thrown in an objective fight that is clearly not winnable. If the enemy Ezreal has a full 2-item powerspike and nobody on your team can kill him, you will lose the fight unless he plays horribly wrong.</p>
-            <p style="margin-top: 10px;"><strong>Do not be afraid to give objectives</strong> when the conditions are clearly unplayable for your team. A free dragon given up is far better than a fight that wipes your entire team and hands them a Baron and the game.</p>
-          </div>
-
           <!-- Never do list -->
           <div class="section-sub" style="margin-top: 24px;">Things to NEVER do in late game</div>
           <div class="never-item"><span class="never-x">✕</span><span>Sidelane alone when all 5 enemies are unaccounted for on the minimap</span></div>
           <div class="never-item"><span class="never-x">✕</span><span>Force a fight at Baron/Dragon when you are clearly outscaled or down in resources</span></div>
           <div class="never-item"><span class="never-x">✕</span><span>Waste your W early in a fight — save it for the most dangerous incoming ability</span></div>
-          <div class="never-item"><span class="never-x">✕</span><span>Leave your ADC alone in base or rotating — they will die instantly</span></div>
-          <div class="never-item"><span class="never-x">✕</span><span>Throw your E into a cluster of enemies without confirming your W is off cooldown</span></div>
-        </div>
-
-
-        <!-- ══════════════════════════════════════════
-             SECTION 2 — LATE GAME WARDING
-        ═══════════════════════════════════════════ -->
-        <div id="warding-sec" style="scroll-margin-top: 130px;">
-          <div class="section-head">
-            <h3>Late Game Warding</h3>
-            <div class="section-rule"></div>
-          </div>
-          <div class="section-sub">Farsight Alteration — vision control that wins games</div>
-
-          <!-- Farsight intro -->
-          <div class="card" style="margin-bottom: 16px;">
-            <div class="card-title">Swap to Farsight Alteration</div>
-            <p>By the late game, your Warding Totem should be swapped for the <strong>Farsight Alteration</strong> (blue trinket). This is your primary vision tool for the rest of the game. Keep it off cooldown heading into every major objective window.</p>
-          </div>
-
-          <!-- Video + text side by side -->
-          <div style="
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 16px;
-            align-items: stretch;
-          ">
-
-            <!-- Video block -->
-            <div style="
-              background: var(--navy);
-              border: 1px solid rgba(255,255,255,0.1);
-              border-top: 3px solid var(--brand);
-              overflow: hidden;
-              display: flex;
-              flex-direction: column;
-            ">
-              <div style="
-                padding: 14px 18px 10px;
-                font-family: 'Playfair Display', serif;
-                font-size: 0.85rem;
-                font-weight: 700;
-                color: var(--white);
-                letter-spacing: 0.5px;
-                border-bottom: 1px solid rgba(255,255,255,0.08);
-                display: flex;
-                align-items: center;
-                gap: 10px;
-              ">
-                <span style="color: var(--brand); font-size: 1rem;">▶</span>
-                Late Game Warding Video
-              </div>
-              <!-- VIDEO — replace src with your actual video file or YouTube embed URL -->
-              <div style="position: relative; width: 100%; aspect-ratio: 16/9; background: #000; flex: 1;">
-                <video
-                  id="warding-video"
-                  controls
-                  style="width:100%; height:100%; object-fit:cover; display:block;"
-                >
-                  <!-- Replace the src below with your actual video path, e.g. videos/lategame-warding.mp4 -->
-                  <source src="videos/lategame-warding.mp4" type="video/mp4">
-                </video>
-                <!-- Placeholder overlay shown when video has no valid source -->
-                <div id="video-placeholder" style="
-                  position: absolute; inset: 0;
-                  background: var(--navy-light);
-                  display: flex;
-                  flex-direction: column;
-                  align-items: center;
-                  justify-content: center;
-                  gap: 10px;
-                ">
-                  <div style="font-size: 2.5rem; color: var(--brand); opacity: 0.7;">📹</div>
-                  <div style="font-size: 0.82rem; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase;">Video Coming Soon</div>
-                  <div style="font-size: 0.72rem; color: rgba(255,255,255,0.2);">Replace src in lategame.html</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Warding rules text block -->
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-
-              <div class="ward-card">
-                <div class="ward-badge">Objective Timing</div>
-                <div class="ward-title">Farsight Before Every Objective</div>
-                <p>Always have your blue trinket charged and ready before Baron, Elder Dragon, or Dragon spawns. Use it to clear bushes where enemies might be hiding or to give your jungler vision to smite-steal a low-HP objective.</p>
-              </div>
-
-              <div class="ward-card">
-                <div class="ward-badge">Between Objectives</div>
-                <div class="ward-title">Using Farsight When No Objective Is Up</div>
-                <p>If no major objective spawns for over 2 minutes and your trinket is off cooldown, use it similarly to a yellow ward — place it in any area where the vision might save a teammate from a gank or reveal an overextended enemy you can pick.</p>
-              </div>
-
-            </div>
-          </div>
-
+          <div class="never-item"><span class="never-x">✕</span><span>Leave your team alone — they will die instantly</span></div>
+          <div class="never-item"><span class="never-x">✕</span><span>Use your W and E for damage without confirming you are safe</span></div>
         </div>
 
       </div><!-- /page-body -->
@@ -241,13 +156,5 @@
 </div>
 
 <script src="js/script.js"></script>
-<script>
-  // Hide placeholder once video successfully loads
-  const vid = document.getElementById('warding-video');
-  const placeholder = document.getElementById('video-placeholder');
-  if (vid && placeholder) {
-    vid.addEventListener('canplay', () => { placeholder.style.display = 'none'; });
-  }
-</script>
 </body>
 </html>

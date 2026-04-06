@@ -279,8 +279,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function transformMatchupCards() {
-  const idToImage = {
-    aphelios:'Aphelios', ashe:'Ashe', 'aurelion-sol':'AurelionSol', brand:'Brand', caitlyn:'Caitlyn', corki:'Corki', draven:'Draven', ezreal:'Ezreal', heimerdinger:'Heimerdinger', hwei:'Hwei', jhin:'Jhin', jinx:'Jinx', 'kaisa':'KaiSa', kalista:'Kalista', karma:'Karma', karthus:'Karthus', 'kogmaw':'KogMaw', lucian:'Lucian', lux:'Lux', mel:'Mel', 'miss-fortune':'MissFortune', morgana:'Morgana', nilah:'Nilah', samira:'Samira', senna:'Senna', seraphine:'Seraphine', sivir:'Sivir', smolder:'Smolder', tristana:'Tristana', twitch:'Twitch', varus:'Varus', vayne:'Vayne', xayah:'Xayah', yunara:'Yunara', zeri:'Zeri', ziggs:'Ziggs', zyra:'Zyra'
+  const idToImageFile = {
+    aphelios:'Aphelios.png', ashe:'Ashe.png', 'aurelion-sol':'AurelionSol.png', brand:'Brand.png', caitlyn:'Caitlyn.png', corki:'Corki.png', draven:'Draven.png', ezreal:'Ezreal.png', heimerdinger:'Heimerdinger.png', hwei:'Hwei.jpg', jhin:'Jhin.png', jinx:'Jinx.png', 'kaisa':'KaiSa.png', kalista:'Kalista.png', karma:'Karma.png', karthus:'Karthus.png', 'kogmaw':'KogMaw.png', lucian:'Lucian.png', lux:'Lux.png', mel:'Mel.jpg', 'miss-fortune':'MissFortune.png', morgana:'Morgana.png', nilah:'Nilah.png', samira:'Samira.png', senna:'Senna.png', syndra:'Syndra.png', seraphine:'Seraphine.png', sivir:'Sivir.png', smolder:'Smolder.jpg', tristana:'Tristana.png', twitch:'Twitch.png', varus:'Varus.png', vayne:'Vayne.png', xayah:'Xayah.png', yunara:'Yunara.jpg', zeri:'Zeri.png', ziggs:'Ziggs.png', zyra:'Zyra.png'
   };
   const wikiById = {
     aphelios:'Aphelios', ashe:'Ashe', 'aurelion-sol':'Aurelion_Sol', brand:'Brand', caitlyn:'Caitlyn', corki:'Corki', draven:'Draven', ezreal:'Ezreal', heimerdinger:'Heimerdinger', hwei:'Hwei', jhin:'Jhin', jinx:'Jinx', kaisa:"Kai'Sa", kalista:'Kalista', karma:'Karma', karthus:'Karthus', kogmaw:"Kog'Maw", lucian:'Lucian', lux:'Lux', mel:'Mel', 'miss-fortune':'Miss_Fortune', morgana:'Morgana', nilah:'Nilah', samira:'Samira', senna:'Senna', syndra:'Syndra', seraphine:'Seraphine', sivir:'Sivir', smolder:'Smolder', tristana:'Tristana', twitch:'Twitch', varus:'Varus', vayne:'Vayne', xayah:'Xayah', yunara:'Yunara', zeri:'Zeri', ziggs:'Ziggs', zyra:'Zyra'
@@ -333,8 +333,9 @@ function transformMatchupCards() {
     const existingDetails = Array.from(card.children).filter(el => !el.classList.contains('card-title'));
     const strategyHtml = existingDetails.map(el => el.outerHTML).join('');
 
-    const imageKey = idToImage[id] || name.replace(/[^a-zA-Z]/g,'');
-    const imagePath = `images/champions/${imageKey}.png`;
+    const fallbackImage = `${name.replace(/[^a-zA-Z]/g,'')}.png`;
+    const imageFile = idToImageFile[id] || fallbackImage;
+    const imagePath = `images/champions/${imageFile}`;
     const wikiSlug = wikiById[id];
     const wikiUrl = wikiSlug ? `${wikiBase}${wikiSlug}` : '#';
     const tierClass = tierMap[id] || 'even';
