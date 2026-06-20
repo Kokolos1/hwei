@@ -3,14 +3,390 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Matchups - The Ultimate Mel Compendium</title>
-  <meta name="description" content="Complete Mel matchup guide and tier list for every relevant mid lane champion.">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+  <title>Matchups - The Ultimate Hwei Compendium</title>
+  <meta name="description" content="Hwei bot/APC matchup guide for marksmen, mage lanes, engage supports, poke supports, and scaling bot lanes.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .matchup-note {
+      background:
+        radial-gradient(circle at 0 0,rgba(201,161,74,0.13),transparent 17rem),
+        linear-gradient(180deg,rgba(35,27,48,0.96),rgba(18,14,25,0.98));
+      border:1px solid rgba(226,198,111,0.16);
+      border-radius:8px;
+      color:rgba(255,255,255,0.74);
+      line-height:1.65;
+      padding:18px 20px;
+      margin:0 0 22px;
+    }
+    #tierlist-sec,
+    #matchup-toc,
+    #matchup-cards-sec {
+      scroll-margin-top:190px !important;
+    }
+    .matchup-note strong { color:var(--gold-light); }
+    #tierlist-sec .tier-list { display:grid; gap:12px; }
+    #tierlist-sec .tier-row {
+      display:grid;
+      grid-template-columns:minmax(170px,170px) minmax(0,1fr);
+      align-items:stretch;
+      gap:0;
+      margin:0;
+      overflow:hidden;
+      border:1px solid rgba(226,198,111,0.16);
+      border-radius:8px;
+      background:linear-gradient(180deg,#211a2b 0%,#15111d 100%);
+      box-shadow:0 16px 32px rgba(10,8,15,0.22);
+    }
+    #tierlist-sec .tier-label {
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      gap:4px;
+      width:auto;
+      min-width:0;
+      max-width:none;
+      padding:16px;
+      color:#15111d;
+      font-weight:900;
+      text-align:center;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      background:linear-gradient(180deg,var(--gold-light),var(--gold));
+    }
+    #tierlist-sec .tier-label span {
+      display:block;
+      color:rgba(21,17,29,.72);
+      font-size:.68rem;
+      letter-spacing:.05em;
+    }
+    #tierlist-sec .tier-row.easy .tier-label { background:linear-gradient(180deg,#86d8d8,#53a9b9); }
+    #tierlist-sec .tier-row.skill .tier-label { background:linear-gradient(180deg,#f1db86,#c9a14a); }
+    #tierlist-sec .tier-row.hard .tier-label { background:linear-gradient(180deg,#d9815f,#a84935); color:#fff; }
+    #tierlist-sec .tier-row.brutal .tier-label { background:linear-gradient(180deg,#bf5571,#7f2d42); color:#fff; }
+    #tierlist-sec .tier-champs {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      align-content:center;
+      gap:9px;
+      min-width:0;
+      padding:14px 16px;
+      background:transparent;
+    }
+    #tierlist-sec a.tier-champ,
+    #matchup-toc .toc-link {
+      display:block;
+      border:0;
+      background:transparent;
+      padding:0;
+      border-radius:0;
+      text-decoration:none;
+      color:inherit;
+      font:inherit;
+      letter-spacing:0;
+      text-align:left;
+      transition:none;
+    }
+    #tierlist-sec a.tier-champ:hover,
+    #tierlist-sec a.tier-champ:focus,
+    #matchup-toc a.toc-link:hover,
+    #matchup-toc a.toc-link:focus {
+      background:transparent;
+      border-color:transparent;
+      color:inherit;
+      transform:none;
+    }
+    #tierlist-sec .tier-chip {
+      display:flex;
+      align-items:center;
+      gap:9px;
+      min-height:42px;
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:999px;
+      background:rgba(255,255,255,0.045);
+      color:rgba(255,255,255,0.86);
+      padding:6px 12px 6px 7px;
+      white-space:nowrap;
+      font-weight:800;
+      font-size:.86rem;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+    #tierlist-sec .tier-chip:hover {
+      transform:translateY(-1px);
+      border-color:rgba(226,198,111,0.35);
+      background:rgba(226,198,111,0.1);
+    }
+    #tierlist-sec .tier-chip img,
+    .matchup-card-icon {
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      object-fit:cover;
+      border:1px solid rgba(226,198,111,0.28);
+    }
+    #matchup-toc .toc-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+      gap:12px;
+    }
+    #matchup-toc .toc-chip {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-height:58px;
+      height:100%;
+      border-radius:8px;
+      border:1px solid rgba(226,198,111,0.18);
+      background:
+        radial-gradient(circle at 100% 0,rgba(226,198,111,0.09),transparent 8rem),
+        linear-gradient(180deg,rgba(35,27,48,0.98),rgba(18,14,25,0.98));
+      box-shadow:0 12px 24px rgba(10,8,15,0.18);
+      color:rgba(255,255,255,0.9);
+      padding:10px 12px;
+      font-family:'Inter','Source Serif 4',serif;
+      font-size:.9rem;
+      font-weight:900;
+      letter-spacing:.01em;
+      line-height:1.15;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;
+    }
+    #matchup-toc .toc-chip:hover {
+      transform:translateY(-2px);
+      border-color:rgba(226,198,111,0.42);
+      background:
+        radial-gradient(circle at 100% 0,rgba(226,198,111,0.16),transparent 8rem),
+        linear-gradient(180deg,rgba(45,34,62,0.98),rgba(21,17,29,0.98));
+      box-shadow:0 16px 32px rgba(10,8,15,0.24);
+    }
+    #matchup-toc .toc-chip img {
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      object-fit:cover;
+      border:1px solid rgba(226,198,111,0.32);
+      box-shadow:0 0 0 2px rgba(255,255,255,0.04);
+    }
+    .matchup-detail-grid { display:grid; gap:14px; }
+    .matchup-card-controls {
+      display:grid;
+      grid-template-columns:minmax(240px,1fr) minmax(220px,280px);
+      gap:12px;
+      align-items:end;
+      margin:0 0 16px;
+      padding:14px;
+      border:1px solid rgba(226,198,111,0.16);
+      border-radius:8px;
+      background:
+        radial-gradient(circle at 100% 0,rgba(226,198,111,0.08),transparent 11rem),
+        linear-gradient(180deg,rgba(35,27,48,0.96),rgba(18,14,25,0.98));
+    }
+    .matchup-control-field {
+      display:grid;
+      gap:7px;
+    }
+    .matchup-control-field label {
+      color:var(--gold-light);
+      font-size:.68rem;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+    .matchup-search-input,
+    .matchup-sort-select {
+      width:100%;
+      min-height:42px;
+      border:1px solid rgba(226,198,111,0.22);
+      border-radius:6px;
+      background:rgba(255,255,255,0.055);
+      color:rgba(255,255,255,0.92);
+      font-family:'Inter','Source Serif 4',serif;
+      font-size:.92rem;
+      font-weight:700;
+      padding:0 12px;
+      outline:none;
+      transition:border-color .18s ease,box-shadow .18s ease,background .18s ease;
+    }
+    .matchup-search-input::placeholder {
+      color:rgba(255,255,255,0.42);
+      font-weight:600;
+    }
+    .matchup-search-input:focus,
+    .matchup-sort-select:focus {
+      border-color:rgba(226,198,111,0.54);
+      background:rgba(255,255,255,0.075);
+      box-shadow:0 0 0 3px rgba(226,198,111,0.12);
+    }
+    .matchup-sort-select option {
+      color:#15111d;
+      background:#f7f0df;
+    }
+    .matchup-card-empty {
+      display:none;
+      border:1px dashed rgba(226,198,111,0.28);
+      border-radius:8px;
+      background:rgba(226,198,111,0.06);
+      color:rgba(255,255,255,0.72);
+      padding:20px;
+      text-align:center;
+      font-weight:700;
+    }
+    .matchup-card-empty.visible { display:block; }
+    .matchup-detail-card {
+      scroll-margin-top:150px;
+      display:grid;
+      gap:16px;
+      background:
+        radial-gradient(circle at 100% 0,rgba(201,161,74,0.09),transparent 18rem),
+        linear-gradient(180deg,#211a2b 0%,#15111d 100%);
+      border:1px solid rgba(226,198,111,0.16);
+      border-left:4px solid var(--gold);
+      border-radius:8px;
+      padding:18px;
+      box-shadow:0 16px 34px rgba(10,8,15,0.24);
+    }
+    .matchup-detail-card.easy { border-left-color:var(--serenity); }
+    .matchup-detail-card.medium { border-left-color:var(--gold); }
+    .matchup-detail-card.hard { border-left-color:var(--disaster); }
+    .matchup-detail-card.brutal { border-left-color:#bf5571; }
+    .matchup-card-head {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    .matchup-title-group {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:220px;
+    }
+    .matchup-card-icon {
+      width:46px;
+      height:46px;
+      border-radius:8px;
+    }
+    .matchup-card-icon-link {
+      display:inline-flex;
+      border-radius:8px;
+      transition:transform .18s ease,filter .18s ease;
+    }
+    .matchup-card-icon-link:hover,
+    .matchup-card-icon-link:focus-visible {
+      transform:translateY(-1px);
+      filter:brightness(1.08);
+      outline:2px solid rgba(226,198,111,0.44);
+      outline-offset:3px;
+    }
+    .matchup-title-group h4 {
+      margin:0;
+      font-family:'Playfair Display',serif;
+      font-size:1.18rem;
+      color:var(--white);
+    }
+    .difficulty-pill {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:3px;
+      min-width:64px;
+      text-decoration:none;
+      text-transform:uppercase;
+      letter-spacing:0;
+      border-radius:999px;
+      padding:7px 12px;
+      font-weight:800;
+      color:#15111d;
+      background:linear-gradient(180deg,var(--gold-light),var(--gold));
+      cursor:pointer;
+      transition:transform .18s ease,filter .18s ease,box-shadow .18s ease;
+    }
+    .difficulty-score {
+      font-family:'Inter','Source Serif 4',serif;
+      font-size:1rem;
+      font-weight:900;
+      line-height:1;
+    }
+    .difficulty-max {
+      font-size:.68rem;
+      font-weight:900;
+      line-height:1;
+      opacity:.72;
+    }
+    .difficulty-pill:hover,
+    .difficulty-pill:focus-visible {
+      transform:translateY(-1px);
+      filter:brightness(1.06);
+      box-shadow:0 0 0 3px rgba(226,198,111,0.16);
+      outline:none;
+    }
+    .difficulty-pill.easy { background:linear-gradient(180deg,#86d8d8,#53a9b9); }
+    .difficulty-pill.hard { background:linear-gradient(180deg,#d9815f,#a84935); color:#fff; }
+    .difficulty-pill.brutal { background:linear-gradient(180deg,#bf5571,#7f2d42); color:#fff; }
+    .matchup-plan {
+      color:rgba(255,255,255,0.74);
+      line-height:1.66;
+      font-size:.95rem;
+    }
+    .matchup-recommendations {
+      display:grid;
+      grid-template-columns:minmax(190px,0.8fr) minmax(260px,1.2fr);
+      gap:12px;
+      align-items:stretch;
+    }
+    .matchup-rec-box {
+      border:1px solid rgba(226,198,111,0.14);
+      border-radius:8px;
+      background:rgba(255,255,255,0.04);
+      padding:12px;
+    }
+    .matchup-rec-title {
+      color:var(--gold-light);
+      font-size:.68rem;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+    }
+    .matchup-rec-icons {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+    .matchup-rec-icons img {
+      width:38px;
+      height:38px;
+      border-radius:7px;
+      border:1px solid rgba(226,198,111,0.24);
+      background:#15111d;
+      object-fit:cover;
+      box-shadow:0 8px 16px rgba(0,0,0,0.18);
+    }
+    .matchup-rec-box.runes .matchup-rec-icons img {
+      border-radius:50%;
+    }
+    .matchup-rec-note {
+      display:block;
+      margin-top:8px;
+      color:rgba(255,255,255,0.62);
+      font-size:.78rem;
+      line-height:1.35;
+      font-weight:700;
+    }
+    @media (max-width:760px) {
+      #tierlist-sec .tier-row { grid-template-columns:1fr; }
+      .matchup-card-controls { grid-template-columns:1fr; }
+      #tierlist-sec .tier-label { min-height:64px; }
+      .matchup-card-head { align-items:flex-start; }
+      .matchup-recommendations { grid-template-columns:1fr; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- LANGUAGE MODAL -->
 <div id="lang-overlay">
   <div class="lang-modal">
     <div class="lang-eyebrow">evandabank Presents</div>
@@ -34,14 +410,12 @@
   </div>
 </div>
 
-<!-- TOP NAV -->
 <header class="topnav-header" id="topnav">
-  <!-- Brand bar -->
   <div class="topnav-brand-bar">
     <div class="topnav-brand-left">
       <div>
         <div class="topnav-brand-eyebrow">Ultimate Compendium</div>
-        <div class="topnav-brand-title">The Ultimate Mel Compendium</div>
+        <div class="topnav-brand-title">The Ultimate Hwei Compendium</div>
       </div>
       <div class="topnav-divider"></div>
       <div class="topnav-author">by <strong>evandabank</strong></div>
@@ -50,8 +424,6 @@
       <button class="lang-switch-btn" onclick="openLang()">🌐 <span id="lang-label">English</span></button>
     </div>
   </div>
-
-  <!-- Nav links -->
   <nav class="topnav-nav">
     <a href="index.html" class="nav-item">Intro / Home</a>
     <a href="abilities.html" class="nav-item">Abilities</a>
@@ -59,208 +431,1211 @@
     <a href="laning.html" class="nav-item">Laning / Early Game</a>
     <a href="midgame.html" class="nav-item">Mid Game</a>
     <a href="lategame.html" class="nav-item">Late Game</a>
-    <a href="matchups.html" class="nav-item">Matchups</a>
+    <a href="matchups.html" class="nav-item active">Matchups</a>
   </nav>
 </header>
 
 <div class="layout">
   <main class="main">
-
     <div class="page active" id="page-matchups">
       <div class="page-hero">
         <div class="hero-eyebrow">Matchups</div>
-        <h2>Matchups</h2>
-        <p class="hero-desc">Full matchup guide and tier list for every relevant champion Mel might face in bot lane.</p>
+        <h2>Hwei Bot Matchups</h2>
+        <p class="hero-desc">Hwei bot wins by controlling two enemies at once. The hard lanes force his E early, outrange his wave control, or threaten all-in before his support can stabilize the lane.</p>
       </div>
+
+      <div class="page-subnav">
+        <div class="subnav-item active" onclick="subnavScroll(this,'tierlist-sec')">Tier List</div>
+        <div class="subnav-item" onclick="subnavScroll(this,'matchup-toc')">Champion Index</div>
+        <div class="subnav-item" onclick="subnavScroll(this,'matchup-cards-sec')">Matchup Cards</div>
+      </div>
+
       <div class="page-body">
-
-        <div id="tierlist-sec" style="margin-bottom:36px;scroll-margin-top:130px">
+        <div id="tierlist-sec" style="margin-bottom:36px;scroll-margin-top:150px">
           <div class="section-head"><h3>Tier List</h3><div class="section-rule"></div></div>
-          <div class="section-sub">Botlane matchup tiers for Mel</div>
-
-          <div class="tier-row">
-            <div class="tier-label heavily-mel-favored">Heavily Mel Favored</div>
-            <div class="tier-champs">
-              <a href="#aphelios" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Aphelios.png" alt="Aphelios">Aphelios</a>
-              <a href="#draven" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Draven.png" alt="Draven">Draven</a>
-              <a href="#jinx" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Jinx.png" alt="Jinx">Jinx</a>
-              <a href="#nilah" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Nilah.png" alt="Nilah">Nilah</a>
-              <a href="#varus" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Varus.png" alt="Varus">Varus</a>
-              <a href="#twitch" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Twitch.png" alt="Twitch">Twitch</a>
-              <a href="#seraphine" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Seraphine.png" alt="Seraphine">Seraphine</a>
+          <div class="section-sub">Bot-lane Hwei matchup ranking by lane pressure, all-in risk, and scaling control</div>
+          <div class="matchup-note"><strong>Read the tier list through the support matchup.</strong> Hwei APC is strongest when he controls wave space and fights after allied crowd control. Engage supports can make an easy carry matchup dangerous, while enchanters can make harder poke lanes playable.</div>
+          <div class="tier-list">
+            <div class="tier-row easy">
+              <div class="tier-label">Heavily Hwei Favored <span>Best lanes</span></div>
+              <div class="tier-champs">
+                <a class="tier-champ" href="#matchup-aphelios"><span class="tier-chip"><img src="images/champions/Aphelios.png" alt="Aphelios">Aphelios</span></a>
+                <a class="tier-champ" href="#matchup-draven"><span class="tier-chip"><img src="images/champions/Draven.png" alt="Draven">Draven</span></a>
+                <a class="tier-champ" href="#matchup-jinx"><span class="tier-chip"><img src="images/champions/Jinx.png" alt="Jinx">Jinx</span></a>
+                <a class="tier-champ" href="#matchup-nilah"><span class="tier-chip"><img src="images/champions/Nilah.png" alt="Nilah">Nilah</span></a>
+                <a class="tier-champ" href="#matchup-varus"><span class="tier-chip"><img src="images/champions/Varus.png" alt="Varus">Varus</span></a>
+                <a class="tier-champ" href="#matchup-twitch"><span class="tier-chip"><img src="images/champions/Twitch.png" alt="Twitch">Twitch</span></a>
+                <a class="tier-champ" href="#matchup-seraphine"><span class="tier-chip"><img src="images/champions/Seraphine.png" alt="Seraphine">Seraphine</span></a>
+              </div>
             </div>
-          </div>
-
-          <div class="tier-row">
-            <div class="tier-label mel-favored">Mel Favored</div>
-            <div class="tier-champs">
-              <a href="#ashe" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Ashe.png" alt="Ashe">Ashe</a>
-              <a href="#caitlyn" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Caitlyn.png" alt="Caitlyn">Caitlyn</a>
-              <a href="#corki" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Corki.png" alt="Corki">Corki</a>
-              <a href="#kalista" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Kalista.png" alt="Kalista">Kalista</a>
-              <a href="#ziggs" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Ziggs.png" alt="Ziggs">Ziggs</a>
-              <a href="#miss-fortune" class="tier-champ"><img class="tier-champ-icon" src="images/champions/MissFortune.png" alt="Miss Fortune">Miss Fortune</a>
-              <a href="#senna" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Senna.png" alt="Senna">Senna</a>
-              <a href="#samira" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Samira.png" alt="Samira">Samira</a>
-              <a href="#hwei" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Hwei.jpg" alt="Hwei">Hwei</a>
-              <a href="#xayah" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Xayah.png" alt="Xayah">Xayah</a>
-              <a href="#aurelion-sol" class="tier-champ"><img class="tier-champ-icon" src="images/champions/AurelionSol.png" alt="Aurelion Sol">Aurelion Sol</a>
-              <a href="#brand" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Brand.png" alt="Brand">Brand</a>
-              <a href="#heimerdinger" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Heimerdinger.png" alt="Heimerdinger">Heimerdinger</a>
-              <a href="#karma" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Karma.png" alt="Karma">Karma</a>
-              <a href="#kogmaw" class="tier-champ"><img class="tier-champ-icon" src="images/champions/KogMaw.png" alt="Kog'Maw">Kog'Maw</a>
-              <a href="#lux" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Lux.png" alt="Lux">Lux</a>
-              <a href="#morgana" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Morgana.png" alt="Morgana">Morgana</a>
-              <a href="#smolder" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Smolder.jpg" alt="Smolder">Smolder</a>
-              <a href="#yunara" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Yunara.jpg" alt="Yunara">Yunara</a>
-              <a href="#zeri" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Zeri.png" alt="Zeri">Zeri</a>
+            <div class="tier-row">
+              <div class="tier-label">Hwei Favored <span>Playable edge</span></div>
+              <div class="tier-champs">
+                <a class="tier-champ" href="#matchup-ashe"><span class="tier-chip"><img src="images/champions/Ashe.png" alt="Ashe">Ashe</span></a>
+                <a class="tier-champ" href="#matchup-caitlyn"><span class="tier-chip"><img src="images/champions/Caitlyn.png" alt="Caitlyn">Caitlyn</span></a>
+                <a class="tier-champ" href="#matchup-corki"><span class="tier-chip"><img src="images/champions/Corki.png" alt="Corki">Corki</span></a>
+                <a class="tier-champ" href="#matchup-kalista"><span class="tier-chip"><img src="images/champions/Kalista.png" alt="Kalista">Kalista</span></a>
+                <a class="tier-champ" href="#matchup-ziggs"><span class="tier-chip"><img src="images/champions/Ziggs.png" alt="Ziggs">Ziggs</span></a>
+                <a class="tier-champ" href="#matchup-miss-fortune"><span class="tier-chip"><img src="images/champions/MissFortune.png" alt="Miss Fortune">Miss Fortune</span></a>
+                <a class="tier-champ" href="#matchup-senna"><span class="tier-chip"><img src="images/champions/Senna.png" alt="Senna">Senna</span></a>
+                <a class="tier-champ" href="#matchup-samira"><span class="tier-chip"><img src="images/champions/Samira.png" alt="Samira">Samira</span></a>
+                <a class="tier-champ" href="#matchup-hwei"><span class="tier-chip"><img src="images/champions/Hwei.jpg" alt="Hwei">Hwei</span></a>
+                <a class="tier-champ" href="#matchup-xayah"><span class="tier-chip"><img src="images/champions/Xayah.png" alt="Xayah">Xayah</span></a>
+                <a class="tier-champ" href="#matchup-aurelion-sol"><span class="tier-chip"><img src="images/champions/AurelionSol.png" alt="Aurelion Sol">Aurelion Sol</span></a>
+                <a class="tier-champ" href="#matchup-brand"><span class="tier-chip"><img src="images/champions/Brand.png" alt="Brand">Brand</span></a>
+                <a class="tier-champ" href="#matchup-heimerdinger"><span class="tier-chip"><img src="images/champions/Heimerdinger.png" alt="Heimerdinger">Heimerdinger</span></a>
+                <a class="tier-champ" href="#matchup-karma"><span class="tier-chip"><img src="images/champions/Karma.png" alt="Karma">Karma</span></a>
+                <a class="tier-champ" href="#matchup-kogmaw"><span class="tier-chip"><img src="images/champions/KogMaw.png" alt="Kog'Maw">Kog'Maw</span></a>
+                <a class="tier-champ" href="#matchup-lux"><span class="tier-chip"><img src="images/champions/Lux.png" alt="Lux">Lux</span></a>
+                <a class="tier-champ" href="#matchup-morgana"><span class="tier-chip"><img src="images/champions/Morgana.png" alt="Morgana">Morgana</span></a>
+                <a class="tier-champ" href="#matchup-smolder"><span class="tier-chip"><img src="images/champions/Smolder.jpg" alt="Smolder">Smolder</span></a>
+                <a class="tier-champ" href="#matchup-yunara"><span class="tier-chip"><img src="images/champions/Yunara.png" alt="Yunara">Yunara</span></a>
+                <a class="tier-champ" href="#matchup-zeri"><span class="tier-chip"><img src="images/champions/Zeri.png" alt="Zeri">Zeri</span></a>
+                <a class="tier-champ" href="#matchup-mel"><span class="tier-chip"><img src="images/champions/Mel.png" alt="Mel">Mel</span></a>
+              </div>
             </div>
-          </div>
-
-          <div class="tier-row">
-            <div class="tier-label even">Even</div>
-            <div class="tier-champs">
-              <a href="#ezreal" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Ezreal.png" alt="Ezreal">Ezreal</a>
-              <a href="#jhin" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Jhin.png" alt="Jhin">Jhin</a>
-              <a href="#kaisa" class="tier-champ"><img class="tier-champ-icon" src="images/champions/KaiSa.png" alt="Kai’sa">Kai’sa</a>
-              <a href="#tristana" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Tristana.png" alt="Tristana">Tristana</a>
-              <a href="#vayne" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Vayne.png" alt="Vayne">Vayne</a>
-              <a href="#zyra" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Zyra.png" alt="Zyra">Zyra</a>
+            <div class="tier-row skill">
+              <div class="tier-label">Even <span>Skill lanes</span></div>
+              <div class="tier-champs">
+                <a class="tier-champ" href="#matchup-ezreal"><span class="tier-chip"><img src="images/champions/Ezreal.png" alt="Ezreal">Ezreal</span></a>
+                <a class="tier-champ" href="#matchup-jhin"><span class="tier-chip"><img src="images/champions/Jhin.png" alt="Jhin">Jhin</span></a>
+                <a class="tier-champ" href="#matchup-kaisa"><span class="tier-chip"><img src="images/champions/KaiSa.png" alt="Kai'Sa">Kai'Sa</span></a>
+                <a class="tier-champ" href="#matchup-tristana"><span class="tier-chip"><img src="images/champions/Tristana.png" alt="Tristana">Tristana</span></a>
+                <a class="tier-champ" href="#matchup-vayne"><span class="tier-chip"><img src="images/champions/Vayne.png" alt="Vayne">Vayne</span></a>
+                <a class="tier-champ" href="#matchup-zyra"><span class="tier-chip"><img src="images/champions/Zyra.png" alt="Zyra">Zyra</span></a>
+              </div>
             </div>
-          </div>
-
-          <div class="tier-row">
-            <div class="tier-label enemy-favored">Enemy Favored</div>
-            <div class="tier-champs">
-              <a href="#lucian" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Lucian.png" alt="Lucian">Lucian</a>
-              <a href="#syndra" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Syndra.png" alt="Syndra">Syndra</a>
-              <a href="#karthus" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Karthus.png" alt="Karthus">Karthus</a>
+            <div class="tier-row hard">
+              <div class="tier-label">Enemy Favored <span>Enemy edge</span></div>
+              <div class="tier-champs">
+                <a class="tier-champ" href="#matchup-lucian"><span class="tier-chip"><img src="images/champions/Lucian.png" alt="Lucian">Lucian</span></a>
+                <a class="tier-champ" href="#matchup-syndra"><span class="tier-chip"><img src="images/champions/Syndra.png" alt="Syndra">Syndra</span></a>
+                <a class="tier-champ" href="#matchup-karthus"><span class="tier-chip"><img src="images/champions/Karthus.png" alt="Karthus">Karthus</span></a>
+              </div>
             </div>
-          </div>
-
-          <div class="tier-row">
-            <div class="tier-label unfavorable">Unfavorable</div>
-            <div class="tier-champs">
-              <a href="#sivir" class="tier-champ"><img class="tier-champ-icon" src="images/champions/Sivir.png" alt="Sivir">Sivir</a>
+            <div class="tier-row brutal">
+              <div class="tier-label">Unfavorable <span>Hardest lane</span></div>
+              <div class="tier-champs">
+                <a class="tier-champ" href="#matchup-sivir"><span class="tier-chip"><img src="images/champions/Sivir.png" alt="Sivir">Sivir</span></a>
+              </div>
             </div>
           </div>
         </div>
 
-        <div id="matchup-guide-sec" style="scroll-margin-top:130px">
-          <div class="section-head"><h3>Botlane Matchup Guide</h3><div class="section-rule"></div></div>
-          <div class="section-sub">Click a champion name to jump to matchup details, or click the icon to open that champion's wiki page.</div>
-
-          <div id="botlane-toc" class="card" style="margin-bottom:24px;">
-            <div class="card-title" style="font-size:1.05rem;">Champions</div>
-            <div class="toc-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px;">
-              <a href="#aphelios" class="toc-link"><img class="champ-icon" src="images/champions/Aphelios.png" alt="Aphelios"> Aphelios</a>
-              <a href="#ashe" class="toc-link"><img class="champ-icon" src="images/champions/Ashe.png" alt="Ashe"> Ashe</a>
-              <a href="#aurelion-sol" class="toc-link"><img class="champ-icon" src="images/champions/AurelionSol.png" alt="Aurelion Sol"> Aurelion Sol</a>
-              <a href="#brand" class="toc-link"><img class="champ-icon" src="images/champions/Brand.png" alt="Brand"> Brand</a>
-              <a href="#caitlyn" class="toc-link"><img class="champ-icon" src="images/champions/Caitlyn.png" alt="Caitlyn"> Caitlyn</a>
-              <a href="#corki" class="toc-link"><img class="champ-icon" src="images/champions/Corki.png" alt="Corki"> Corki</a>
-              <a href="#draven" class="toc-link"><img class="champ-icon" src="images/champions/Draven.png" alt="Draven"> Draven</a>
-              <a href="#ezreal" class="toc-link"><img class="champ-icon" src="images/champions/Ezreal.png" alt="Ezreal"> Ezreal</a>
-              <a href="#heimerdinger" class="toc-link"><img class="champ-icon" src="images/champions/Heimerdinger.png" alt="Heimerdinger"> Heimerdinger</a>
-              <a href="#hwei" class="toc-link"><img class="champ-icon" src="images/champions/Hwei.jpg" alt="Hwei"> Hwei</a>
-              <a href="#jhin" class="toc-link"><img class="champ-icon" src="images/champions/Jhin.png" alt="Jhin"> Jhin</a>
-              <a href="#jinx" class="toc-link"><img class="champ-icon" src="images/champions/Jinx.png" alt="Jinx"> Jinx</a>
-              <a href="#kaisa" class="toc-link"><img class="champ-icon" src="images/champions/KaiSa.png" alt="Kai’sa"> Kai’sa</a>
-              <a href="#kalista" class="toc-link"><img class="champ-icon" src="images/champions/Kalista.png" alt="Kalista"> Kalista</a>
-              <a href="#karma" class="toc-link"><img class="champ-icon" src="images/champions/Karma.png" alt="Karma"> Karma</a>
-              <a href="#karthus" class="toc-link"><img class="champ-icon" src="images/champions/Karthus.png" alt="Karthus"> Karthus</a>
-              <a href="#kogmaw" class="toc-link"><img class="champ-icon" src="images/champions/KogMaw.png" alt="Kog’Maw"> Kog’Maw</a>
-              <a href="#lucian" class="toc-link"><img class="champ-icon" src="images/champions/Lucian.png" alt="Lucian"> Lucian</a>
-              <a href="#lux" class="toc-link"><img class="champ-icon" src="images/champions/Lux.png" alt="Lux"> Lux</a>
-              <a href="#mel" class="toc-link"><img class="champ-icon" src="images/champions/Mel.jpg" alt="Mel"> Mel</a>
-              <a href="#miss-fortune" class="toc-link"><img class="champ-icon" src="images/champions/MissFortune.png" alt="Miss Fortune"> Miss Fortune</a>
-              <a href="#morgana" class="toc-link"><img class="champ-icon" src="images/champions/Morgana.png" alt="Morgana"> Morgana</a>
-              <a href="#nilah" class="toc-link"><img class="champ-icon" src="images/champions/Nilah.png" alt="Nilah"> Nilah</a>
-              <a href="#samira" class="toc-link"><img class="champ-icon" src="images/champions/Samira.png" alt="Samira"> Samira</a>
-              <a href="#senna" class="toc-link"><img class="champ-icon" src="images/champions/Senna.png" alt="Senna"> Senna</a>
-              <a href="#syndra" class="toc-link"><img class="champ-icon" src="images/champions/Syndra.png" alt="Syndra"> Syndra</a>
-              <a href="#seraphine" class="toc-link"><img class="champ-icon" src="images/champions/Seraphine.png" alt="Seraphine"> Seraphine</a>
-              <a href="#sivir" class="toc-link"><img class="champ-icon" src="images/champions/Sivir.png" alt="Sivir"> Sivir</a>
-              <a href="#smolder" class="toc-link"><img class="champ-icon" src="images/champions/Smolder.jpg" alt="Smolder"> Smolder</a>
-              <a href="#tristana" class="toc-link"><img class="champ-icon" src="images/champions/Tristana.png" alt="Tristana"> Tristana</a>
-              <a href="#twitch" class="toc-link"><img class="champ-icon" src="images/champions/Twitch.png" alt="Twitch"> Twitch</a>
-              <a href="#varus" class="toc-link"><img class="champ-icon" src="images/champions/Varus.png" alt="Varus"> Varus</a>
-              <a href="#vayne" class="toc-link"><img class="champ-icon" src="images/champions/Vayne.png" alt="Vayne"> Vayne</a>
-              <a href="#xayah" class="toc-link"><img class="champ-icon" src="images/champions/Xayah.png" alt="Xayah"> Xayah</a>
-              <a href="#yunara" class="toc-link"><img class="champ-icon" src="images/champions/Yunara.jpg" alt="Yunara"> Yunara</a>
-              <a href="#zeri" class="toc-link"><img class="champ-icon" src="images/champions/Zeri.png" alt="Zeri"> Zeri</a>
-              <a href="#ziggs" class="toc-link"><img class="champ-icon" src="images/champions/Ziggs.png" alt="Ziggs"> Ziggs</a>
-              <a href="#zyra" class="toc-link"><img class="champ-icon" src="images/champions/Zyra.png" alt="Zyra"> Zyra</a>
-            </div>
+        <div id="matchup-toc" style="margin-bottom:36px;scroll-margin-top:150px">
+          <div class="section-head"><h3>Champion Index</h3><div class="section-rule"></div></div>
+          <div class="section-sub">Alphabetical matchup table of contents</div>
+          <div class="toc-grid">
+            <a class="toc-link" href="#matchup-aphelios"><span class="toc-chip"><img src="images/champions/Aphelios.png" alt="Aphelios">Aphelios</span></a>
+            <a class="toc-link" href="#matchup-ashe"><span class="toc-chip"><img src="images/champions/Ashe.png" alt="Ashe">Ashe</span></a>
+            <a class="toc-link" href="#matchup-aurelion-sol"><span class="toc-chip"><img src="images/champions/AurelionSol.png" alt="Aurelion Sol">Aurelion Sol</span></a>
+            <a class="toc-link" href="#matchup-brand"><span class="toc-chip"><img src="images/champions/Brand.png" alt="Brand">Brand</span></a>
+            <a class="toc-link" href="#matchup-caitlyn"><span class="toc-chip"><img src="images/champions/Caitlyn.png" alt="Caitlyn">Caitlyn</span></a>
+            <a class="toc-link" href="#matchup-corki"><span class="toc-chip"><img src="images/champions/Corki.png" alt="Corki">Corki</span></a>
+            <a class="toc-link" href="#matchup-draven"><span class="toc-chip"><img src="images/champions/Draven.png" alt="Draven">Draven</span></a>
+            <a class="toc-link" href="#matchup-ezreal"><span class="toc-chip"><img src="images/champions/Ezreal.png" alt="Ezreal">Ezreal</span></a>
+            <a class="toc-link" href="#matchup-heimerdinger"><span class="toc-chip"><img src="images/champions/Heimerdinger.png" alt="Heimerdinger">Heimerdinger</span></a>
+            <a class="toc-link" href="#matchup-hwei"><span class="toc-chip"><img src="images/champions/Hwei.jpg" alt="Hwei">Hwei</span></a>
+            <a class="toc-link" href="#matchup-jhin"><span class="toc-chip"><img src="images/champions/Jhin.png" alt="Jhin">Jhin</span></a>
+            <a class="toc-link" href="#matchup-jinx"><span class="toc-chip"><img src="images/champions/Jinx.png" alt="Jinx">Jinx</span></a>
+            <a class="toc-link" href="#matchup-kaisa"><span class="toc-chip"><img src="images/champions/KaiSa.png" alt="Kai'Sa">Kai'Sa</span></a>
+            <a class="toc-link" href="#matchup-kalista"><span class="toc-chip"><img src="images/champions/Kalista.png" alt="Kalista">Kalista</span></a>
+            <a class="toc-link" href="#matchup-karma"><span class="toc-chip"><img src="images/champions/Karma.png" alt="Karma">Karma</span></a>
+            <a class="toc-link" href="#matchup-karthus"><span class="toc-chip"><img src="images/champions/Karthus.png" alt="Karthus">Karthus</span></a>
+            <a class="toc-link" href="#matchup-kogmaw"><span class="toc-chip"><img src="images/champions/KogMaw.png" alt="Kog'Maw">Kog'Maw</span></a>
+            <a class="toc-link" href="#matchup-lucian"><span class="toc-chip"><img src="images/champions/Lucian.png" alt="Lucian">Lucian</span></a>
+            <a class="toc-link" href="#matchup-lux"><span class="toc-chip"><img src="images/champions/Lux.png" alt="Lux">Lux</span></a>
+            <a class="toc-link" href="#matchup-mel"><span class="toc-chip"><img src="images/champions/Mel.png" alt="Mel">Mel</span></a>
+            <a class="toc-link" href="#matchup-miss-fortune"><span class="toc-chip"><img src="images/champions/MissFortune.png" alt="Miss Fortune">Miss Fortune</span></a>
+            <a class="toc-link" href="#matchup-morgana"><span class="toc-chip"><img src="images/champions/Morgana.png" alt="Morgana">Morgana</span></a>
+            <a class="toc-link" href="#matchup-nilah"><span class="toc-chip"><img src="images/champions/Nilah.png" alt="Nilah">Nilah</span></a>
+            <a class="toc-link" href="#matchup-samira"><span class="toc-chip"><img src="images/champions/Samira.png" alt="Samira">Samira</span></a>
+            <a class="toc-link" href="#matchup-senna"><span class="toc-chip"><img src="images/champions/Senna.png" alt="Senna">Senna</span></a>
+            <a class="toc-link" href="#matchup-seraphine"><span class="toc-chip"><img src="images/champions/Seraphine.png" alt="Seraphine">Seraphine</span></a>
+            <a class="toc-link" href="#matchup-sivir"><span class="toc-chip"><img src="images/champions/Sivir.png" alt="Sivir">Sivir</span></a>
+            <a class="toc-link" href="#matchup-smolder"><span class="toc-chip"><img src="images/champions/Smolder.jpg" alt="Smolder">Smolder</span></a>
+            <a class="toc-link" href="#matchup-syndra"><span class="toc-chip"><img src="images/champions/Syndra.png" alt="Syndra">Syndra</span></a>
+            <a class="toc-link" href="#matchup-tristana"><span class="toc-chip"><img src="images/champions/Tristana.png" alt="Tristana">Tristana</span></a>
+            <a class="toc-link" href="#matchup-twitch"><span class="toc-chip"><img src="images/champions/Twitch.png" alt="Twitch">Twitch</span></a>
+            <a class="toc-link" href="#matchup-varus"><span class="toc-chip"><img src="images/champions/Varus.png" alt="Varus">Varus</span></a>
+            <a class="toc-link" href="#matchup-vayne"><span class="toc-chip"><img src="images/champions/Vayne.png" alt="Vayne">Vayne</span></a>
+            <a class="toc-link" href="#matchup-xayah"><span class="toc-chip"><img src="images/champions/Xayah.png" alt="Xayah">Xayah</span></a>
+            <a class="toc-link" href="#matchup-yunara"><span class="toc-chip"><img src="images/champions/Yunara.png" alt="Yunara">Yunara</span></a>
+            <a class="toc-link" href="#matchup-zeri"><span class="toc-chip"><img src="images/champions/Zeri.png" alt="Zeri">Zeri</span></a>
+            <a class="toc-link" href="#matchup-ziggs"><span class="toc-chip"><img src="images/champions/Ziggs.png" alt="Ziggs">Ziggs</span></a>
+            <a class="toc-link" href="#matchup-zyra"><span class="toc-chip"><img src="images/champions/Zyra.png" alt="Zyra">Zyra</span></a>
           </div>
-
-          <div class="matchup-sort-controls">
-            <button id="matchup-sort-btn" class="matchup-sort-btn" type="button" aria-label="Toggle matchup card sorting" data-sort-mode="alphabetical">
-              Sort By: Alphabetical (A-Z)
-            </button>
-          </div>
-
-          <div id="matchup-cards" class="matchup-cards" style="display:grid;gap:16px;">
-            <p style="margin:0 0 8px 0; font-style:italic;">Click a champion icon to go to their wiki page. Click the difficulty number to go back to the Table of Contents.</p>
-
-            <!-- champion matchup cards -->
-            <div id="aphelios" class="card"><div class="card-title">Aphelios</div><p>Aphelios is a difficult champion to play against. Before the lane, ensure that you know what ALL of his guns do. He starts the game with red/green. As with all lanes, we need to give priority and back up. Don't try to push the lane. He heavily outranges us with green gun. Once we hit level 3, we can start to play the game. Look for long range poke, saving reflect for either his Green or Blue ability (or his ultimate after 6). You cannot reflect his purple root. This is a lane that you can win at level 6 once you have some ability power. Bad Aphelios players will just get poked out. Maintain distance and you will be just fine in this lane.</p></div>
-            <div id="ashe" class="card"><div class="card-title">Ashe</div><p>Ashe wins the lane through her oppressive levels 1-5. She has a really bad midgame and struggles to win fights when she gets hit by spells. That is to say, she is MASSIVELY outdamaged by you after level 5. Ashe's main threat comes from taking an all-in with lethal-tempo + her passive. Avoid engaging with her AT ALL when at a disadvantage (this includes pre level 6). When we are even or ahead, we can easily fight her and win. Of course, this depends on support pairing, but that is generally the case. Ashe is not a great champion against Mel, and we can reflect her W or R. Usually though, save your reflection for her ultimate.</p></div>
-            <div id="aurelion-sol" class="card"><div class="card-title">Aurelion Sol</div><p>Aurelion is such a weird champion in the botlane. First, his stacking mechanic makes him extremely overpowered in the late game. We need to avoid letting him place his E (black hole) on the wave and killing it. Try to save your combo to punish him doing this. He is literally forced to stand still when he channels his Q on the wave, giving you the freest E+Q combo of your life. The only thing we need to be worried about is him flying at us when we are out of position. His ult is really good at catching people at the worst moment. As such, be cautious when you don't have your root (which can interrupt him flying) or when you are separated from your support.</p></div>
-            <div id="brand" class="card"><div class="card-title">Brand</div><p>Brand is a rare sight in botlane. When playing against Brand, we win all early levels. Reflect his Q to avoid giving him a stun. After level 6, reflect his ultimate and dodge his Q. Sadly, Brand will build Rylais which counters you hard. Good news though, you outrange the shit out of him so if he does manage to apply his Rylais, you kinda griefed. You CAN reflect his E bounce (the thingy that bounces real far off the wave), but it's not recommended. When he's looking to splash his E onto you, just stand far away from any minions affected by his passive and you will be fine. You outscale this lane, and reflecting his ultimate in teamfights is an instant win.</p></div>
-            <div id="caitlyn" class="card"><div class="card-title">Caitlyn</div><p>Caitlyn is very glass cannon. Super squishy, but does a lot of damage. We can reflect all of Caitlyn's abilities except her placing down a trap. We can also reflect her long-range headshot auto's. Best reflection here is her E+Q combo, but normally her support pairings (especially morgana and lux) have a better reflection for us. Keep range and don't overextend. If you go even a millimeter out of range, you will really feel it from her auto attacks. This lane is won by fundamentals and keeping your spacing. Luckily, you slightly outrange her and have a stronger all-in (if you hit spells of course).</p></div>
-            <div id="corki" class="card"><div class="card-title">Corki</div><p>Corki is the better version of Draven. We will almost never win a raw 1v1 against Corki. If you miss any of your spells, it's completely cooked. Keep our range and try to poke him out. The weakness of Corki is his short range and weak scaling (though if he gets a lead, he becomes a monster). We can reflect his Q and Ultimate missiles. The best reflection target is the Q and one auto attack at the same time. If you time it right, you can reflect his Q and the auto attack will have a sheen proc on it when you reflect. This is super good for you. While we definitely outscale in this lane, I would recommend playing safe for longer than usually, until around level 7-9 when you start to get more AP and points in spells. Always press E if he Ws forward (his dash). His W is essentially a self stun and it has super predictable pathing.</p></div>
-            <div id="draven" class="card"><div class="card-title">Draven</div><p>Draven is terrible into Mel. Of course, Draven always has the threat of snowballing the lane out of control to win the game, but all things considered, Mel should never really be losing here. Give priority, follow up on your support's spells, and try not to interact. Mel should never trade autos with a draven. Keep your range and poke him down. You can reflect his E and Ultimate. Note that reflecting Draven's ultimate on the way back to him destroys his ult but does not reflect it. Typically you will reflect Draven E.</p></div>
-            <div id="ezreal" class="card"><div class="card-title">Ezreal</div><p>Ezreal is a very even matchup for us. He will always win extended trades with his passive in the early game. His Q at level 1 does 120 base damage on a 5 seconds cooldown. Safe to say, his early game is really strong. He also gets massively outscaled. He even has a range advantage. Our saving grace here is his terrible scaling and poor waveclear. Once we get to midgame, we can shove mid waves wayyy faster than him and take positive trades when he tries to CS. Stay safe early and play off your supports spells. This is usually (at least in high elo) a 0 kill lane. Btw is Ezreal is basically a mage not a marksman.</p></div>
-            <div id="heimerdinger" class="card"><div class="card-title">Heimerdinger</div><p>Honestly, Heimerdinger as a champion is really bad right now. We can reflect his stun and his rockets. We can also reflect the autos and lazar from his turrets, though reflecting anything from his turret will bounce back to the turret itself. If your Q oneshots turrets or he places several turrets close together, you can use your spells to kill them. Heimerdinger has a very long CD on his turret kits. He cannot place them too often. You also outrange and outscale him so... even if you do struggle against him in lane, keep range, CS, don't die, and win the teamfights. Be careful of his bush cheese though. Sometimes Heim will place 3 turrets in a bush and oneshot you if you walk into him.</p></div>
-            <div id="hwei" class="card"><div class="card-title">Hwei</div><p>Mel has the upper hand in almost all mage botlanes, Hwei is no exception. In an even trade, Mel will always win. Save your reflection for Hwei's ultimate after level 6. Before level 6, try to reflect Hwei's fear or eyeball root. When Hwei looks to clear the wave, you can reflect his lava fissure thingy and his fireball. Both are good options when you are ahead to deny Hwei the ability to CS. Stay safe though and do this sparingly. When Hwei does use his lava fissure, make sure that he cannot use his crushing maw (weird purple pull spell) to suck you into the fire. Stand far enough away/to the side of the wave that he cannot do this.</p></div>
-            <div id="jhin" class="card"><div class="card-title">Jhin</div><p>Jhin's movement speed makes him very strong against mages. It's not too difficult for him to dodge spells. Always wait until he is an auto attack animation before trying to hit him with spells. We can reflect his Q (any of the bounces) and this is an awesome way to get a really positive trade, especially if he kills a couple minions with it. We can also reflect his W and ultimate shots. Wait until level 5-6 and you will start being more useful than Jhin inside trades. This is a Mel favored lane and your champion does generally outscale his. You win the 1v1, you are stronger than teamfights, just make sure that you don't miss your spells due to his high movement speed.</p></div>
-            <div id="jinx" class="card"><div class="card-title">Jinx</div><p>Jinx is legit a potato before 2 items. Genuinely. The only reason she can sometimes win is because she gets stacking attack speed with mingun and lethal tempo. The tradeoff is that she has terrible range when she's in minigun form. Maintain range, you can even trade with autos against Jinx. You win at all stages of the matchup. You can reflect her W (typically recommended) and Ultimate. Hitting a full combo on Jinx is almost always a oneshot. This is a lane where, depending on teamcomp, I would consider going shadowflame second.</p></div>
-            <div id="kaisa" class="card"><div class="card-title">Kai'sa</div><p>Kai'sa wins in extended trades due to lethal tempo and her passive. As per usual, give prio and play for poke. We wait for level 5 to play here. After 5, if you find yourself 1v1 against Kai'sa (both supports are roaming), be careful of her ultimate. You will almost never win a 1v1 against Kai'sa if she has ultimate and barrier off cooldown. It's too many shields to get through. Instead, just play from range perma and you will be fine.</p></div>
-            <div id="kalista" class="card"><div class="card-title">Kalista</div><p>Kalista is very good against mages because of her dashing. She is also legit the worst champion in the entire game. You just save your spells for when she dashes in a predictable pattern (Ex. in a straight line to run you down). Never fight her, don't go behind, and win every single teamfight. You can win trades if you have a CC support and they lock the Kalista down. The issue is not her strength, it's a lack of being able to hit spells. IF you find yourself able to hit spells, you WILL win, otherwise just scale.</p></div>
-            <div id="karma" class="card"><div class="card-title">Karma</div><p>Karma pokes with Q->E. Dodge Soulflare and punish when shield is down.</p></div>
-            <div id="karthus" class="card"><div class="card-title">Karthus</div><p>Karthus is a super rare champion these days and does very well into Mel. We have nothing to reflect sadly. In this lane, I just farm and play for poke. Karthus will usually run exhaust and you can't one-shot him if he exhausts your combo. I would recommend just playing from range and playing off your supports CC. Luckily, Karthus is super immobile so it's kinda free for your support to make a play, you kinda just have to wait and follow up on it.</p></div>
-            <div id="kogmaw" class="card"><div class="card-title">Kog'Maw</div><p>Kog'Maw is legit a terrible champion. He's paper thin but does a lot of damage. Lucky us, we are Mel and outrange him. Don't trade autos and just poke him from range. Reflect his E. This lane is harder if he goes AD. You lose early levels and win at level 5. 1v1 against Kog is really free. Shove him under tower and poke while he tries to CS when both supports are roaming. You will be able to dive him solo if you play it correctly. If you reflect his E, this is a perfect time to throw your combo as the slow makes it harder for him to dodge your spells.</p></div>
-            <div id="lucian" class="card"><div class="card-title">Lucian</div><p>Lucian is very good into mages, especially with his Nami and Milio pairings. Never use your E before Lucian uses his dash, after Lucian dashes, full combo him and try to reflect his Q + Auto attack. We lose this lane until we are around level 7. Make sure that he doesn't catch you out with his ultimate. If he does ult you and there is nothing to block it, press E on him to peel yourself, and W for movespeed/blocking some of the bullets. This lane is hard but Lucian doesn't scale very well.</p></div>
-            <div id="lux" class="card"><div class="card-title">Lux</div><p>Mel beats lux really hard. We need to save our reflection for her Q (root) and we will be just fine. Take priority in this matchup and poke from range. Make sure that her E doesn't hit you and the wave together. You are stronger in longer fights. She can never throw the binding at you. Every trade is Lux pressing E and Mel pressing E+Q. You will always win under these conditions. In midgame, Lux is really good at securing mid priority. Try to shove mid as fast as possible without dying and ensure that Lux cannot move to help her team. You win this lane early and need to get an advantage before midgame.</p></div>
-            <div id="mel" class="card"><div class="card-title">Mel</div><p>Mirrored matchup: emphasize your own strengths and look for level 6 fight over objective control.</p></div>
-            <div id="miss-fortune" class="card"><div class="card-title">Miss Fortune</div><p>Miss Fortune is very good into mages, but only if she goes bloodthirster. If she goes lethality this lane is free. Don't trade autos and try not to stand directly behind minions or you will get hit by her Q. If you do get hit by the Q, you can reflect it back to Miss Fortune. Even if it bounces off a minion, the reflection will hit Miss Fortune. Keep space and poke her down with Q. Save your E in case she tries to run at you with her W (movespeed and attack speed steroid). In Teamfights, reflecting her ultimate is hilarious and can sometimes wipe her whole team. Look for these opportunities, though you can only reflect maybe 1/3 of it. If she goes bloodthirster, this doesn't alone necessitate anti-heal, though you might want it if her team has other healing.</p></div>
-            <div id="morgana" class="card"><div class="card-title">Morgana</div><p>Morgana's Black Shield counters CC. Play around it and strike when it’s not available.</p></div>
-            <div id="nilah" class="card"><div class="card-title">Nilah</div><p>The single worst champion against mages in the botlane. Okay maybe they could pick Yuumi ADC idk but that might actually be better. Nilah's E (her dash) has a whopping 26 seconds cooldown and 2 charges. This is a massive window for us to abuse her. She can only really get onto us from our range with both charges, even if she tries to do this, just throw out your root and prevent her from using the second dash. It requires some reaction time, but it's definitely doable. If she does get onto you, don't panic. Hit your root, reflect her support's spells, and run away. You cannot reflect anything from Nilah. Don't give priority in this lane and try to poke her out. You might get outpushed level 1-3, but everything after that should be winning.</p></div>
-            <div id="samira" class="card"><div class="card-title">Samira</div><p>Never get CCd against a Samira, her passive enables her to follow-up and get into auto attack range of you. If you ever get CCd, you are almost certainly dead. Samira is not as bad against mages as people think. It is really easy to die to a Samira, she does a lot of damage. Keep range and poke her. Give prio till around level 5. Respect Samira's ability to dash through a minion to get into auto range of you. If she does dash through a minion, you may be forced to E her even though she can windwall and destroy the projectile. This is a fine trade. You can reflect Samira's auto attacks, Q, and part of Samira ultimate. You win by keeping range and poking. It's a battle of positioning, but if you play perfectly, you are guaranteed an advantage by war of attrition through poke.</p></div>
-            <div id="senna" class="card"><div class="card-title">Senna</div><p>You cannot reflect Senna's Auto or Q. Shockingly, you can reflect her ULTIMATE (crazy right) and her root (W). ALWAYS REFLECT THE ULTIMATE. It is such a broken spell to reflect back at her whole team. Senna wins the level 1 all-in really hard. She's stronger until level 5, at which point we can take over. Our damage is super oppressive against a squishy champion like Senna. Build an oblivion orb right after lost chapter/1 item if her lane pairing also has healing. After level 5, you kinda just win. Use your spells right when she auto attacks and you should always hit them. One full combo with a couple auto attacks is a kill (if she doesn't have barrier). Hit 1-2 Qs and look for an all-in. She cannot play in the 1v1 against you, keep poking and look to dive solo if both supports leave lane.</p></div>
-            <div id="syndra" class="card"><div class="card-title">Syndra</div><p>Syndra is a hard control-mage matchup in botlane. Respect her setup and burst windows, play from max range, and avoid giving her clean stun angles through minions.</p></div>
-            <div id="seraphine" class="card"><div class="card-title">Seraphine</div><p>The single best matchup for Mel in the game. Reflecting Seraphine E or R in a teamfight is disgustingly OP, though reflecting her ultimate is better of course. We do more damage than seraphine and can win all-ins. Do NOT build anti-heal against her early, she has essentially 0 healing. You will probably lose prio level 1 since Seraphine is stronger at this level and has better waveclear. After level 3, you are stronger with your reflection and can easily win trades by reflecting her E and after 6, dodging the E and reflecting her ultimate. In the 1v1, try to prevent Seraphine from getting to the wave and poke her out/zone her from CS.</p></div>
-            <div id="sivir" class="card"><div class="card-title">Sivir</div><p>Sivir is my permaban. If you somehow found yourself in this lane, I really feel for you. This is about to be a miserable experience so prepare yourself. You need to concede prio level 1, you can't stand close to the wave or her Q will ricochet to you. Actually you can never get prio since her waveclear is disgusting. You can't fight her 1:1 if you are even. If you magically get a lead, use Q to burn her spellshield, wait for it to come off-cooldown again, and E+Q combo into ultimate. This is the only way to kill Sivir. You will lose lane, so just scale and try to play teamfights. Sivir is low range so she may end up being useless later in the game.</p></div>
-            <div id="smolder" class="card"><div class="card-title">Smolder</div><p>Smolder is in a really weird state. He's strong early and strong late, but he really sucks in the mid game. To beat a smolder we have to play from our range. We will ALWAYS lose the trade if he gets into our range. Smolder does good damage and is very tanky. Poke with Q and save your E for after he flies (his E). You can reflect both his W and his ultimate. It's generally better to reflect his W in lane but his ultimate in teamfights. Also remember that his flap flap (E) does a lot of damage so try not to be in range when he uses it.</p></div>
-            <div id="tristana" class="card"><div class="card-title">Tristana</div><p>Tristana is a sleeper champion against Mel. Her all-in is really strong and with engage support pairings, it is nearly impossible to fight her... so don't. Her lategame is really bad and Tristana struggles to kill tanks. Play from range and give CS as needed. RESPECT HER JUMPING RANGE. It's really far. While you can reflect a Tristana E (the explosive grenade that charges on-hit), it's really hard to react in time. Instead, try to reflect Tristana's ultimate. It's more reliable and the ult still does 300ish damage. Essentially just scale and win teamfights. Tristana has poor scaling.</p></div>
-            <div id="twitch" class="card"><div class="card-title">Twitch</div><p>You counter the living shit out of Twitch. Twitch as a champion cannot function without his W for slowing you (ESPECIALLY IF THEY ARE AP). Play from range, poke him down, even if he gets in your range you will win if you hit your spells. If he opens on you from stealth, root him and run away. The only time he can win is by flashing your root and then running you down. Watch out for this, especially on mid waves. Outside of this, he has no way to play against you.</p></div>
-            <div id="varus" class="card"><div class="card-title">Varus</div><p>Varus is a mage (he's a fake marksman) and super early game focused. Throw all the things I said about mages winning early out the window. Varus is the final boss of early game champion (lethality varus). We can reflect all of his spells. I save my reflection for his ultimate, as his Q and E will do physical damage and only do 30% of their damage after reflection. You can sometimes reflect his E for a slow to hit your spells easier, but this is quite rare. Give priority level 1-5. You lose all-in if you miss spells or don't reflect his ultimate. A good Varus will ult your support and it's an instant win fight for him. You will outscale it super hard though so just don't overplay. Hit your poke and win the midgame = gg. Varus scaling is dogwater.</p></div>
-            <div id="vayne" class="card"><div class="card-title">Vayne</div><p>Vayne is really strong these days actually, but her lane phase is still terrible. Give prio level 1, we cannot fight the Vayne level 1. At level 2 we can start looking for poke, save your E for when Vayne tries to dash into you. Only use your E after Vayne uses the dash, never before. Poke Vayne when she CS a minion. She cannot dash when she is in her auto attack animation. While you will lose if Vayne gets to all-in, her short range makes this almost impossible. You can reflect her condemn. You will lose 1v1 if you are pushed too far forward against the Vayne. Keep your distance and respect her all-in with her ultimate.</p></div>
-            <div id="xayah" class="card"><div class="card-title">Xayah</div><p>Xayah is deceptively good into mages. Don't get me wrong, she's not amazing, but she does so much damage when she gets to hit you. DO NOT let her support lock you down. It's near instant death. You can reflect Xayah's Q (where she throws 2 feathers out) and her ultimate. Reflecting Xayah's E (feather pullback) does work, but it destroys the feather not reflecting them, though you do take 0 damage. I highly recommend saving reflect for Xayah E just to save yourself a lot of HP. Try to poke from range and don't take an all-in unless you are really far ahead. Xayah will always win these and has good waveclear, the lane is hard if you don't have a ranged support pairing to assist with poking the Xayah out. Short trades are your friend here.</p></div>
-            <div id="yunara" class="card"><div class="card-title">Yunara</div><p>Yunara has an auto attack reset with her Q (empowered auto attack spell), and will win trades if she gets to hit you with it. You can reflect Yunara W (slow chakram) to give yourself a better time at hitting your spells. Yunara is strong in the all-in, but has short range. We need to keep our distance, especially once she hits 6. She is super threatening with her dash and lazer beam in ult form. Do not take a 1v1 against her when she has these spells off-cooldown. ABUSE HER WHEN THE ULT IS ON CD. She is really weak when you can just reflect her W (slow chakram) and one-shot her.</p></div>
-            <div id="zeri" class="card"><div class="card-title">Zeri</div><p>Zeri is very short-range and lacks mobility. Riot has nerfed her movespeed into the ground. The only way to lose is to let Zeri get an all-in at level 6 with her ultimate. To be fair, her ultimate does give her some crazy burst, but we can reflect her W (slow big missile). Note though that we can only reflect the W before it passes through terrain, not after. We can reflect Zeri's auto attacks as well. Keep range and poke her out. She is stronger at level 1 and weaker after that. This is a very easy lane, but Zeri will outscale us. We need to get an advantage during the lane phase to be in a good position.</p></div>
-            <div id="ziggs" class="card"><div class="card-title">Ziggs</div><p>Against a good Ziggs, this lane is even. A bad Ziggs will go 0-10 into a good Mel though. Keep clearing waves and trying to poke Ziggs when he is in range. DO NOT stand on top of your minions, it makes it easy for him to hit his Q (bouncing bomb). Save your reflection for his W (explosive satchel charge) and his minefield. You cannot reflect his ultimate. You win when you hit all of your spells. You are stronger levels 3 and beyond, but he does outscale you in most games due to how gross his ultimate is on 7 items. Overall an easy lane but a good Ziggs can neutralize you by just deleting the wave. Keep the pressure on him.</p></div>
-            <div id="zyra" class="card"><div class="card-title">Zyra</div><p>Zyra is a really good champion into Mel. The only thing we can reflect is her E (the root). Try to avoid taking poke from her plants. If she spawns one on top of you, it is more effective to kill it than run away. You take less damage if you just kill it. There's not much you can do to avoid Zyra getting poke on you, but you will win the lane. Try not to get hit by her spells outside of the plants. If you keep running at her and dodge the spells, you will win the 1v1. If she uses ult and enrages her plants, it's often worth it to press Q on them to kill them instantly. This is a fundamentals lane, you will win the game by having good wave management and finding a lead elsewhere. You aren't strictly stronger in the 1v1 and Zyra does a good job of keeping you at range.</p></div>
-          </div>
-
-          <div class="info-box-amber" style="margin-top:16px">Tier definitions: Heavily Mel Favored (easy for Mel) · Mel Favored (advantage) · Even (balanced) · Enemy Favored (hard) · Unfavorable (very hard)</div>
         </div>
 
+        <div id="matchup-cards-sec" style="scroll-margin-top:150px">
+          <div class="section-head"><h3>Matchup Cards</h3><div class="section-rule"></div></div>
+          <div class="section-sub">Alphabetical Hwei APC matchup notes</div>
+          <div class="matchup-card-controls" aria-label="Matchup card controls">
+            <div class="matchup-control-field">
+              <label for="matchup-card-search">Search champion</label>
+              <input class="matchup-search-input" id="matchup-card-search" type="search" placeholder="Search by champion name..." autocomplete="off">
+            </div>
+            <div class="matchup-control-field">
+              <label for="matchup-card-sort">Sort cards</label>
+              <select class="matchup-sort-select" id="matchup-card-sort">
+                <option value="alphabetical">Alphabetical Order</option>
+                <option value="difficulty">Matchup Difficulty</option>
+              </select>
+            </div>
+          </div>
+          <div class="matchup-detail-grid">
+            <article class="matchup-detail-card easy" id="matchup-aphelios">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Aphelios" target="_blank" rel="noopener" aria-label="Open Aphelios League wiki"><img class="matchup-card-icon" src="images/champions/Aphelios.png" alt="Aphelios"></a><div><h4>Aphelios</h4></div></div><a class="difficulty-pill easy" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 2 out of 10"><span class="difficulty-score">2</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Track his gun pair and punish the windows where he cannot immediately threaten you. Hwei can thin waves safely, poke his low mobility, and force him to choose between farming and respecting QW execute range.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card medium" id="matchup-ashe">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Ashe" target="_blank" rel="noopener" aria-label="Open Ashe League wiki"><img class="matchup-card-icon" src="images/champions/Ashe.png" alt="Ashe"></a><div><h4>Ashe</h4></div></div><a class="difficulty-pill" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 5 out of 10"><span class="difficulty-score">5</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Ashe wins when Volley chip turns into a long chase. Stand behind minions, avoid greedy spell casts after she tags you with slows, and keep WQ/WW available when her level six arrow can start a bot fight.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card medium" id="matchup-aurelion-sol">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Aurelion_Sol" target="_blank" rel="noopener" aria-label="Open Aurelion Sol League wiki"><img class="matchup-card-icon" src="images/champions/AurelionSol.png" alt="Aurelion Sol"></a><div><h4>Aurelion Sol</h4></div></div><a class="difficulty-pill" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 5 out of 10"><span class="difficulty-score">5</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Aurelion Sol wants a calm lane where he can stack and turn waves into safe scaling. Interrupt his channel windows with threat, keep the wave moving before he farms it for free, and punish him hard before his late-game zone control takes over.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card hard" id="matchup-brand">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Brand" target="_blank" rel="noopener" aria-label="Open Brand League wiki"><img class="matchup-card-icon" src="images/champions/Brand.png" alt="Brand"></a><div><h4>Brand</h4></div></div><a class="difficulty-pill hard" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 7 out of 10"><span class="difficulty-score">7</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Brand can match your range and punish stationary casting. Dodge first, trade second. If you stay healthy through early waves, Hwei out-controls him around dragon entrances and narrow jungle paths.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card hard" id="matchup-caitlyn">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Caitlyn" target="_blank" rel="noopener" aria-label="Open Caitlyn League wiki"><img class="matchup-card-icon" src="images/champions/Caitlyn.png" alt="Caitlyn"></a><div><h4>Caitlyn</h4></div></div><a class="difficulty-pill hard" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 7 out of 10"><span class="difficulty-score">7</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Caitlyn lanes try to pin you under turret and convert traps into plates. Preserve health over early CS, clear waves before they crash too large, and avoid casting from predictable spots behind low-health minions.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card medium" id="matchup-corki">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Corki" target="_blank" rel="noopener" aria-label="Open Corki League wiki"><img class="matchup-card-icon" src="images/champions/Corki.png" alt="Corki"></a><div><h4>Corki</h4></div></div><a class="difficulty-pill" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 5 out of 10"><span class="difficulty-score">5</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Corki is vulnerable before items but becomes awkward once rockets start controlling the lane. Abuse early waveclear, force him to spend mana farming, and give package timers real respect near dragon.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card brutal" id="matchup-draven">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Draven" target="_blank" rel="noopener" aria-label="Open Draven League wiki"><img class="matchup-card-icon" src="images/champions/Draven.png" alt="Draven"></a><div><h4>Draven</h4></div></div><a class="difficulty-pill brutal" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 9 out of 10"><span class="difficulty-score">9</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Draven punishes every missed spell and every slow reset. Give space early, poke his axe catch zones only when his support cannot engage, and treat your E cooldown like the lane's emergency brake.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card easy" id="matchup-ezreal">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Ezreal" target="_blank" rel="noopener" aria-label="Open Ezreal League wiki"><img class="matchup-card-icon" src="images/champions/Ezreal.png" alt="Ezreal"></a><div><h4>Ezreal</h4></div></div><a class="difficulty-pill easy" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 4 out of 10"><span class="difficulty-score">4</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Ezreal is hard to kill but struggles to punish your wave control if you use minions well. Push with purpose, avoid eating free Mystic Shots, and save hard-commit spells for after Arcane Shift.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card hard" id="matchup-heimerdinger">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Heimerdinger" target="_blank" rel="noopener" aria-label="Open Heimerdinger League wiki"><img class="matchup-card-icon" src="images/champions/Heimerdinger.png" alt="Heimerdinger"></a><div><h4>Heimerdinger</h4></div></div><a class="difficulty-pill hard" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 7 out of 10"><span class="difficulty-score">7</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Heimerdinger turns the lane into a turret puzzle. Clear setups before trading, avoid walking through turret zones to chase, and call for jungle help only when turrets are thinned first.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card easy" id="matchup-hwei">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Hwei" target="_blank" rel="noopener" aria-label="Open Hwei League wiki"><img class="matchup-card-icon" src="images/champions/Hwei.jpg" alt="Hwei"></a><div><h4>Hwei</h4></div></div><a class="difficulty-pill easy" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 4 out of 10"><span class="difficulty-score">4</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">The mirror is about cooldown discipline and support setup. Whoever spends E first usually gives the other Hwei permission to control the next trade, so value wave position, brush control, and cleaner follow-up over random poke exchanges.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card easy" id="matchup-jhin">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Jhin" target="_blank" rel="noopener" aria-label="Open Jhin League wiki"><img class="matchup-card-icon" src="images/champions/Jhin.png" alt="Jhin"></a><div><h4>Jhin</h4></div></div><a class="difficulty-pill easy" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 4 out of 10"><span class="difficulty-score">4</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Respect fourth shot and root follow-up, but punish Jhin's reload and low sustained DPS. Hwei controls the wave well here as long as he avoids predictable casting into Deadly Flourish.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card easy" id="matchup-jinx">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Jinx" target="_blank" rel="noopener" aria-label="Open Jinx League wiki"><img class="matchup-card-icon" src="images/champions/Jinx.png" alt="Jinx"></a><div><h4>Jinx</h4></div></div><a class="difficulty-pill easy" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 2 out of 10"><span class="difficulty-score">2</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Jinx needs time and reset angles. Pressure her before items, deny free rockets on the wave, and save your control spell for her support so she cannot start the snowball.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card medium" id="matchup-kaisa">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Kai'Sa" target="_blank" rel="noopener" aria-label="Open Kai'Sa League wiki"><img class="matchup-card-icon" src="images/champions/KaiSa.png" alt="Kai'Sa"></a><div><h4>Kai'Sa</h4></div></div><a class="difficulty-pill" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 5 out of 10"><span class="difficulty-score">5</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Kai'Sa is manageable until isolated plasma stacks make all-ins lethal. Keep the wave between you, punish her shorter range, and do not let support CC mark you for a free ultimate dive.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card brutal" id="matchup-kalista">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Kalista" target="_blank" rel="noopener" aria-label="Open Kalista League wiki"><img class="matchup-card-icon" src="images/champions/Kalista.png" alt="Kalista"></a><div><h4>Kalista</h4></div></div><a class="difficulty-pill brutal" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 9 out of 10"><span class="difficulty-score">9</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Kalista turns one hook, knockup, or bad step into a chase. Keep waves closer to your side, avoid extended trades after spear stacks begin, and make her jump through spell zones to reach you.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card hard" id="matchup-karma">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Karma" target="_blank" rel="noopener" aria-label="Open Karma League wiki"><img class="matchup-card-icon" src="images/champions/Karma.png" alt="Karma"></a><div><h4>Karma</h4></div></div><a class="difficulty-pill hard" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 7 out of 10"><span class="difficulty-score">7</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Karma makes enemy bot lanes faster, safer, and harder to punish. Dodge Mantra Q first, then trade while it is down. Avoid letting her shield speed turn your missed E into a full chase.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card hard" id="matchup-karthus">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Karthus" target="_blank" rel="noopener" aria-label="Open Karthus League wiki"><img class="matchup-card-icon" src="images/champions/Karthus.png" alt="Karthus"></a><div><h4>Karthus</h4></div></div><a class="difficulty-pill hard" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 7 out of 10"><span class="difficulty-score">7</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Karthus punishes immobile casting and can win even after dying if the fight is messy. Keep lateral movement constant, avoid extended 2v2s in his E, and track Requiem when staying low after trades.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card easy" id="matchup-kogmaw">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Kog'Maw" target="_blank" rel="noopener" aria-label="Open Kog'Maw League wiki"><img class="matchup-card-icon" src="images/champions/KogMaw.png" alt="Kog'Maw"></a><div><h4>Kog'Maw</h4></div></div><a class="difficulty-pill easy" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 2 out of 10"><span class="difficulty-score">2</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Pressure before item spikes. Hwei can own the first waves and dragon setup, but Kog'Maw becomes dangerous if the game slows down and his team protects front-to-back fights.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card hard" id="matchup-lucian">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Lucian" target="_blank" rel="noopener" aria-label="Open Lucian League wiki"><img class="matchup-card-icon" src="images/champions/Lucian.png" alt="Lucian"></a><div><h4>Lucian</h4></div></div><a class="difficulty-pill hard" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 7 out of 10"><span class="difficulty-score">7</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Lucian punishes slow spell timing, especially with Nami, Milio, or aggressive supports. Respect dash range, keep minions between you and Piercing Light angles, and do not take short trades when his support is synced.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card hard" id="matchup-lux">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Lux" target="_blank" rel="noopener" aria-label="Open Lux League wiki"><img class="matchup-card-icon" src="images/champions/Lux.png" alt="Lux"></a><div><h4>Lux</h4></div></div><a class="difficulty-pill hard" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 7 out of 10"><span class="difficulty-score">7</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Lux with a range ADC can make every CS painful. Avoid lining up behind minions she wants to E, keep river wards active, and punish her hard when Q misses because her lane loses its teeth briefly.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card medium" id="matchup-mel">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Mel" target="_blank" rel="noopener" aria-label="Open Mel League wiki"><img class="matchup-card-icon" src="images/champions/Mel.png" alt="Mel"></a><div><h4>Mel</h4></div></div><a class="difficulty-pill" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 5 out of 10"><span class="difficulty-score">5</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Mel can punish obvious projectile timing and make careless burst trades backfire. Bait reflect before committing important spells, use wave pressure to force defensive casts, and avoid standing still in her layered poke zones.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card medium" id="matchup-miss-fortune">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Miss_Fortune" target="_blank" rel="noopener" aria-label="Open Miss Fortune League wiki"><img class="matchup-card-icon" src="images/champions/MissFortune.png" alt="Miss Fortune"></a><div><h4>Miss Fortune</h4></div></div><a class="difficulty-pill" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 5 out of 10"><span class="difficulty-score">5</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Miss Fortune wins lane through bounce Q and support CC into Bullet Time. Do not stand behind dying minions, force her to use mana on wave, and keep E ready to interrupt or zone her ultimate channel.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card hard" id="matchup-morgana">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Morgana" target="_blank" rel="noopener" aria-label="Open Morgana League wiki"><img class="matchup-card-icon" src="images/champions/Morgana.png" alt="Morgana"></a><div><h4>Morgana</h4></div></div><a class="difficulty-pill hard" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 7 out of 10"><span class="difficulty-score">7</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Black Shield can erase your best pick window, so do not throw decisive E spells into obvious shield timing. Bait shield with Q pressure, then punish its cooldown with allied CC or ultimate layering.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card brutal" id="matchup-nilah">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Nilah" target="_blank" rel="noopener" aria-label="Open Nilah League wiki"><img class="matchup-card-icon" src="images/champions/Nilah.png" alt="Nilah"></a><div><h4>Nilah</h4></div></div><a class="difficulty-pill brutal" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 9 out of 10"><span class="difficulty-score">9</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Nilah wants melee-range chaos and can ignore too much of your casual poke with the right support. Keep the lane long, do not spend E for chip damage, and punish her only after her dash or defensive cooldown is used.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card brutal" id="matchup-samira">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Samira" target="_blank" rel="noopener" aria-label="Open Samira League wiki"><img class="matchup-card-icon" src="images/champions/Samira.png" alt="Samira"></a><div><h4>Samira</h4></div></div><a class="difficulty-pill brutal" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 9 out of 10"><span class="difficulty-score">9</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Samira punishes wasted E and can block key projectiles with Blade Whirl. Make her walk through zones instead of giving her straight-line fights, and focus on stopping the support engage that starts her combo.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card medium" id="matchup-senna">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Senna" target="_blank" rel="noopener" aria-label="Open Senna League wiki"><img class="matchup-card-icon" src="images/champions/Senna.png" alt="Senna"></a><div><h4>Senna</h4></div></div><a class="difficulty-pill" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 5 out of 10"><span class="difficulty-score">5</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Senna trades well through minions and scales if lane is passive. Pressure her cast windows, keep side-step space for root, and do not let her freely collect souls after every wave.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card medium" id="matchup-seraphine">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Seraphine" target="_blank" rel="noopener" aria-label="Open Seraphine League wiki"><img class="matchup-card-icon" src="images/champions/Seraphine.png" alt="Seraphine"></a><div><h4>Seraphine</h4></div></div><a class="difficulty-pill" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 5 out of 10"><span class="difficulty-score">5</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Seraphine can neutralize waves and punish grouped teammates later. Do not panic if lane is slow; build clean objective setups, dodge empowered E, and punish her when shield and echo timing are down.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card easy" id="matchup-sivir">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Sivir" target="_blank" rel="noopener" aria-label="Open Sivir League wiki"><img class="matchup-card-icon" src="images/champions/Sivir.png" alt="Sivir"></a><div><h4>Sivir</h4></div></div><a class="difficulty-pill easy" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 4 out of 10"><span class="difficulty-score">4</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Sivir clears safely but has limited range for punishing Hwei directly. Bait Spell Shield with lighter poke, avoid obvious E casts into it, and use superior objective zone control once waves are handled.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card easy" id="matchup-smolder">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Smolder" target="_blank" rel="noopener" aria-label="Open Smolder League wiki"><img class="matchup-card-icon" src="images/champions/Smolder.jpg" alt="Smolder"></a><div><h4>Smolder</h4></div></div><a class="difficulty-pill easy" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 4 out of 10"><span class="difficulty-score">4</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Smolder wants a quiet lane to stack. Contest early waves, make him spend spells defensively, and avoid letting his support create the stable front line he needs to farm safely.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card hard" id="matchup-syndra">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Syndra" target="_blank" rel="noopener" aria-label="Open Syndra League wiki"><img class="matchup-card-icon" src="images/champions/Syndra.png" alt="Syndra"></a><div><h4>Syndra</h4></div></div><a class="difficulty-pill hard" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 7 out of 10"><span class="difficulty-score">7</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Syndra contests Hwei's range and can punish stationary casts with Scatter the Weak. Stay diagonal from spheres, force her to clear waves instead of holding stun, and respect level six burst from half health.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card brutal" id="matchup-tristana">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Tristana" target="_blank" rel="noopener" aria-label="Open Tristana League wiki"><img class="matchup-card-icon" src="images/champions/Tristana.png" alt="Tristana"></a><div><h4>Tristana</h4></div></div><a class="difficulty-pill brutal" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 9 out of 10"><span class="difficulty-score">9</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Tristana can override your preferred spacing with one jump and explosive charge. Keep the wave near your tower, preserve E for jump-in, and punish her hard if she uses Rocket Jump to farm or escape.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card easy" id="matchup-twitch">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Twitch" target="_blank" rel="noopener" aria-label="Open Twitch League wiki"><img class="matchup-card-icon" src="images/champions/Twitch.png" alt="Twitch"></a><div><h4>Twitch</h4></div></div><a class="difficulty-pill easy" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 2 out of 10"><span class="difficulty-score">2</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Twitch is punishable before stealth openings become lethal. Ward deeper than normal, ping missing timers early, and if he opens without killing you instantly, Hwei's fear and shield can swing the return trade.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card medium" id="matchup-varus">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Varus" target="_blank" rel="noopener" aria-label="Open Varus League wiki"><img class="matchup-card-icon" src="images/champions/Varus.png" alt="Varus"></a><div><h4>Varus</h4></div></div><a class="difficulty-pill" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 5 out of 10"><span class="difficulty-score">5</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Identify the build quickly. Lethality Varus wants range and chip; on-hit Varus wants extended fights. Hwei wins by choosing the correct response instead of playing both styles the same way.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card easy" id="matchup-vayne">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Vayne" target="_blank" rel="noopener" aria-label="Open Vayne League wiki"><img class="matchup-card-icon" src="images/champions/Vayne.png" alt="Vayne"></a><div><h4>Vayne</h4></div></div><a class="difficulty-pill easy" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 2 out of 10"><span class="difficulty-score">2</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Do not let Vayne's short-range weakness disappear for free. Control the wave, punish last hits, and keep enough distance that condemn angles never start the fight.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card easy" id="matchup-xayah">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Xayah" target="_blank" rel="noopener" aria-label="Open Xayah League wiki"><img class="matchup-card-icon" src="images/champions/Xayah.png" alt="Xayah"></a><div><h4>Xayah</h4></div></div><a class="difficulty-pill easy" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 4 out of 10"><span class="difficulty-score">4</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Xayah is safest when enemies walk into feather lines for her. Trade from angles, do not chase straight through minions, and wait out Featherstorm before committing ultimate burst.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card medium" id="matchup-yunara">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Yunara" target="_blank" rel="noopener" aria-label="Open Yunara League wiki"><img class="matchup-card-icon" src="images/champions/Yunara.png" alt="Yunara"></a><div><h4>Yunara</h4></div></div><a class="difficulty-pill" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 5 out of 10"><span class="difficulty-score">5</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Yunara is a spacing test: Hwei wants to keep her farming under spell threat while avoiding the extended trades where scaling marksmen thrive. Play around support pressure, punish last hits, and keep enough control available to stop committed chases.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card easy" id="matchup-zeri">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Zeri" target="_blank" rel="noopener" aria-label="Open Zeri League wiki"><img class="matchup-card-icon" src="images/champions/Zeri.png" alt="Zeri"></a><div><h4>Zeri</h4></div></div><a class="difficulty-pill easy" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 4 out of 10"><span class="difficulty-score">4</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Zeri struggles into controlled zones before fights become extended. Pressure her early, keep wards around wall angles, and save crowd control for when she commits rather than trying to poke her at max range.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card easy" id="matchup-ziggs">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Ziggs" target="_blank" rel="noopener" aria-label="Open Ziggs League wiki"><img class="matchup-card-icon" src="images/champions/Ziggs.png" alt="Ziggs"></a><div><h4>Ziggs</h4></div></div><a class="difficulty-pill easy" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 4 out of 10"><span class="difficulty-score">4</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Ziggs can neutralize waves and punish towers, but Hwei contests objective setup better if he preserves health. Dodge bombs before clearing and do not let satchel demolish plates from a huge crash.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+            <article class="matchup-detail-card hard" id="matchup-zyra">
+              <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Zyra" target="_blank" rel="noopener" aria-label="Open Zyra League wiki"><img class="matchup-card-icon" src="images/champions/Zyra.png" alt="Zyra"></a><div><h4>Zyra</h4></div></div><a class="difficulty-pill hard" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 7 out of 10"><span class="difficulty-score">7</span><span class="difficulty-max">/10</span></a></div>
+              <p class="matchup-plan">Zyra makes casting lanes messy by filling the ground with extra threats. Clear plants efficiently, dodge root before trading, and avoid narrow paths where her ultimate and Hwei's immobility become a problem.</p>
+              <div class="matchup-recommendations">
+                <div class="matchup-rec-box summoners">
+                  <div class="matchup-rec-title">Recommended Summoners</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/Flash.png" alt="Flash" title="Flash">
+                    <img src="images/exhaust.png" alt="Exhaust" title="Exhaust">
+                  </div>
+                  <span class="matchup-rec-note">Default defensive setup for bot-lane Hwei.</span>
+                </div>
+                <div class="matchup-rec-box runes">
+                  <div class="matchup-rec-title">Recommended Runes</div>
+                  <div class="matchup-rec-icons">
+                    <img src="images/runes/arcane-comet.png" alt="Arcane Comet" title="Arcane Comet">
+                    <img src="images/runes/manaflow-band.png" alt="Manaflow Band" title="Manaflow Band">
+                    <img src="images/runes/transcendence.png" alt="Transcendence" title="Transcendence">
+                    <img src="images/runes/gathering-storm.png" alt="Gathering Storm" title="Gathering Storm">
+                    <img src="images/runes/legend-haste.png" alt="Legend: Haste" title="Legend: Haste">
+                    <img src="images/runes/cut-down.png" alt="Cut Down" title="Cut Down">
+                  </div>
+                  <span class="matchup-rec-note">Comet scaling page: Sorcery primary with Precision secondary.</span>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div class="matchup-card-empty" id="matchup-card-empty">No matchup cards match that search.</div>
+        </div>
       </div>
     </div>
-
   </main>
 
-  <!-- FOOTER -->
   <footer style="background: var(--navy); color: rgba(255,255,255,0.6); padding: 24px 48px; text-align: center; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1);">
     <div style="max-width: 800px; margin: 0 auto;">
-      <p>The Ultimate Mel Compendium by evandabank • © 2026</p>
-      <p style="margin-top: 8px; font-size: 0.75rem;">Built with ❤️ for the League of Legends community</p>
+      <p>The Ultimate Hwei Compendium by evandabank • © 2026</p>
+      <p style="margin-top: 8px; font-size: 0.75rem;">Built for the League of Legends community</p>
     </div>
   </footer>
 </div>
 
 <script src="js/script.js"></script>
+<script>
+  (function initMatchupCardControls() {
+    const searchInput = document.getElementById('matchup-card-search');
+    const sortSelect = document.getElementById('matchup-card-sort');
+    const grid = document.querySelector('#matchup-cards-sec .matchup-detail-grid');
+    const emptyState = document.getElementById('matchup-card-empty');
+    if (!searchInput || !sortSelect || !grid) return;
+
+    const difficultyRank = { easy: 1, medium: 2, hard: 3, brutal: 4 };
+
+    function getCardName(card) {
+      return card.querySelector('.matchup-title-group h4')?.textContent.trim() || '';
+    }
+
+    function getCardDifficulty(card) {
+      if (card.classList.contains('brutal')) return difficultyRank.brutal;
+      if (card.classList.contains('hard')) return difficultyRank.hard;
+      if (card.classList.contains('medium')) return difficultyRank.medium;
+      return difficultyRank.easy;
+    }
+
+    function applyMatchupControls() {
+      const query = searchInput.value.trim().toLowerCase();
+      const cards = Array.from(grid.querySelectorAll('.matchup-detail-card'));
+
+      cards.sort((a, b) => {
+        if (sortSelect.value === 'difficulty') {
+          const diff = getCardDifficulty(a) - getCardDifficulty(b);
+          if (diff !== 0) return diff;
+        }
+        return getCardName(a).localeCompare(getCardName(b));
+      });
+
+      let visibleCount = 0;
+      cards.forEach(card => {
+        const isMatch = getCardName(card).toLowerCase().includes(query);
+        card.hidden = !isMatch;
+        if (isMatch) visibleCount += 1;
+        grid.appendChild(card);
+      });
+
+      if (emptyState) emptyState.classList.toggle('visible', visibleCount === 0);
+    }
+
+    searchInput.addEventListener('input', applyMatchupControls);
+    sortSelect.addEventListener('change', applyMatchupControls);
+    applyMatchupControls();
+  })();
+</script>
 </body>
 </html>

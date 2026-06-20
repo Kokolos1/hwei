@@ -3,15 +3,158 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pregame - The Ultimate Mel Compendium</title>
-  <meta name="description" content="Complete Mel pregame setup including summoner spells, rune pages, item builds, and upgrade priorities.">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+  <title>Pregame - The Ultimate Hwei Compendium</title>
+  <meta name="description" content="Complete Hwei pregame setup including summoner spells, rune pages, item builds, and patch-aware notes.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    #summoners-sec .summoner-loadout {
+      display:grid;
+      grid-template-columns:minmax(0,.92fr) auto minmax(0,1.25fr);
+      gap:14px;
+      align-items:stretch;
+      margin-bottom:16px;
+    }
+    #summoners-sec .summoner-slot {
+      background:
+        radial-gradient(circle at 100% 0,rgba(201,161,74,.11),transparent 16rem),
+        linear-gradient(180deg,#fffdf8,#fbf5ea);
+      border:1px solid var(--border);
+      border-radius:8px;
+      box-shadow:var(--shadow);
+      padding:18px;
+      min-width:0;
+    }
+    #summoners-sec .summoner-slot.locked {
+      border-top:3px solid var(--gold);
+    }
+    #summoners-sec .summoner-choice-panel {
+      border-top:3px solid var(--brand);
+    }
+    #summoners-sec .summoner-slot-label {
+      color:var(--brand-deeper);
+      font-size:.68rem;
+      font-weight:900;
+      letter-spacing:2px;
+      margin-bottom:12px;
+      text-transform:uppercase;
+    }
+    #summoners-sec .summoner-pick {
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+    }
+    #summoners-sec .summoner-icon {
+      width:72px;
+      height:72px;
+      flex:0 0 72px;
+      border-radius:10px;
+      background:var(--navy);
+      border:1px solid rgba(201,161,74,.38);
+      box-shadow:0 12px 22px rgba(21,17,29,.16);
+      overflow:hidden;
+    }
+    #summoners-sec .summoner-icon img {
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
+    }
+    #summoners-sec .summoner-copy h4 {
+      color:var(--navy);
+      font-family:'Playfair Display',serif;
+      font-size:1.2rem;
+      line-height:1.15;
+      margin:0 0 7px;
+    }
+    #summoners-sec .summoner-copy p {
+      color:var(--text-body);
+      font-size:.93rem;
+      line-height:1.6;
+      margin:0;
+    }
+    #summoners-sec .summoner-connector {
+      align-self:center;
+      color:var(--text-light);
+      font-size:.74rem;
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      writing-mode:vertical-rl;
+    }
+    #summoners-sec .choice-header {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:baseline;
+      margin-bottom:12px;
+    }
+    #summoners-sec .choice-header h4 {
+      color:var(--navy);
+      font-family:'Playfair Display',serif;
+      font-size:1.15rem;
+      margin:0;
+    }
+    #summoners-sec .choice-header span {
+      color:var(--text-light);
+      font-size:.68rem;
+      font-weight:900;
+      letter-spacing:1.7px;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    #summoners-sec .summoner-choice-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+    #summoners-sec .summoner-option {
+      background:rgba(255,255,255,.72);
+      border:1px solid var(--border);
+      border-radius:8px;
+      padding:14px;
+    }
+    #summoners-sec .summoner-option.recommended {
+      border-color:rgba(201,161,74,.48);
+      background:
+        radial-gradient(circle at 100% 0,rgba(201,161,74,.12),transparent 12rem),
+        rgba(255,255,255,.78);
+    }
+    #summoners-sec .option-tag {
+      display:inline-flex;
+      margin-top:10px;
+      min-height:24px;
+      align-items:center;
+      border-radius:999px;
+      border:1px solid var(--border-dark);
+      color:var(--text-muted);
+      font-size:.67rem;
+      font-weight:900;
+      letter-spacing:1.2px;
+      padding:3px 8px;
+      text-transform:uppercase;
+    }
+    #summoners-sec .recommended .option-tag {
+      border-color:rgba(201,161,74,.58);
+      color:var(--amber);
+      background:var(--gold-pale);
+    }
+    @media (max-width: 860px) {
+      #summoners-sec .summoner-loadout {
+        grid-template-columns:1fr;
+      }
+      #summoners-sec .summoner-connector {
+        writing-mode:horizontal-tb;
+        justify-self:center;
+      }
+      #summoners-sec .summoner-choice-grid {
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<!-- LANGUAGE MODAL -->
 <div id="lang-overlay">
   <div class="lang-modal">
     <div class="lang-eyebrow">evandabank Presents</div>
@@ -35,13 +178,12 @@
   </div>
 </div>
 
-<!-- TOP NAV -->
 <header class="topnav-header" id="topnav">
   <div class="topnav-brand-bar">
     <div class="topnav-brand-left">
       <div>
         <div class="topnav-brand-eyebrow">Ultimate Compendium</div>
-        <div class="topnav-brand-title">The Ultimate Mel Compendium</div>
+        <div class="topnav-brand-title">The Ultimate Hwei Compendium</div>
       </div>
       <div class="topnav-divider"></div>
       <div class="topnav-author">by <strong>evandabank</strong></div>
@@ -53,7 +195,7 @@
   <nav class="topnav-nav">
     <a href="index.html" class="nav-item">Intro / Home</a>
     <a href="abilities.html" class="nav-item">Abilities</a>
-    <a href="pregame.html" class="nav-item">Pregame</a>
+    <a href="pregame.html" class="nav-item active">Pregame</a>
     <a href="laning.html" class="nav-item">Laning / Early Game</a>
     <a href="midgame.html" class="nav-item">Mid Game</a>
     <a href="lategame.html" class="nav-item">Late Game</a>
@@ -63,250 +205,378 @@
 
 <div class="layout">
   <main class="main">
-
     <div class="page active" id="page-pregame">
       <div class="page-hero">
         <div class="hero-eyebrow">Pregame Setup</div>
-        <h2>Pregame</h2>
-        <p class="hero-desc">Everything you choose before the game starts — summoner spells, rune pages, and item build paths.</p>
+        <h2>Hwei Pregame</h2>
+        <p class="hero-desc">Build the setup that lets Hwei survive bot lane, keep mana, and reach the 2v2 and objective fights where his spellbook takes over.</p>
       </div>
+
       <div class="page-subnav">
-        <div class="subnav-item active" onclick="subnavScroll(this,'summoners-sec')">Summoner Spells</div>
+        <div class="subnav-item active" onclick="subnavScroll(this,'summoners-sec')">Summoners</div>
         <div class="subnav-item" onclick="subnavScroll(this,'runes-sec')">Runes</div>
         <div class="subnav-item" onclick="subnavScroll(this,'items-sec')">Items</div>
       </div>
+
       <div class="page-body">
-
-        <!-- ── SUMMONER SPELLS ── -->
-        <div id="summoners-sec" style="margin-bottom:36px;scroll-margin-top:130px">
+        <div id="summoners-sec" style="margin-bottom:36px;scroll-margin-top:150px">
           <div class="section-head"><h3>Summoner Spells</h3><div class="section-rule"></div></div>
-          <div class="section-sub">The only recommended combination for Mel</div>
+          <div class="section-sub">Flash is locked; choose Teleport or Exhaust for slot two</div>
 
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;align-items:stretch">
-            <!-- LEFT: combined spell card -->
-            <div class="card" style="border-top:3px solid var(--brand);margin-bottom:0;display:flex;flex-direction:row;align-items:center;gap:24px">
-              <!-- icons + plus stacked together -->
-              <div style="display:flex;flex-direction:column;align-items:center;gap:0;flex-shrink:0">
-                <div class="spell-icon-wrapper"><img src="images/Flash.png" alt="Flash"></div>
-                <i class="fa-solid fa-plus" style="font-size:1rem;color:var(--brand);opacity:0.75;padding:10px 0"></i>
-                <div class="spell-icon-wrapper"><img src="images/teleport.png" alt="Teleport"></div>
-              </div>
-              <!-- text stacked -->
-              <div style="display:flex;flex-direction:column;gap:0">
-                <div>
-                  <div class="card-title">Flash & Teleport Combination Every Game</div>
-                  <p style="font-size:.92rem;line-height:1.7">Flash is the best summoner spell in the game, hands down. Especially on mages which have intentionally low mobility. <strong>This is a MUST USE in every single game. No exceptions.</strong> With that said, ensure that you don't waste your flash late game for a single kill (unless in a team fight) AND if you burn flash AND die, that is terrible. PLEASE don't waste flash when you will die regardless.</p>
-                </div>
-                <div style="margin-top:20px">
-                  <p style="font-size:.92rem;line-height:1.7">Teleport is the only secondary summoner spell that I run. Other players use barrier & ghost on occassion, but I find telport to be the most reliable in all situations. With that said, these runes (along with exhaust) are definitely viable. Personally though, I find teleport to be such an overpowered summoner spell when you utilize it properly. Watch the video for more details on how to actually use this spell.</p>
+          <div class="summoner-loadout">
+            <article class="summoner-slot locked">
+              <div class="summoner-slot-label">Slot 1 - Mandatory</div>
+              <div class="summoner-pick">
+                <div class="summoner-icon"><img src="images/Flash.png" alt="Flash"></div>
+                <div class="summoner-copy">
+                  <h4>Flash</h4>
+                  <p>Always take Flash. Hwei has range, not mobility, so this is your panic button, late-fight reposition tool, and occasional kill confirm.</p>
                 </div>
               </div>
-            </div>
-            <!-- RIGHT: video placeholder -->
-            <div style="border:1px solid var(--border);border-top:3px solid var(--brand);overflow:hidden">
-              <iframe
-                src="https://www.youtube.com/embed/mIsx2mKSw-4"
-                title="Summoner Spells Overview"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-                style="width:100%;aspect-ratio:16/9;display:block;border:none">
-              </iframe>
-            </div>
+            </article>
+
+            <div class="summoner-connector">Plus</div>
+
+            <article class="summoner-slot summoner-choice-panel">
+              <div class="choice-header">
+                <h4>Second Summoner Slot</h4>
+                <span>Pick one</span>
+              </div>
+              <div class="summoner-choice-grid">
+                <div class="summoner-option recommended">
+                  <div class="summoner-pick">
+                    <div class="summoner-icon"><img src="images/teleport.png" alt="Teleport"></div>
+                    <div class="summoner-copy">
+                      <h4>Teleport</h4>
+                      <p>Default choice for stable lanes, mana resets, and staying synced with waves before objective fights.</p>
+                      <div class="option-tag">Default</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="summoner-option">
+                  <div class="summoner-pick">
+                    <div class="summoner-icon"><img src="images/exhaust.png" alt="Exhaust"></div>
+                    <div class="summoner-copy">
+                      <h4>Exhaust</h4>
+                      <p>Take this into burst, divers, or hard all-in bot lanes where surviving the first engage matters more than map tempo.</p>
+                      <div class="option-tag">Defensive</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
           </div>
 
-          <div class="info-box-amber">⚠️ Do not take Ignite! Mel is almost never in range of the enemy to use this spell. IT IS TERRIBLE.</div>
+          <div class="info-box-amber">Baseline: Flash + Teleport. Swap Teleport for Exhaust when the enemy draft can repeatedly force melee range or one-shot windows.</div>
         </div>
 
-        <!-- ── RUNES ── -->
-        <div id="runes-sec" style="margin-bottom:36px;scroll-margin-top:130px">
+        <div id="runes-sec" style="margin-bottom:36px;scroll-margin-top:150px">
           <div class="section-head"><h3>Runes</h3><div class="section-rule"></div></div>
-          <div class="section-sub">Standard rune page- I run this EVERY game</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;align-items:start">
-            <!-- LEFT: Runes image -->
-            <div style="border:1px solid var(--border);border-top:3px solid var(--brand);overflow:hidden;background:var(--white)">
-              <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border);background:var(--paper)">
-                <button
-                  id="runes-toggle-v3"
-                  type="button"
-                  onclick="switchRunePage('v3')"
-                  style="padding:6px 10px;border:1px solid var(--brand);background:var(--brand);color:var(--white);font-size:.76rem;font-weight:700;letter-spacing:.5px;cursor:pointer;">
-                  Recommended Page
-                </button>
-                <button
-                  id="runes-toggle-v2"
-                  type="button"
-                  onclick="switchRunePage('v2')"
-                  style="padding:6px 10px;border:1px solid var(--border-dark);background:var(--white);color:var(--text-body);font-size:.76rem;font-weight:700;letter-spacing:.5px;cursor:pointer;">
-                  Comet (Not Recommended)
-                </button>
+          <div class="section-sub">Select a rune page by lane state</div>
+
+          <div class="rune-selector" data-selected-rune-page="default">
+            <div class="rune-selector-sidebar" role="tablist" aria-label="Hwei rune pages">
+              <button class="rune-page-option active" type="button" data-rune-page="default" role="tab" aria-selected="true">
+                <span class="rune-page-kicker">Recommended</span>
+                <span class="rune-page-name">Recommended Comet</span>
+                <span class="rune-page-note">Gathering Storm default</span>
+                <span class="rune-page-icons" aria-hidden="true"></span>
+              </button>
+              <button class="rune-page-option" type="button" data-rune-page="early" role="tab" aria-selected="false">
+                <span class="rune-page-kicker">Early Game</span>
+                <span class="rune-page-name">Early Game Comet</span>
+                <span class="rune-page-note">Scorch and flat health</span>
+                <span class="rune-page-icons" aria-hidden="true"></span>
+              </button>
+              <button class="rune-page-option" type="button" data-rune-page="melee" role="tab" aria-selected="false">
+                <span class="rune-page-kicker">Versus Melee</span>
+                <span class="rune-page-name">Aery Melee Comp</span>
+                <span class="rune-page-note">Aery into short trades</span>
+                <span class="rune-page-icons" aria-hidden="true"></span>
+              </button>
+              <button class="rune-page-option rune-faq-option" type="button" data-rune-page="faq" role="tab" aria-selected="false">
+                <span class="rune-page-kicker">Reference</span>
+                <span class="rune-page-name">Runes FAQ</span>
+                <span class="rune-page-note">Common setup questions</span>
+                <span class="rune-page-icons" aria-hidden="true"></span>
+              </button>
+            </div>
+
+            <div class="rune-page-display">
+              <div class="rune-display-head">
+                <div>
+                  <div class="rune-display-kicker" id="rune-display-kicker">Recommended Page</div>
+                  <h4 id="rune-display-title">Recommended Comet</h4>
+                  <p id="rune-display-summary">Default Hwei bot/APC page for scaling lane control and reliable late-game damage.</p>
+                </div>
+                <div class="rune-import-action">
+                  <button class="rune-copy-btn" type="button" id="rune-copy-btn">Import Runes</button>
+                  <div class="rune-import-status" id="rune-import-status" role="status" aria-live="polite"></div>
+                </div>
               </div>
-              <img id="runes-page-image" src="images/RunesV3.png" alt="Mel Rune Page 1" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block">
-            </div>
-            <!-- RIGHT: YouTube video -->
-            <div style="border:1px solid var(--border);border-top:3px solid var(--brand);overflow:hidden">
-              <iframe
-                src="https://www.youtube.com/embed/82oYXCH4ne8"
-                title="Mel Runes Guide"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-                style="width:100%;aspect-ratio:16/9;display:block;border:none">
-              </iframe>
-            </div>
-          </div>
-          <div class="g2">
-            <div class="card">
-              <div class="card-title">Why First Strike?</div>
-              <p style="font-size:.9rem;line-height:1.7">The alternative to First Strike is Arcane Comet. Mel plays like a burst mage, and First Strike gives 7% bonus damage for 3 seconds. This is VERY effective for a burst mage (Mel uses all her spells within this windows). This combined with the fact that we can always hit the enemy first (AND INSPIRATION IS OP ASF), makes it the best</p>
-            </div>
-            <div class="card">
-              <div class="card-title">Why Cash Back, Triple Tonic & JOAT?</div>
-              <p style="font-size:.9rem;line-height:1.7">Cash Back is literally 1300 gold. No brainer unless you want 10MS from free boots (high elo only). Triple Tonic has no alternatives (rest of runes in this row suck). Jack of all trades is 6ish free ability haste. Not great but pretty good. Can definitely be swapped for cosmic insight.</p>
-            </div>
-            <div class="card">
-              <div class="card-title">Why Manaflow & Transcendence?</div>
-              <p style="font-size:.9rem;line-height:1.7"> Mel (and most mages) NEED a mana rune. Manaflow band is really really strong, and essentially gives us infinite mana if we play properly. Transcendece is 10 free ability haste and is significantly stronger than gathering storm (due to spiking earlier and more reliable). The only change we might make is Manaflow > Gathering Storm if you find you don't go OOM</p>
-            </div>
-            <div class="card">
-              <div class="card-title">Why These Stat Shards?</div>
-              <p style="font-size:.9rem;line-height:1.7">We are running scaling stat shards in this page. Mages outscale ADCs, BUT they do win lane convincingly. To offset this, we can be greedy with our runes. 8 Ability haste is worse than adaptive force early, but it scales significantly better. We also go health scaling instead of flat since our lane phase should be relatively safe.</p>
+
+              <div class="rune-page-content" id="rune-page-content">
+                <div class="rune-tree-grid">
+                  <div class="rune-tree-card primary-tree" id="rune-primary-tree"></div>
+                  <div class="rune-tree-card secondary-tree" id="rune-secondary-tree"></div>
+                </div>
+
+                <div class="rune-shard-panel">
+                  <div class="rune-mini-title">Stat Shards</div>
+                  <div class="rune-shards" id="rune-shards"></div>
+                </div>
+
+                <div class="rune-advice-grid">
+                  <div class="rune-advice">
+                    <span>Use When</span>
+                    <p id="rune-use-case"></p>
+                  </div>
+                  <div class="rune-advice">
+                    <span>Swap If</span>
+                    <p id="rune-swap-note"></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rune-faq-panel" id="rune-faq-panel" hidden></div>
             </div>
           </div>
+
+          <div class="info-box">Rune strength changes by patch. Use this selector as the guide default, then adjust if your lane has extreme engage, heavy poke, or a support who guarantees CC.</div>
         </div>
 
-        <!-- ── ITEMS ── -->
-        <div id="items-sec" style="scroll-margin-top:130px">
+        <div id="items-sec" style="scroll-margin-top:150px">
           <div class="section-head"><h3>Items</h3><div class="section-rule"></div></div>
-          <div class="section-sub">Build path and situational picks</div>
+          <div class="section-sub">Safe default build path and situational pivots</div>
 
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
-
-            <!-- LEFT: YouTube video -->
-            <div style="background:var(--navy);border:1px solid var(--border);border-top:3px solid var(--brand);overflow:hidden;position:sticky;top:130px">
-              <iframe
-                src="https://www.youtube.com/embed/sKop_6L3MNs"
-                title="Mel Items Guide"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-                style="width:100%;aspect-ratio:16/9;display:block;border:none">
-              </iframe>
+          <div class="item-shop-panel">
+            <div class="item-import-panel" aria-label="Copy Hwei item sets for League client import">
+              <div>
+                <div class="item-import-kicker">League Client Import</div>
+                <div class="item-import-title">Copy an item set, then paste it in Collection &gt; Items &gt; Import Item Sets.</div>
+              </div>
+              <div class="item-import-actions">
+                <button class="item-copy-btn primary" type="button" data-item-set-copy="all">Copy All Builds</button>
+                <button class="item-copy-btn" type="button" data-item-set-copy="scaling-burn">Scaling Burn</button>
+                <button class="item-copy-btn" type="button" data-item-set-copy="tempo-burst">Tempo Burst</button>
+                <button class="item-copy-btn" type="button" data-item-set-copy="utility-weave">Utility Weave</button>
+              </div>
+              <div class="item-copy-status" id="item-copy-status" role="status" aria-live="polite"></div>
             </div>
 
-            <!-- RIGHT: tab nav + content -->
-            <div>
-              <div class="tab-bar">
-                <button class="tab-btn active" onclick="switchTab(this,'t-start')">Starting Items</button>
-                <button class="tab-btn" onclick="switchTab(this,'t-boots')">Boots</button>
-                <button class="tab-btn" onclick="switchTab(this,'t-core')">Core Build</button>
-              </div>
+            <div class="tab-bar item-tabs">
+              <button class="tab-btn active" onclick="switchTab(this,'t-start')">Starting Items</button>
+              <button class="tab-btn" onclick="switchTab(this,'t-boots')">Boots</button>
+              <button class="tab-btn" onclick="switchTab(this,'t-core')">Core Builds</button>
+              <button class="tab-btn" onclick="switchTab(this,'t-situational')">Situational</button>
+            </div>
 
-              <div id="t-start" class="tab-pane active">
-                <div class="g3">
-                  <div class="item-card" style="border-top:3px solid var(--brand)">
-                    <div class="item-icon"><img src="images/doransring.jpg" alt="Doran's Ring"></div>
-                    <div class="name">Doran's Ring</div>
-                    <div class="note">Every game, no exceptions. Mel cannot make good use of other starting items.</div>
-                  </div>
-                  <div class="item-card" style="border-top:3px solid var(--brand)">
-                    <div class="item-icon"><img src="images/healthPotion.jpg" alt="Health Potions"></div>
-                    <div class="name">2× Health Potions</div>
-                    <div class="note">Start your first potion at ~180–200 damage taken. Upgrade to Refillable on first or second reset.</div>
-                  </div>
-                  <div class="item-card" style="border-top:3px solid var(--brand)">
-                    <div class="item-icon"><img src="images/wardingtotem.jpg" alt="Warding Totem"></div>
-                    <div class="name">Warding Totem</div>
-                    <div class="note">Must purchase on every champion. Swap to Farsight Alteration in the late game.</div>
-                  </div>
+            <div id="t-start" class="tab-pane active">
+              <div class="item-grid item-grid-start">
+                <div class="item-card item-card-shop">
+                  <div class="item-tag">Start</div>
+                  <div class="item-icon"><img src="images/doransring.jpg" alt="Doran's Ring"></div>
+                  <div class="name">Doran's Ring</div>
+                  <div class="note">Default start for lane power, health, and mana support.</div>
                 </div>
-                <div class="info-box" style="margin-top:12px"><strong>First reset priority:</strong> Spend ALL your gold and do not leave base with 300g unspent. Build toward Lost Chapter first (it builds into all mage starting items and gives mana on level-up). Only buy generic boots before completing your first full item. Video will contain all the details</div>
+                <div class="item-card item-card-shop">
+                  <div class="item-tag">Sustain</div>
+                  <div class="item-icon"><img src="images/healthPotion.jpg" alt="Health Potions"></div>
+                  <div class="name">2 Health Potions</div>
+                  <div class="note">Use early enough that you can contest the next wave instead of recalling late.</div>
+                </div>
+                <div class="item-card item-card-shop">
+                  <div class="item-tag">Vision</div>
+                  <div class="item-icon"><img src="images/wardingtotem.jpg" alt="Warding Totem"></div>
+                  <div class="name">Warding Totem</div>
+                  <div class="note">Swap to Farsight in late game when face-checking becomes lethal.</div>
+                </div>
               </div>
+            </div>
 
-              <div id="t-boots" class="tab-pane">
-                <div style="display:flex;flex-direction:column;gap:12px">
-                  <div class="item-card" style="border-top:3px solid var(--brand);text-align:left;display:flex;align-items:flex-start;gap:14px;padding:16px">
-                    <div class="item-icon" style="margin:0;flex-shrink:0"><img src="images/sorcBoots.jpg" alt="Sorcerer's Shoes"></div>
-                    <div>
-                      <div class="name" style="text-align:left;margin-bottom:6px">Sorcerer's Shoes</div>
-                      <div class="note" style="text-align:left">Default boots in all cases. Buy after 1st item almost every game. 12 magic pen is a lot stronger than the 10 CDR provided by lucidity boots. </div>
+            <div id="t-boots" class="tab-pane">
+              <div class="item-grid item-grid-boots">
+                <div class="item-card item-card-shop">
+                  <div class="item-tag">Damage</div>
+                  <div class="item-icon"><img src="images/sorcBoots.jpg" alt="Sorcerer's Shoes"></div>
+                  <div class="name">Sorcerer's Shoes</div>
+                  <div class="note">Default boots when you can safely play for damage, poke threat, and magic penetration tempo.</div>
+                </div>
+                <div class="item-card item-card-shop">
+                  <div class="item-tag">Haste</div>
+                  <div class="item-icon"><img src="images/IonianBoots.jpg" alt="Ionian Boots"></div>
+                  <div class="name">Ionian Boots</div>
+                  <div class="note">Alternative when haste, Teleport cooldown, and repeated spell rotations matter more than penetration.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="t-core" class="tab-pane">
+              <div class="core-builds-shell">
+                <div class="core-build-tabs" role="tablist" aria-label="Hwei core builds">
+                  <button class="core-build-tab active" type="button" data-core-build="build-seraphs" onclick="switchCoreBuild(this,'build-seraphs')">
+                    <span>Scaling Burn</span>
+                    <small>Seraph's > Liandry's > Cosmic</small>
+                  </button>
+                  <button class="core-build-tab" type="button" data-core-build="build-blackfire" onclick="switchCoreBuild(this,'build-blackfire')">
+                    <span>Tempo Burst</span>
+                    <small>Blackfire > Cosmic > Shadowflame</small>
+                  </button>
+                  <button class="core-build-tab" type="button" data-core-build="build-helia" onclick="switchCoreBuild(this,'build-helia')">
+                    <span>Utility Weave</span>
+                    <small>Tear > Liandry's > Helia > Diadem</small>
+                  </button>
+                </div>
+
+                <div id="build-seraphs" class="core-build-pane active">
+                  <div class="build-path" aria-label="Scaling Burn core item order">
+                    <div class="build-step">
+                      <div class="build-step-meta">1st Core</div>
+                      <div class="item-icon"><img src="images/items/seraphs-embrace.png" alt="Seraph's Embrace"></div>
+                      <div class="build-step-body">
+                        <div class="name">Seraph's Embrace</div>
+                        <div class="note">Mana scaling and survivability for slower lanes where Hwei can safely farm toward teamfights.</div>
+                      </div>
+                    </div>
+                    <div class="build-step">
+                      <div class="build-step-meta">2nd Core</div>
+                      <div class="item-icon"><img src="images/items/liandrys-torment.png" alt="Liandry's Torment"></div>
+                      <div class="build-step-body">
+                        <div class="name">Liandry's Torment</div>
+                        <div class="note">Adds burn damage for repeated spell hits, front-to-back fights, and higher-health targets.</div>
+                      </div>
+                    </div>
+                    <div class="build-step">
+                      <div class="build-step-meta">3rd Core</div>
+                      <div class="item-icon"><img src="images/items/cosmic-drive.png" alt="Cosmic Drive"></div>
+                      <div class="build-step-body">
+                        <div class="name">Cosmic Drive</div>
+                        <div class="note">Turns spell uptime into movement and haste so Hwei can keep spacing after each cast cycle.</div>
+                      </div>
                     </div>
                   </div>
-                  <div class="item-card" style="border-top:3px solid var(--brand);text-align:left;display:flex;align-items:flex-start;gap:14px;padding:16px">
-                    <div class="item-icon" style="margin:0;flex-shrink:0"><img src="images/IonianBoots.jpg" alt="Ionian Boots of Lucidity"></div>
-                    <div>
-                      <div class="name" style="text-align:left;margin-bottom:6px">Ionian Boots of Lucidity</div>
-                      <div class="note" style="text-align:left">Run instead of Sorcerer's Shoes only when the enemy has 2–3 champions with significant magic resist built. These are the only alternative to sorcerer's at the moment.</div>
+                  <div class="item-callout">Best default when the game is slower and Hwei needs mana, shield value, and scaling DPS.</div>
+                </div>
+
+                <div id="build-blackfire" class="core-build-pane">
+                  <div class="build-path" aria-label="Tempo Burst core item order">
+                    <div class="build-step">
+                      <div class="build-step-meta">1st Core</div>
+                      <div class="item-icon"><img src="images/items/blackfire-torch.png" alt="Blackfire Torch"></div>
+                      <div class="build-step-body">
+                        <div class="name">Blackfire Torch</div>
+                        <div class="note">Fast mana spike for waveclear, repeat poke, and early objective tempo.</div>
+                      </div>
+                    </div>
+                    <div class="build-step">
+                      <div class="build-step-meta">2nd Core</div>
+                      <div class="item-icon"><img src="images/items/cosmic-drive.png" alt="Cosmic Drive"></div>
+                      <div class="build-step-body">
+                        <div class="name">Cosmic Drive</div>
+                        <div class="note">Keeps Hwei mobile in skirmishes while reducing downtime between spell rotations.</div>
+                      </div>
+                    </div>
+                    <div class="build-step">
+                      <div class="build-step-meta">3rd Core</div>
+                      <div class="item-icon"><img src="images/items/shadowflame.png" alt="Shadowflame"></div>
+                      <div class="build-step-body">
+                        <div class="name">Shadowflame</div>
+                        <div class="note">Converts early tempo into sharper burst against squishies and low-health objective fights.</div>
+                      </div>
                     </div>
                   </div>
+                  <div class="item-callout">Use when bot lane tempo matters and your team can fight around your first two completed items.</div>
+                </div>
+
+                <div id="build-helia" class="core-build-pane">
+                  <div class="build-path build-path-four" aria-label="Utility Weave core item order">
+                    <div class="build-step">
+                      <div class="build-step-meta">Start Stack</div>
+                      <div class="item-icon"><img src="images/items/tear-of-the-goddess.png" alt="Tear of the Goddess"></div>
+                      <div class="build-step-body">
+                        <div class="name">Tear of the Goddess</div>
+                        <div class="note">Early mana stacking before pivoting into utility-focused teamfight items.</div>
+                      </div>
+                    </div>
+                    <div class="build-step">
+                      <div class="build-step-meta">Burn</div>
+                      <div class="item-icon"><img src="images/items/liandrys-torment.png" alt="Liandry's Torment"></div>
+                      <div class="build-step-body">
+                        <div class="name">Liandry's Torment</div>
+                        <div class="note">Keeps Hwei's damage relevant while he plays slower fights and extended spell cycles.</div>
+                      </div>
+                    </div>
+                    <div class="build-step">
+                      <div class="build-step-meta">Utility</div>
+                      <div class="item-icon"><img src="images/items/echoes-of-helia.png" alt="Echoes of Helia"></div>
+                      <div class="build-step-body">
+                        <div class="name">Echoes of Helia</div>
+                        <div class="note">Rewards repeated damage and shielding patterns when Hwei is playing around grouped allies.</div>
+                      </div>
+                    </div>
+                    <div class="build-step">
+                      <div class="build-step-meta">Teamfight</div>
+                      <div class="item-icon"><img src="images/items/diadem-of-songs.png" alt="Diadem of Songs"></div>
+                      <div class="build-step-body">
+                        <div class="name">Diadem of Songs</div>
+                        <div class="note">A supportive AP finisher for ally-centered fights where Hwei is weaving damage and protection.</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item-callout">Use this when Hwei is functionally a utility APC, grouping early and playing around ally uptime.</div>
                 </div>
               </div>
+            </div>
 
-              <div id="t-core" class="tab-pane">
-                <p style="font-size:.88rem;color:var(--text-muted);margin-bottom:14px">Mel is a burst mage<strong></strong>. The goal to consistently be able to one-shot squishy targets while having enough CDR to kill tanks. The below build will have slight variance depending on the game, please watch the video for full context.</p>
-                <div style="display:flex;flex-direction:column;gap:8px">
-                  <div class="item-card" style="border-top:3px solid var(--brand);text-align:left;display:flex;align-items:flex-start;gap:14px;padding:14px">
-                    <div class="item-icon" style="margin:0;flex-shrink:0"><img src="images/blackfireTorch.jpg" alt="Blackfire Torch"></div>
-                    <div><div class="name" style="text-align:left;margin-bottom:4px">Blackfire Torch</div><div class="note" style="text-align:left">Best first item. Necessary to build first due to mana constraints & the 600 mana that torch provides. The reason we build torch is due to it's awesome stat profile (20 CDR) and it's just really a strong item right now. </div></div>
-                  </div>
-                  <div class="item-card" style="border-top:3px solid var(--brand);text-align:left;display:flex;align-items:flex-start;gap:14px;padding:14px">
-                    <div class="item-icon" style="margin:0;flex-shrink:0"><img src="images/cosmicDrive.jpg" alt="Cosmic Drive"></div>
-                    <div><div class="name" style="text-align:left;margin-bottom:4px">Cosmic Drive</div><div class="note" style="text-align:left">Second item. Provides ability haste and movement speed on ability hits for better chase/poke and kite potential. Note that the burn from torch applies the movespeed from Cosmic Drive. You get 7 seconds of bonus speed on ability hit with this build.</div></div>
-                  </div>
-                  <div class="item-card" style="border-top:3px solid var(--brand);text-align:left;display:flex;align-items:flex-start;gap:14px;padding:14px">
-                    <div class="item-icon" style="margin:0;flex-shrink:0"><img src="images/Shadowflame.jpg" alt="Shadowflame"></div>
-                    <div><div class="name" style="text-align:left;margin-bottom:4px">Shadowflame</div><div class="note" style="text-align:left">Third item. Can be built second against really squishy enemy team comps. Never build second if you fall behind. This item is just pure damage, but I can't stress enough how overtuned it is right now. Super OP for a burst mage like Mel.</div></div>
-                  </div>
-                  <div class="item-card" style="border-top:3px solid var(--brand);text-align:left;display:flex;align-items:flex-start;gap:14px;padding:14px">
-                    <div class="item-icon" style="margin:0;flex-shrink:0"><img src="images/rabadons.jpg" alt="Rabadon's Deathcap"></div>
-                    <div><div class="name" style="text-align:left;margin-bottom:4px">Rabadon's Deathcap</div><div class="note" style="text-align:left">Fourth item. Multiplies total AP by 30% & a massive power spike for our damage. We can sometimes delay building Rabadon's further if we need to build Magic Pen to get through tanks. This is our best/most ideal fourth item though.</div></div>
-                  </div>
-                  <div class="item-card" style="border-top:3px solid var(--brand);text-align:left;display:flex;align-items:flex-start;gap:14px;padding:14px">
-                    <div class="item-icon" style="margin:0;flex-shrink:0"><img src="images/voidStaff.jpg" alt="Void Staff"></div>
-                    <div><div class="name" style="text-align:left;margin-bottom:4px">Void Staff</div><div class="note" style="text-align:left">Fifth item. Can be built 4th if the enemy starts getting too much MR (2-3 enemies with a full MR item and not just merc treads). Always build this fifth if you didn't build it yet EVEN IF THE ENEMY HAS NO MR ITEMS. Necessary to shread lategame base MR. </div></div>
-                  </div>
-                  <div class="item-card" style="border-top:3px solid var(--brand);text-align:left;display:flex;align-items:flex-start;gap:14px;padding:14px">
-                    <div class="item-icon" style="margin:0;flex-shrink:0"><img src="images/zhonyas.jpg" alt="Zhonya's Hourglass"></div>
-                    <div><div class="name" style="text-align:left;margin-bottom:4px">Zhonya's Hourglass</div><div class="note" style="text-align:left">Sixth item. I almost never build this before my last item. Times when I build early include against: Rengar, Malphite, Yasuo team comps. Definitely a strong item but is VERY expensive for the stats it provides.</div></div>
-                  </div>
+            <div id="t-situational" class="tab-pane">
+              <div class="item-grid item-grid-situational">
+                <div class="item-card item-card-shop">
+                  <div class="item-tag">Burst</div>
+                  <div class="item-icon"><img src="images/Shadowflame.jpg" alt="Shadowflame"></div>
+                  <div class="name">Shadowflame</div>
+                  <div class="note">Burst option into squishy teams when you are ahead or even.</div>
+                </div>
+                <div class="item-card item-card-shop">
+                  <div class="item-tag">Pen</div>
+                  <div class="item-icon"><img src="images/voidStaff.jpg" alt="Void Staff"></div>
+                  <div class="name">Void Staff</div>
+                  <div class="note">Buy when multiple enemies have meaningful magic resist.</div>
+                </div>
+                <div class="item-card item-card-shop">
+                  <div class="item-tag">Utility Pen</div>
+                  <div class="item-icon"><img src="images/cryptbloom.jpg" alt="Cryptbloom"></div>
+                  <div class="name">Cryptbloom</div>
+                  <div class="note">Penetration option when teamfight utility matters more than pure damage.</div>
+                </div>
+                <div class="item-card item-card-shop">
+                  <div class="item-tag">Stasis</div>
+                  <div class="item-icon"><img src="images/zhonyas.jpg" alt="Zhonya's Hourglass"></div>
+                  <div class="name">Zhonya's Hourglass</div>
+                  <div class="note">Use into unavoidable dive, hard engage, or stasis-dependent teamfights.</div>
+                </div>
+                <div class="item-card item-card-shop">
+                  <div class="item-tag">Haste</div>
+                  <div class="item-icon"><img src="images/IonianBoots.jpg" alt="Ionian Boots"></div>
+                  <div class="name">Ionian Boots</div>
+                  <div class="note">Alternative when haste and summoner cooldowns matter more than magic penetration.</div>
                 </div>
               </div>
-
-            </div><!-- end right col -->
-
-          </div><!-- end grid -->
+            </div>
+          </div>
         </div>
-
       </div>
     </div>
-
   </main>
 
-  <footer style="background:var(--navy);color:rgba(255,255,255,0.6);padding:24px 48px;text-align:center;font-size:0.85rem;border-top:1px solid rgba(255,255,255,0.1);">
-    <div style="max-width:800px;margin:0 auto;">
-      <p>The Ultimate Mel Compendium by evandabank • © 2026</p>
-      <p style="margin-top:8px;font-size:0.75rem;">Built with ❤️ for the League of Legends community</p>
+  <footer style="background: var(--navy); color: rgba(255,255,255,0.6); padding: 24px 48px; text-align: center; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1);">
+    <div style="max-width: 800px; margin: 0 auto;">
+      <p>The Ultimate Hwei Compendium by evandabank • © 2026</p>
+      <p style="margin-top: 8px; font-size: 0.75rem;">Built for the League of Legends community</p>
     </div>
   </footer>
 </div>
 
 <script src="js/script.js"></script>
-<script>
-  function switchRunePage(page) {
-    const image = document.getElementById('runes-page-image');
-    const btnV3 = document.getElementById('runes-toggle-v3');
-    const btnV2 = document.getElementById('runes-toggle-v2');
-    if (!image || !btnV3 || !btnV2) return;
-
-    const isV3 = page === 'v3';
-    image.src = isV3 ? 'images/RunesV3.png' : 'images/CometRunes.png';
-    image.alt = isV3 ? 'Mel Rune Page 1' : 'Mel Rune Page 2';
-
-    btnV3.style.background = isV3 ? 'var(--brand)' : 'var(--white)';
-    btnV3.style.color = isV3 ? 'var(--white)' : 'var(--text-body)';
-    btnV3.style.borderColor = isV3 ? 'var(--brand)' : 'var(--border-dark)';
-
-    btnV2.style.background = isV3 ? 'var(--white)' : 'var(--brand)';
-    btnV2.style.color = isV3 ? 'var(--text-body)' : 'var(--white)';
-    btnV2.style.borderColor = isV3 ? 'var(--border-dark)' : 'var(--brand)';
-  }
-</script>
 </body>
 </html>

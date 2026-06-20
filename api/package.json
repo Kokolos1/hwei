@@ -1,7 +1,7 @@
 {
-  "name": "mel-try1-api",
+  "name": "hwei-guide-api",
   "version": "1.0.0",
-  "description": "Express API for Patreon OAuth for MelGuide",
+  "description": "Express API for Patreon OAuth for HweiGuide",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

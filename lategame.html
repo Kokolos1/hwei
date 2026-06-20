@@ -3,10 +3,203 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Late Game - The Ultimate Mel Compendium</title>
-  <meta name="description" content="Mel late game strategy including overview, teamfighting, and priorities.">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+  <title>Late Game - The Ultimate Hwei Compendium</title>
+  <meta name="description" content="Hwei late game strategy including overview, teamfighting, and priorities.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .guide-section { margin-bottom:52px; scroll-margin-top:130px; }
+    .guide-card-stack { display:grid; gap:16px; }
+    .guide-card-accent {
+      border-left:4px solid var(--brand);
+      background:
+        radial-gradient(circle at 100% 0,rgba(76,187,110,.1),transparent 16rem),
+        linear-gradient(180deg,#fffdf8 0%,#f4f1e7 100%);
+    }
+    .guide-pair {
+      display:grid;
+      grid-template-columns:minmax(260px,.72fr) minmax(0,1.28fr);
+      gap:20px;
+      align-items:center;
+    }
+    .guide-chart-wrap { min-width:0; }
+    .elo-duration-graphic {
+      overflow:hidden;
+      border:1px solid rgba(36,29,48,.12);
+      border-radius:8px;
+      background:
+        radial-gradient(circle at 100% 0,rgba(111,90,168,.12),transparent 18rem),
+        linear-gradient(180deg,#fff 0%,#f7f3ea 100%);
+      box-shadow:0 14px 30px rgba(32,25,42,.12);
+    }
+    .elo-chart-head {
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px 16px 12px;
+      border-bottom:1px solid rgba(36,29,48,.1);
+      background:linear-gradient(180deg,rgba(21,17,29,.96),rgba(35,28,46,.96));
+      color:var(--white);
+    }
+    .elo-chart-kicker {
+      color:var(--gold-light);
+      font-size:.64rem;
+      font-weight:900;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+      margin-bottom:4px;
+    }
+    .elo-chart-title {
+      font-family:'Playfair Display',serif;
+      font-size:1.08rem;
+      font-weight:900;
+      line-height:1.05;
+    }
+    .elo-chart-patch {
+      flex-shrink:0;
+      border:1px solid rgba(226,198,111,.36);
+      border-radius:999px;
+      padding:5px 9px;
+      color:var(--gold-light);
+      font-size:.68rem;
+      font-weight:900;
+      letter-spacing:1px;
+      text-transform:uppercase;
+    }
+    .elo-chart-legend {
+      display:grid;
+      grid-template-columns:88px minmax(120px,1fr) 56px 54px;
+      gap:8px;
+      padding:9px 12px;
+      color:rgba(36,29,48,.52);
+      font-size:.62rem;
+      font-weight:900;
+      letter-spacing:1px;
+      text-transform:uppercase;
+    }
+    .elo-duration-row {
+      display:grid;
+      grid-template-columns:88px minmax(120px,1fr) 56px 54px;
+      gap:8px;
+      align-items:center;
+      padding:8px 12px;
+      border-top:1px solid rgba(36,29,48,.06);
+      color:var(--text-body);
+    }
+    .elo-rank {
+      color:var(--navy);
+      font-size:.78rem;
+      font-weight:900;
+    }
+    .elo-bar-track {
+      position:relative;
+      height:26px;
+      overflow:hidden;
+      border-radius:999px;
+      background:rgba(36,29,48,.08);
+    }
+    .elo-bar {
+      width:var(--bar);
+      height:100%;
+      border-radius:inherit;
+      background:linear-gradient(90deg,var(--brand),var(--gold));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.34);
+    }
+    .elo-time {
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      padding-left:10px;
+      color:#17121f;
+      font-size:.74rem;
+      font-weight:900;
+      text-shadow:0 1px 0 rgba(255,255,255,.35);
+    }
+    .elo-games {
+      color:rgba(36,29,48,.6);
+      font-size:.72rem;
+      font-weight:800;
+      text-align:right;
+    }
+    .elo-delta {
+      justify-self:end;
+      min-width:44px;
+      border-radius:999px;
+      padding:4px 7px;
+      background:rgba(76,187,110,.12);
+      color:var(--brand-deeper);
+      font-size:.67rem;
+      font-weight:900;
+      text-align:center;
+    }
+    .elo-delta.down {
+      background:rgba(189,70,55,.1);
+      color:var(--red);
+    }
+    .elo-chart-foot {
+      padding:9px 12px 11px;
+      color:rgba(36,29,48,.48);
+      font-size:.68rem;
+      line-height:1.45;
+      border-top:1px solid rgba(36,29,48,.08);
+    }
+    .guide-large-copy {
+      display:grid;
+      gap:10px;
+      font-size:1.12rem;
+      line-height:1.65;
+      color:var(--text-body);
+    }
+    .guide-large-copy p,
+    .guide-card-copy p + p { margin-top:0; }
+    .guide-note-muted {
+      color:rgba(0,0,0,.45);
+      font-style:italic;
+    }
+    .guide-takeaway {
+      border:1px solid rgba(76,187,110,.22);
+      border-left:4px solid var(--brand);
+      border-radius:6px;
+      background:rgba(76,187,110,.08);
+      color:var(--text-body);
+      padding:12px 14px;
+      font-size:.9rem;
+      line-height:1.55;
+      margin-top:12px;
+    }
+    .guide-takeaway strong { color:var(--brand-deeper); }
+    .guide-never-heading { margin-top:24px; }
+    .never-stack {
+      display:grid;
+      gap:8px;
+    }
+    .never-stack .never-item {
+      margin:0;
+      border-radius:6px;
+      border:1px solid rgba(189,70,55,.18);
+      border-left:4px solid var(--red);
+      background:linear-gradient(180deg,rgba(189,70,55,.09),rgba(189,70,55,.055));
+      font-weight:650;
+    }
+    @media (max-width:860px) {
+      .guide-pair { grid-template-columns:1fr; }
+      .guide-large-copy { font-size:1rem; }
+      .elo-chart-legend,
+      .elo-duration-row { grid-template-columns:76px minmax(110px,1fr) 48px; }
+      .elo-chart-legend span:nth-child(3),
+      .elo-duration-row .elo-games { display:none; }
+    }
+    @media (max-width:520px) {
+      .elo-chart-head { align-items:flex-start; flex-direction:column; }
+      .elo-chart-patch { align-self:flex-start; }
+      .elo-chart-legend,
+      .elo-duration-row { grid-template-columns:70px minmax(0,1fr) 46px; gap:6px; padding-left:10px; padding-right:10px; }
+      .elo-rank { font-size:.7rem; }
+      .elo-time { font-size:.68rem; padding-left:8px; }
+    }
+  </style>
 </head>
 <body>
 
@@ -40,7 +233,7 @@
     <div class="topnav-brand-left">
       <div>
         <div class="topnav-brand-eyebrow">Ultimate Compendium</div>
-        <div class="topnav-brand-title">The Ultimate Mel Compendium</div>
+        <div class="topnav-brand-title">The Ultimate Hwei Compendium</div>
       </div>
       <div class="topnav-divider"></div>
       <div class="topnav-author">by <strong>evandabank</strong></div>
@@ -67,7 +260,7 @@
       <!-- HERO -->
       <div class="page-hero">
         <h2>Late Game</h2>
-        <p class="hero-desc">Here's how to close out games as Mel. This phase starts around the 30-minute mark.</p>
+        <p class="hero-desc">Close games by controlling space before fights start, protecting your E cooldown, and turning objective chokes into painted traps.</p>
       </div>
 
       <!-- IN-PAGE SUBNAV -->
@@ -80,7 +273,7 @@
         <!-- ══════════════════════════════════════════
              SECTION 1 — LATE GAME OVERVIEW
         ═══════════════════════════════════════════ -->
-        <div id="overview-sec" style="margin-bottom: 52px; scroll-margin-top: 130px;">
+        <div id="overview-sec" class="guide-section">
           <div class="section-head">
             <h3>Late Game Overview</h3>
             <div class="section-rule"></div>
@@ -88,58 +281,134 @@
           <div class="section-sub">Teamfighting, positioning &amp; priorities at full build</div>
 
           <!-- Intro prose card -->
-          <div class="card" style="margin-bottom: 16px;">
+          <div class="guide-card-stack">
+          <div class="card guide-card-copy">
             <div class="card-title">The State of the Game</div>
-            <p>At this point in the game, most towers have fallen and the game will be over in 1–2 teamfights. Sidelaning is essentially over. Your biggest concern — especially in soloqueue — is that everyone will just be sittinga around midlane and trying to kill you.<strong> This happens ALL THE TIME.</strong> Do not leave your team alone. And especially do not BE alone. We need to stay with our teamates from this point onward. Only defend or catch sidewaves when absolutely necessary.</p>
-            <p style="margin-top: 10px;">You should have 4–5 items at this point. Getting more gold from farming is great, but protecting your team from dying is the highest priority. One mistake can lose the game, so we need to minimize our own while capitalizing on the enemy's. The same rules as midgame apply in this section, except every death can be game ending. As always, I have one main piece of advice. DON'T DIE. Seriously. Just don't die. That is all you need to do. An extra 200 gold is not going to win the game at this point, but not dieing probably will.</p>
+            <p>At this point in the game, most towers have fallen and the game will be decided by one or two objective fights. Hwei should rarely be alone. Catch side waves only when you know where the enemy threats are and you have a safe path back to your team.</p>
+            <p>Your job is not to walk forward and prove you can hit a spell. Your job is to make the enemy walk through terrible spaces: EW in fog, QE across entrances, EE on grouped targets, and R when a champion is already trapped or slowed.</p>
+            <div class="guide-takeaway"><strong>Takeaway:</strong> Hwei should rarely be alone; late game is about controlling terrible spaces before the fight starts.</div>
           </div>
 
           <!-- Game duration context -->
-          <div class="card" style="margin-bottom: 16px; border-left: 4px solid var(--brand); background: rgba(80, 180, 100, 0.12);">
+          <div class="card guide-card-accent">
             <div class="card-title">Game Length by Elo: Why It Changes Late Game Priorities</div>
-            <div style="display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center;">
-              <div style="flex-shrink: 0;">
-                <img
-                  src="images/gameDuration.png"
-                  alt="Game duration by rank"
-                  style="width: auto; max-width: 100%; max-height: 460px; display: block; border: 1px solid rgba(255,255,255,0.12);"
-                >
+            <div class="guide-pair">
+              <div class="guide-chart-wrap">
+                <div class="elo-duration-graphic" role="img" aria-label="Patch 16.1 average League of Legends game duration by rank, from Challenger at 26 minutes 33 seconds to Bronze at 31 minutes 6 seconds.">
+                  <div class="elo-chart-head">
+                    <div>
+                      <div class="elo-chart-kicker">Average Game Length</div>
+                      <div class="elo-chart-title">Duration by Elo</div>
+                    </div>
+                    <div class="elo-chart-patch">Patch 16.1</div>
+                  </div>
+                  <div class="elo-chart-legend" aria-hidden="true">
+                    <span>Rank</span>
+                    <span>Duration</span>
+                    <span>Games</span>
+                    <span>Change</span>
+                  </div>
+                  <div class="elo-duration-row">
+                    <div class="elo-rank">Challenger</div>
+                    <div class="elo-bar-track"><div class="elo-bar" style="--bar:85.3%"></div><div class="elo-time">26m33s</div></div>
+                    <div class="elo-games">4K</div>
+                    <div class="elo-delta">+0.57%</div>
+                  </div>
+                  <div class="elo-duration-row">
+                    <div class="elo-rank">Grandmaster</div>
+                    <div class="elo-bar-track"><div class="elo-bar" style="--bar:86.8%"></div><div class="elo-time">27m01s</div></div>
+                    <div class="elo-games">8K</div>
+                    <div class="elo-delta">+0.81%</div>
+                  </div>
+                  <div class="elo-duration-row">
+                    <div class="elo-rank">Master</div>
+                    <div class="elo-bar-track"><div class="elo-bar" style="--bar:88.6%"></div><div class="elo-time">27m35s</div></div>
+                    <div class="elo-games">77K</div>
+                    <div class="elo-delta">+1.35%</div>
+                  </div>
+                  <div class="elo-duration-row">
+                    <div class="elo-rank">Diamond</div>
+                    <div class="elo-bar-track"><div class="elo-bar" style="--bar:89.9%"></div><div class="elo-time">27m59s</div></div>
+                    <div class="elo-games">452K</div>
+                    <div class="elo-delta down">-1.81%</div>
+                  </div>
+                  <div class="elo-duration-row">
+                    <div class="elo-rank">Emerald</div>
+                    <div class="elo-bar-track"><div class="elo-bar" style="--bar:93.5%"></div><div class="elo-time">29m05s</div></div>
+                    <div class="elo-games">979K</div>
+                    <div class="elo-delta down">-0.96%</div>
+                  </div>
+                  <div class="elo-duration-row">
+                    <div class="elo-rank">Platinum</div>
+                    <div class="elo-bar-track"><div class="elo-bar" style="--bar:96.5%"></div><div class="elo-time">30m00s</div></div>
+                    <div class="elo-games">1.5M</div>
+                    <div class="elo-delta">+0.39%</div>
+                  </div>
+                  <div class="elo-duration-row">
+                    <div class="elo-rank">Gold</div>
+                    <div class="elo-bar-track"><div class="elo-bar" style="--bar:98.4%"></div><div class="elo-time">30m36s</div></div>
+                    <div class="elo-games">2.17M</div>
+                    <div class="elo-delta">+0.82%</div>
+                  </div>
+                  <div class="elo-duration-row">
+                    <div class="elo-rank">Silver</div>
+                    <div class="elo-bar-track"><div class="elo-bar" style="--bar:99.8%"></div><div class="elo-time">31m03s</div></div>
+                    <div class="elo-games">2.37M</div>
+                    <div class="elo-delta">+1.09%</div>
+                  </div>
+                  <div class="elo-duration-row">
+                    <div class="elo-rank">Bronze</div>
+                    <div class="elo-bar-track"><div class="elo-bar" style="--bar:100%"></div><div class="elo-time">31m06s</div></div>
+                    <div class="elo-games">1.88M</div>
+                    <div class="elo-delta">+1.08%</div>
+                  </div>
+                  <div class="elo-duration-row">
+                    <div class="elo-rank">Iron</div>
+                    <div class="elo-bar-track"><div class="elo-bar" style="--bar:98.5%"></div><div class="elo-time">30m38s</div></div>
+                    <div class="elo-games">137K</div>
+                    <div class="elo-delta">+0.16%</div>
+                  </div>
+                  <div class="elo-chart-foot">Lower-elo games trend longer, so late-game setup, vision discipline, and avoiding isolated deaths matter more often.</div>
+                </div>
               </div>
-              <div style="font-size: 1.85rem;">
-                <p>The image to the left is a 3-month-old snapshot of game duration by rank. These numbers are basically the exact same today (and I did steal it from a random Reddit post). The important thing to note: <strong>games last longer the more you climb.</strong></p>
-                <p style="margin-top: 10px;">Why does this matter? Well, ADCs tend to outscale mages, and <strong>longer games give them more time to scale.</strong> But Evan... doesn't this mean mages are <em>bad</em> in low elo? <strong>WRONG.</strong></p>
-                <p style="margin-top: 10px;">While it is true that ADCs can outscale mages, <strong>mages are a lot safer than ADCs.</strong> In a scrappy environment (which lower elo is <em>certainly</em> scrappier), mages have a much easier time surviving. They simply have more tools — and better defensive items — to keep themselves safe.</p>
-                <p style="margin-top: 10px; color: rgba(0,0,0,0.45); font-style: italic;">I just wanted to share this chart with you. It doesn't really change the way you play — I just find it interesting.</p>
+              <div class="guide-large-copy">
+                <p>Late-game duration changes what Hwei values. Longer games give enemy carries more damage, but they also make vision and setup more important.</p>
+                <p>Hwei scales best when fights happen around objectives and narrow paths. He is much worse when the map is dark and enemies can flank from every angle.</p>
+                <p>Treat every Baron, Elder, and inhibitor wave as a setup problem: where will the enemy enter, which brush is dangerous, and which spellbook subject must stay available?</p>
+                <p class="guide-note-muted">This chart is useful context, but the real late-game rule is simpler: no blind face-checks, no lonely side waves, no wasted control spell.</p>
               </div>
             </div>
           </div>
 
           <!-- 2-col: Teamfighting + Priority -->
-          <div class="g2" style="margin-bottom: 16px;">
+          <div class="g2">
 
             <div class="card">
               <div class="card-title">Teamfighting — Same Rules, More Extreme</div>
-              <p>Teamfighting in the late game is the same as mid game, but with bigger stakes. Tanky champions will be nearly unkillable while mages, assassins, and ADCs deal <em>crazy</em> amounts of damage to each other.</p>
-              <div class="info-box" style="margin-top: 12px;">
-                <strong>Core rule:</strong> Stand far back, use spells from range, and only target squishy enemies who overextend. Let your frontline engage and absorb damage. NEVER go in first (including to any bushes, objectives, or the jungle).
+              <p>Teamfighting in the late game is the same as mid game, but with bigger stakes. Tanky champions will be nearly unkillable while mages, divers, and marksmen deal <em>crazy</em> amounts of damage to each other.</p>
+              <div class="info-box">
+                <strong>Core rule:</strong> Stand far back, use spells from range, and cast for space before you cast for damage. Let your frontline reveal threats before you commit QW or R.
               </div>
             </div>
 
             <div class="card">
               <div class="card-title">Priority Targets &amp; Awareness</div>
               <p>Always know who the highest-threat enemy is. Someone with a full build and 10 kills will destroy your team if left unchecked. Focus your damage on the fed carry or whichever squishy target is most in range.</p>
-              <p style="margin-top: 10px;">Mage teamfighting seems simple — stand back and poke — but it requires constant situational awareness. <strong>Standing far back is useless if the enemy Qiyana flanks from behind and one-shots you.</strong> Always know where every enemy is before committing to a fight.</p>
+              <p>Mage teamfighting seems simple — stand back and poke — but it requires constant situational awareness. <strong>Standing far back is useless if the enemy Qiyana flanks from behind and one-shots you.</strong> Always know where every enemy is before committing to a fight.</p>
             </div>
 
           </div>
 
           <!-- Never do list -->
-          <div class="section-sub" style="margin-top: 24px;">Things to NEVER do in late game</div>
-          <div class="never-item"><span class="never-x">✕</span><span>Sidelane alone when all 5 enemies are unaccounted for on the minimap</span></div>
-          <div class="never-item"><span class="never-x">✕</span><span>Force a fight at Baron/Dragon when you are clearly outscaled or down in resources</span></div>
-          <div class="never-item"><span class="never-x">✕</span><span>Waste your W early in a fight — save it for the most dangerous incoming ability</span></div>
-          <div class="never-item"><span class="never-x">✕</span><span>Leave your team alone — they will die instantly</span></div>
-          <div class="never-item"><span class="never-x">✕</span><span>Use your W and E for damage without confirming you are safe</span></div>
+          <div class="section-sub guide-never-heading">Things to NEVER do in late game</div>
+          <div class="never-stack">
+            <div class="never-item"><span class="never-x">✕</span><span>Sidelane alone when all 5 enemies are unaccounted for on the minimap</span></div>
+            <div class="never-item"><span class="never-x">✕</span><span>Force a fight at Baron/Dragon when you are clearly outscaled or down in resources</span></div>
+            <div class="never-item"><span class="never-x">✕</span><span>Spend E before the enemy diver has committed</span></div>
+            <div class="never-item"><span class="never-x">✕</span><span>Leave your team alone — they will die instantly</span></div>
+            <div class="never-item"><span class="never-x">✕</span><span>Use WE for extra damage when WW shield or WQ repositioning is what keeps the fight playable</span></div>
+          </div>
+          </div>
         </div>
 
       </div><!-- /page-body -->
@@ -149,8 +418,8 @@
   <!-- FOOTER -->
   <footer style="background: var(--navy); color: rgba(255,255,255,0.6); padding: 24px 48px; text-align: center; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1);">
     <div style="max-width: 800px; margin: 0 auto;">
-      <p>The Ultimate Mel Compendium by evandabank • © 2026</p>
-      <p style="margin-top: 8px; font-size: 0.75rem;">Built with ❤️ for the League of Legends community</p>
+      <p>The Ultimate Hwei Compendium by evandabank • © 2026</p>
+      <p style="margin-top: 8px; font-size: 0.75rem;">Built for the League of Legends community</p>
     </div>
   </footer>
 </div>

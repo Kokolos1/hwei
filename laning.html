@@ -3,111 +3,144 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Laning - The Ultimate Mel Compendium</title>
-  <meta name="description" content="Master Mel's laning phase with level-by-level lane plans, poke windows, and optimal warding positions.">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+  <title>Laning - The Ultimate Hwei Compendium</title>
+  <meta name="description" content="Master Hwei bot/APC laning with level-by-level lane plans, poke windows, support coordination, and optimal warding positions.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <style>
-    /* ── WARDING SECTION ── */
+    .guide-section { margin-bottom:36px; scroll-margin-top:150px; }
+    .guide-phase-stack { display:grid; gap:16px; }
+    .guide-phase-card {
+      display:grid;
+      gap:16px;
+      padding:0;
+      overflow:hidden;
+      border-top-color:var(--gold);
+    }
+    .guide-phase-head {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:16px 18px 0;
+    }
+    .guide-phase-head .card-title { margin:0; padding:0; border:0; }
+    .phase-badge {
+      border:1px solid rgba(201,161,74,.3);
+      background:var(--gold-pale);
+      color:var(--amber);
+      border-radius:999px;
+      padding:4px 10px;
+      font-size:.68rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .guide-split {
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(280px,1fr);
+      gap:16px;
+      align-items:stretch;
+      padding:0 18px 18px;
+    }
+    .guide-lead {
+      font-size:.92rem;
+      line-height:1.75;
+      margin-bottom:12px;
+      color:var(--text-body);
+    }
+    .guide-phase-card .tip-list { margin-bottom:14px; }
+    .guide-takeaway {
+      border:1px solid rgba(76,187,110,.22);
+      border-left:4px solid var(--brand);
+      border-radius:6px;
+      background:rgba(76,187,110,.08);
+      color:var(--text-body);
+      padding:12px 14px;
+      font-size:.9rem;
+      line-height:1.55;
+    }
+    .guide-takeaway strong { color:var(--brand-deeper); }
+    .guide-media {
+      background:var(--navy);
+      border:1px solid rgba(255,255,255,.08);
+      border-top:3px solid var(--brand);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-width:0;
+    }
+    .guide-media-label {
+      padding:11px 16px 9px;
+      border-bottom:1px solid rgba(255,255,255,.07);
+      font-family:'Inter','Source Serif 4',serif;
+      font-size:.74rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.68);
+    }
+    .guide-media-inner {
+      position:relative;
+      width:100%;
+      aspect-ratio:16/9;
+      background:var(--navy-light);
+    }
+    .guide-media-inner iframe {
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      display:block;
+      border:0;
+    }
     .ward-section {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-width: 1200px;
-      margin: 0 auto;
-      margin-top: 16px;
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+      margin-top:16px;
     }
-
-    /* ── EACH ROW: two-column minimal layout ── */
     .ward-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      align-items: start;
-      padding: 16px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      overflow: hidden;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      background:linear-gradient(180deg,#fffdf8 0%,#fbf5ea 100%);
+      border:1px solid var(--border);
+      border-top:3px solid var(--brand);
+      box-shadow:var(--shadow);
+      min-width:0;
     }
-
-    .ward-row.img-left .ward-img-wrap { order: 1; }
-    .ward-row.img-left .ward-text     { order: 2; }
-    .ward-row.img-right .ward-text    { order: 1; }
-    .ward-row.img-right .ward-img-wrap{ order: 2; }
-
     .ward-img-wrap {
-      height: 320px;
-      overflow: hidden;
-      transform: none;
-      border: 1px solid var(--border);
+      height:250px;
+      overflow:hidden;
+      border-bottom:1px solid var(--border);
+      background:var(--navy-light);
     }
-
     .ward-map {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
     }
-
-    .ward-text {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      max-width: none;
-      padding: 8px 8px 0;
-    }
-
+    .ward-text { padding:16px 18px 18px; }
     .ward-text h4 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 16px;
+      font-family:'Playfair Display',serif;
+      font-size:1.08rem;
+      font-weight:800;
+      color:var(--navy);
+      margin-bottom:8px;
     }
-
     .ward-text p {
-      font-size: 0.95rem;
-      line-height: 1.75;
-      color: var(--text-body);
+      font-size:.92rem;
+      line-height:1.65;
+      color:var(--text-body);
     }
-
-    .ward-text p strong { color: var(--text-dark); }
-
-    .ward-sweep-note {
-      background: none;
-      border: none;
-      border-left: 4px solid var(--gold);
-      padding: 18px 20px 18px 16px;
-      font-size: 0.92rem;
-      line-height: 1.6;
-      color: var(--text-body);
-      margin-top: 24px;
-      position: relative;
-      z-index: 3;
-    }
-
-    @media (max-width: 768px) {
-      .ward-section {
-        gap: 32px;
-      }
-      .ward-row {
-        grid-template-columns: 1fr;
-        gap: 16px;
-        padding: 14px;
-      }
-      .ward-img-wrap,
-      .ward-text {
-        min-height: auto;
-      }
-      .ward-text {
-        padding: 0 0 0 0;
-        justify-content: flex-start;
-      }
-      .ward-map {
-        min-height: 260px;
-        height: 260px;
-      }
+    .ward-warning { margin-bottom:20px; }
+    @media (max-width: 860px) {
+      .guide-split,
+      .ward-section { grid-template-columns:1fr; }
+      .ward-img-wrap { height:260px; }
     }
   </style>
 </head>
@@ -120,18 +153,18 @@
     <h2>Select Your Language</h2>
     <p>Choose your preferred language to view the guide.</p>
     <div class="lang-grid">
-      <button class="lang-btn sel" data-lang="en" onclick="selLang(this)"><span class="flag"></span>English</button>
-      <button class="lang-btn" data-lang="es" onclick="selLang(this)"><span class="flag"></span>Español</button>
-      <button class="lang-btn" data-lang="fr" onclick="selLang(this)"><span class="flag"></span>Français</button>
-      <button class="lang-btn" data-lang="de" onclick="selLang(this)"><span class="flag"></span>Deutsch</button>
-      <button class="lang-btn" data-lang="pt" onclick="selLang(this)"><span class="flag"></span>Brasileiro</button>
-      <button class="lang-btn" data-lang="it" onclick="selLang(this)"><span class="flag"></span>Italiano</button>
-      <button class="lang-btn" data-lang="ro" onclick="selLang(this)"><span class="flag"></span>Română</button>
-      <button class="lang-btn" data-lang="tr" onclick="selLang(this)"><span class="flag"></span>Türkçe</button>
-      <button class="lang-btn" data-lang="pl" onclick="selLang(this)"><span class="flag"></span>Polski</button>
-      <button class="lang-btn" data-lang="ru" onclick="selLang(this)"><span class="flag"></span>Русский</button>
-      <button class="lang-btn" data-lang="ko" onclick="selLang(this)"><span class="flag"></span>한국어</button>
-      <button class="lang-btn" data-lang="ja" onclick="selLang(this)"><span class="flag"></span>日本語</button>
+      <button class="lang-btn sel" data-lang="en" onclick="selLang(this)"><span class="flag">🇺🇸</span>English</button>
+      <button class="lang-btn" data-lang="es" onclick="selLang(this)"><span class="flag">🇪🇸</span>Español</button>
+      <button class="lang-btn" data-lang="fr" onclick="selLang(this)"><span class="flag">🇫🇷</span>Français</button>
+      <button class="lang-btn" data-lang="de" onclick="selLang(this)"><span class="flag">🇩🇪</span>Deutsch</button>
+      <button class="lang-btn" data-lang="pt" onclick="selLang(this)"><span class="flag">🇧🇷</span>Brasileiro</button>
+      <button class="lang-btn" data-lang="it" onclick="selLang(this)"><span class="flag">🇮🇹</span>Italiano</button>
+      <button class="lang-btn" data-lang="ro" onclick="selLang(this)"><span class="flag">🇷🇴</span>Română</button>
+      <button class="lang-btn" data-lang="tr" onclick="selLang(this)"><span class="flag">🇹🇷</span>Türkçe</button>
+      <button class="lang-btn" data-lang="pl" onclick="selLang(this)"><span class="flag">🇵🇱</span>Polski</button>
+      <button class="lang-btn" data-lang="ru" onclick="selLang(this)"><span class="flag">🇷🇺</span>Русский</button>
+      <button class="lang-btn" data-lang="ko" onclick="selLang(this)"><span class="flag">🇰🇷</span>한국어</button>
+      <button class="lang-btn" data-lang="ja" onclick="selLang(this)"><span class="flag">🇯🇵</span>日本語</button>
     </div>
     <button class="lang-confirm" onclick="confirmLang()">Continue to Guide </button>
   </div>
@@ -144,13 +177,13 @@
     <div class="topnav-brand-left">
       <div>
         <div class="topnav-brand-eyebrow">Ultimate Compendium</div>
-        <div class="topnav-brand-title">The Ultimate Mel Compendium</div>
+        <div class="topnav-brand-title">The Ultimate Hwei Compendium</div>
       </div>
       <div class="topnav-divider"></div>
       <div class="topnav-author">by <strong>evandabank</strong></div>
     </div>
     <div class="topnav-brand-right">
-      <button class="lang-switch-btn" onclick="openLang()"> <span id="lang-label">English</span></button>
+      <button class="lang-switch-btn" onclick="openLang()">🌐 <span id="lang-label">English</span></button>
     </div>
   </div>
 
@@ -173,7 +206,7 @@
       <div class="page-hero">
         <div class="hero-eyebrow">Laning &amp; Early Game</div>
         <h2>Laning &amp; Early Game</h2>
-        <p class="hero-desc">Laning Phase & Warding (sort of)</p>
+        <p class="hero-desc">Survive early 2v2 pressure, control waves with intention, and enter dragon fights with enough mana and health to paint the river.</p>
       </div>
       <div class="page-subnav">
         <div class="subnav-item active" onclick="subnavScroll(this,'laning-sec')">Early Game</div>
@@ -181,143 +214,144 @@
       </div>
       <div class="page-body">
 
-        <div id="laning-sec" style="margin-bottom:36px;scroll-margin-top:130px">
+        <div id="laning-sec" class="guide-section">
           <div class="section-head"><h3>Early Game</h3><div class="section-rule"></div></div>
           <div class="section-sub">Level-by-level laning plan with text and video for each phase</div>
 
-          <div class="card" style="margin-bottom:16px">
-            <div class="card-title">Level 1</div>
-            <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:stretch">
+          <div class="guide-phase-stack">
+          <div class="card guide-phase-card">
+            <div class="guide-phase-head"><div class="card-title">Level 1</div><span class="phase-badge">Opening Wave</span></div>
+            <div class="guide-split">
               <div>
-                <p style="font-size:.92rem;line-height:1.75;margin-bottom:12px"><strong>Level 1 plan:</strong> play patient, avoid bad early fights, and set up your level 2-3 trading window.</p>
-                <ul class="tip-list" style="margin-bottom:14px">
-                  <li><span class="tip-num"></span><span>For level 1, we are almost always going to give priority. This means to stand back and let the enemy push the wave into us. Mel (and mages in general) are really really weak level 1. Especially against ADCs that take lethal tempo.</span></li>
-                  <li><span class="tip-num"></span><span>Once we hit level 2-3 and are no longer at a level disadvantage, we can look to take harder trades.</span></li>
-                  <li><span class="tip-num"></span><span>At the start of every lane, path IMMEDIATELY to the middle brush and drop a ward (video has more details). This will prevent the opponents from being able to bush cheese us level 1.</span></li>
-                  <li><span class="tip-num"></span><span>After dropping the ward, backup and play for poke. Wait for the wave to crash and play safe. The goal is to enter level 2-3 with enough HP/mana that we can contest trades after.</span></li>
-                  <li><span class="tip-num"></span><span>Make sure not to give CS and XP for no reason level 1. Sometimes though a champion like Nautilus might be able to zone you off the wave entirely.</span></li>
+                <p class="guide-lead"><strong>Level 1 plan:</strong> play patient, avoid bad early fights, and set up your level 2-3 trading window.</p>
+                <ul class="tip-list">
+                  <li><span class="tip-num"></span><span>Level 1 is about information and wave health. Start with the spell that lets you survive the lane, usually E into engage supports or Q if your support can help contest the wave.</span></li>
+                  <li><span class="tip-num"></span><span>Do not burn your control spell for harmless poke against all-in lanes. If Nautilus, Leona, Rell, or Samira can start a fight, EQ is worth more than a small trade.</span></li>
+                  <li><span class="tip-num"></span><span>Last-hit patiently if the enemy has stronger early push. Hwei becomes much more stable once all three subjects are unlocked.</span></li>
+                  <li><span class="tip-num"></span><span>If you can safely touch the wave, trim it with Q so it does not crash as a giant stack. If you cannot, preserve health and collect the wave under tower.</span></li>
+                  <li><span class="tip-num"></span><span>Your level 1 goal is simple: reach level 3 with enough health, mana, and wave control to use the full spellbook with your support.</span></li>
                 </ul>
+                <div class="guide-takeaway"><strong>Takeaway:</strong> reach level 3 with enough health, mana, and wave control to use the full spellbook with your support.</div>
               </div>
-              <div style="background:var(--navy);border:1px solid var(--border);border-top:3px solid var(--brand);overflow:hidden;display:flex;flex-direction:column">
-                <div style="padding:11px 16px 9px;border-bottom:1px solid rgba(255,255,255,0.07);font-family:'Playfair Display', serif;font-size:.82rem;font-weight:700;color:rgba(255,255,255,0.68)">Level 1 Video</div>
-                <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--navy-light)">
+              <div class="guide-media">
+                <div class="guide-media-label">Level 1 Video</div>
+                <div class="guide-media-inner">
                   <iframe
                     src="https://www.youtube.com/embed/rzQKhMj-1K4"
                     title="Level 1 Walkthrough"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen
-                    style="position:absolute;inset:0;width:100%;height:100%;display:block;border:none">
+                    >
                   </iframe>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="card" style="margin-bottom:16px">
-            <div class="card-title">Levels 2-5</div>
-            <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:stretch">
+          <div class="card guide-phase-card">
+            <div class="guide-phase-head"><div class="card-title">Levels 2-5</div><span class="phase-badge">Stabilize</span></div>
+            <div class="guide-split">
               <div>
-                <p style="font-size:.92rem;line-height:1.75;margin-bottom:12px"><strong>Levels 2-5 plan:</strong> play by matchup, stay stable, and avoid falling behind before your level 6 spike.</p>
-                <ul class="tip-list" style="margin-bottom:14px">
+                <p class="guide-lead"><strong>Levels 2-5 plan:</strong> play by matchup, stay stable, and avoid falling behind before your level 6 spike.</p>
+                <ul class="tip-list">
                   <li><span class="tip-num"></span><span>This part of the lane is going to depend HEAVILY on your lane matchup. Check out the matchup tab for more concrete information.</span></li>
-                  <li><span class="tip-num"></span><span>Generally speaking, Mel is decently strong in this window, but loses all-in/extended trades against ADCs. Some ADCs though (such as Jhin), Mel can beat due to being able to reflect a large portion of their damage.</span></li>
-                  <li><span class="tip-num"></span><span>Key to this stage is ensuring that you can assist your jungler with securing scuttle crab, or pinging your jungler to leave crab if you cannot contest.</span></li>
+                  <li><span class="tip-num"></span><span>Generally speaking, Hwei is strong when the fight starts at range and weak when the enemy support forces melee range. Hold E against lanes that can all-in.</span></li>
+                  <li><span class="tip-num"></span><span>Key to this stage is knowing whether you can help your jungler at river. If your wave is bad, your support is late, or E is down, ping your jungler away instead of arriving late.</span></li>
                   <li><span class="tip-num"></span><span>By far the most importnat thing during this part of the lane is TO NOT DIE. Whatever you do, do not put yourslef behind.</span></li>
-                  <li><span class="tip-num"></span><span>Your time is coming to win the lane, but if you aren't confident and your support isn't landing anything for you to play off, just play for poke. Mel is not the strongest champion right now, but oh boy does it get better at level 6.</span></li>
+                  <li><span class="tip-num"></span><span>If you are not confident, keep the wave playable and trade with low-risk spells. Hwei does not need to win lane by force to be useful later.</span></li>
                 </ul>
+                <div class="guide-takeaway"><strong>Takeaway:</strong> if the wave is bad, your support is late, or E is down, ping your jungler away instead of arriving late.</div>
               </div>
-              <div style="background:var(--navy);border:1px solid var(--border);border-top:3px solid var(--brand);overflow:hidden;display:flex;flex-direction:column">
-                <div style="padding:11px 16px 9px;border-bottom:1px solid rgba(255,255,255,0.07);font-family:'Playfair Display', serif;font-size:.82rem;font-weight:700;color:rgba(255,255,255,0.68)">Levels 2-5 Video</div>
-                <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--navy-light)">
+              <div class="guide-media">
+                <div class="guide-media-label">Levels 2-5 Video</div>
+                <div class="guide-media-inner">
                   <iframe
                     src="https://www.youtube.com/embed/rzQKhMj-1K4"
                     title="Levels 2-5 Walkthrough"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen
-                    style="position:absolute;inset:0;width:100%;height:100%;display:block;border:none">
+                    >
                   </iframe>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="card" style="margin-bottom:0">
-            <div class="card-title">Level 6-10</div>
-            <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:stretch">
+          <div class="card guide-phase-card">
+            <div class="guide-phase-head"><div class="card-title">Level 6-10</div><span class="phase-badge">Take Space</span></div>
+            <div class="guide-split">
               <div>
-                <p style="font-size:.92rem;line-height:1.75;margin-bottom:12px"><strong>Level 6-10 plan:</strong> THIS is the period of the game where you can really abuse your champion to the fullest. Even against a champion such as Draven, Mel should be winning at this point.</p>
-                <ul class="tip-list" style="margin-bottom:14px">
+                <p class="guide-lead"><strong>Level 6-10 plan:</strong> this is where Hwei starts taking over space. You have ultimate, better waveclear, and enough spell access to punish enemies who walk through predictable paths.</p>
+                <ul class="tip-list">
                   <li><span class="tip-num"></span><span>Starting around level 6-7, you have everything that you need to succeed. Points in all of your spells, several points in your Q, and a mana item such that you will NEVER be worried about going OOM if you aren't excessively spamming.</span></li>
-                  <li><span class="tip-num"></span><span>We need to play from range and know our matchup. Against most champions, we can simply 1v1 them even if we are tanking autos. Check the matchup section of this guide for more information.</span></li>
-                  <li><span class="tip-num"></span><span>In low elo this lane is still going to be a 2v2, in which case we want to play off our opponents CC and take almost all fights. Be sure that you don't get caught by the enemy support though, as that's really the only way for you to die.</span></li>
-                  <li><span class="tip-num"></span><span>In high-elo, both supports will often be roaming, and this is our time to shove waves and poke the enemy under tower, abusing our superior 1v1.</span></li>
+                  <li><span class="tip-num"></span><span>Play from range and know which enemy cooldown can actually kill you. If that cooldown is down, step forward and pressure.</span></li>
+                  <li><span class="tip-num"></span><span>Use QE to crash waves before dragon timers, then move first with your support and jungler or prepare EW in river entrances.</span></li>
+                  <li><span class="tip-num"></span><span>Do not overstay for plates if the enemy jungler can punish you. Hwei is powerful around setup, not blind overextension.</span></li>
                 </ul>
+                <div class="guide-takeaway"><strong>Takeaway:</strong> crash waves before dragon timers, then move first or prepare EW in river entrances.</div>
               </div>
-              <div style="background:var(--navy);border:1px solid var(--border);border-top:3px solid var(--brand);overflow:hidden;display:flex;flex-direction:column">
-                <div style="padding:11px 16px 9px;border-bottom:1px solid rgba(255,255,255,0.07);font-family:'Playfair Display', serif;font-size:.82rem;font-weight:700;color:rgba(255,255,255,0.68)">Level 6-10 Video</div>
-                <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--navy-light)">
+              <div class="guide-media">
+                <div class="guide-media-label">Level 6-10 Video</div>
+                <div class="guide-media-inner">
                   <iframe
                     src="https://www.youtube.com/embed/rzQKhMj-1K4"
                     title="Level 6-10 Walkthrough"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen
-                    style="position:absolute;inset:0;width:100%;height:100%;display:block;border:none">
+                    >
                   </iframe>
                 </div>
               </div>
             </div>
           </div>
+          </div>
         </div>
 
-        <div id="warding-sec" style="scroll-margin-top:130px">
+        <div id="warding-sec" class="guide-section">
           <div class="section-head"><h3>Warding</h3><div class="section-rule"></div></div>
-          <div class="section-sub">Vision control as mid lane</div>
+          <div class="section-sub">Vision control as bot/APC</div>
 
-          <div class="never-item" style="margin-bottom:20px"><span class="never-x">⚠</span><span>I'm going to be honest, I average a 12 vision score. I bought 2 control wards in 2025 across 4000 games. I'm definitely not a warding expert and I lowkey think warding is fake lol. But here are the wards that I do place (whenever I remember).</span></div>
+          <div class="never-item ward-warning"><span class="never-x">⚠</span><span>I'm going to be honest, I average a 12 vision score. I bought 2 control wards in 2025 across 4000 games. I'm definitely not a warding expert and I lowkey think warding is fake lol. But here are the wards that I do place (whenever I remember).</span></div>
 
           <div class="ward-section">
 
-            <!-- ROW 1: image left · text right -->
-            <div class="ward-row img-left">
+            <div class="ward-row">
               <div class="ward-img-wrap">
                 <img src="images/lvl1Ward.png" alt="Ward placement map" class="ward-map">
               </div>
               <div class="ward-text">
                 <h4>Level 1 Ward</h4>
-                <p>We drop this ward level 1 at the start of every game. This prevents the enemy from bush cheesing us and allows us to poke them easier level 1. Immediately sprint to botlane at game start to drop this ward ASAP.</strong></p>
+                <p>Use an early ward to cover the side you expect the jungler to path through, then lean toward that vision. Hwei is vulnerable when both river entrances are dark.</p>
               </div>
             </div>
 
-            <!-- ROW 2: text left · image right -->
-            <div class="ward-row img-right">
-              <div class="ward-text">
-                <h4>Boring ass river ward</h4>
-                <p>I'm going to be real, junglers can gank you from a lot of angles that aren't straight through river. BUT combining this with a tri-bush ward CAN keep you safe. This ward is especially effective at using the faelight to get vision on drake/enemy jungler taking the scuttle crab.</p>
-              </div>
+            <div class="ward-row">
               <div class="ward-img-wrap">
                 <img src="images/standardRiverWard.png" alt="Stealth champion warding map" class="ward-map">
               </div>
+              <div class="ward-text">
+                <h4>Boring ass river ward</h4>
+                <p>A normal river ward is still useful, but only if you respect what it tells you. If you see the jungler, stop pushing and preserve E until the danger passes.</p>
+              </div>
             </div>
 
-            <!-- ROW 3: image left · text right -->
-            <div class="ward-row img-left">
+            <div class="ward-row">
               <div class="ward-img-wrap">
                 <img src="images/triBushWard.png" alt="Standard jungler warding map" class="ward-map">
               </div>
               <div class="ward-text">
-                <h4>Tri-bush Ward</h4>
-                <p>Now, I've shown these bushes on blue side, but they also work on red-side with the opposite ward. Dropping a ward like this can give you vision of an enemy jungler ganking you from this angle. If you're pushed under tower, you can also drop this on your tri-bush to spot if the enemy jungler is moving to dive you. Combine this with the ward above and you can keep yourself safe. </p>
+                <h4>Side Entrance Ward</h4>
+                <p>When you are pushing, ward the side entrance you plan to lean toward. Hwei can only play aggressively if one half of the map is known.</p>
               </div>
             </div>
 
-            <!-- ROW 4: text left · image right -->
-            <div class="ward-row img-right">
+            <div class="ward-row">
+              <div class="ward-img-wrap">
+                <img src="images/stealthChampWard.png" alt="Early game ganker warding map" class="ward-map">
+              </div>
               <div class="ward-text">
                 <h4>Stealth Champion Warding</h4>
                 <p>For example, warding the river bushes against Shaco doesn't do anything. He is just going to use his Q over the wall. Instead, we want to ward his jungle camps (usually raptors). The same is true for champions like Evelynn and Twitch.</p>
-              </div>
-              <div class="ward-img-wrap">
-                <img src="images/stealthChampWard.png" alt="Early game ganker warding map" class="ward-map">
               </div>
             </div>
           </div><!-- /.ward-section -->
@@ -331,8 +365,8 @@
   <!-- FOOTER -->
   <footer style="background: var(--navy); color: rgba(255,255,255,0.6); padding: 24px 48px; text-align: center; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1);">
     <div style="max-width: 800px; margin: 0 auto;">
-      <p>The Ultimate Mel Compendium by evandabank • © 2026</p>
-      <p style="margin-top: 8px; font-size: 0.75rem;">Built with ❤️ for the League of Legends community</p>
+      <p>The Ultimate Hwei Compendium by evandabank • © 2026</p>
+      <p style="margin-top: 8px; font-size: 0.75rem;">Built for the League of Legends community</p>
     </div>
   </footer>
 </div>

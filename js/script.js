@@ -26,6 +26,15 @@ function toggleAbility(key) {
   }
 }
 
+function switchSpellVariant(btn, id) {
+  const shell = btn.closest('.spell-detail-shell');
+  if (!shell) return;
+  shell.querySelectorAll('.spell-variant-tab').forEach(tab => tab.classList.remove('active'));
+  shell.querySelectorAll('.spell-variant-pane').forEach(pane => pane.classList.remove('active'));
+  btn.classList.add('active');
+  shell.querySelector('#' + id)?.classList.add('active');
+}
+
 // ── SUBNAV SCROLL ──
 function subnavScroll(el, targetId) {
   // Update active state within this subnav
@@ -43,17 +52,218 @@ function subnavScroll(el, targetId) {
 
 // ── LANGUAGE ──
 const langLabels = { en:'English',es:'Español',fr:'Français',de:'Deutsch',pt:'Brasileiro',it:'Italiano',ro:'Română',tr:'Türkçe',pl:'Polski',ru:'Русский',ko:'한국어',ja:'日本語' };
-let selLangCode = 'en';
+const langStorageKey = 'hweiGuideLanguage';
+const translationCachePrefix = 'hweiGuideTranslation:';
+const translationSkipSelector = [
+  'script',
+  'style',
+  'noscript',
+  'code',
+  'pre',
+  'svg',
+  'canvas',
+  'iframe',
+  'video',
+  'audio',
+  '.lang-grid',
+  '.rune-node-name',
+  '.rune-selected-list',
+  '.item-icon',
+  '.matchup-name',
+  '.tier-champ',
+  '.toc-link',
+  '.matchup-image-link',
+  '.champion-icon',
+  '[data-no-translate]'
+].join(',');
+const translationPreserveText = new Set([
+  'Hwei', 'Mel', 'Aphelios', 'Ashe', 'Aurelion Sol', 'Brand', 'Caitlyn', 'Corki', 'Draven', 'Ezreal',
+  'Heimerdinger', 'Jhin', 'Jinx', "Kai'Sa", 'Kalista', 'Karma', 'Karthus', "Kog'Maw", 'Lucian', 'Lux',
+  'Miss Fortune', 'Morgana', 'Nilah', 'Samira', 'Senna', 'Seraphine', 'Sivir', 'Smolder', 'Syndra',
+  'Tristana', 'Twitch', 'Varus', 'Vayne', 'Xayah', 'Yunara', 'Zeri', 'Ziggs', 'Zyra',
+  'Q', 'W', 'E', 'R', 'QQ', 'QW', 'QE', 'WQ', 'WW', 'WE', 'EQ', 'EW', 'EE'
+]);
+const memoryStorage = {};
+function safeStorageGet(key) {
+  try {
+    return window.localStorage?.getItem(key) ?? memoryStorage[key] ?? null;
+  } catch (error) {
+    return memoryStorage[key] ?? null;
+  }
+}
+function safeStorageSet(key, value) {
+  memoryStorage[key] = value;
+  try {
+    window.localStorage?.setItem(key, value);
+  } catch (error) {
+    // In private or sandboxed contexts, in-memory storage keeps this page functional.
+  }
+}
+let selLangCode = safeStorageGet(langStorageKey) || 'en';
+let translationNodes = [];
+let translationAttributes = [];
+
 function selLang(btn) {
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('sel'));
   btn.classList.add('sel');
-  selLangCode = btn.dataset.lang;
+  selLangCode = btn.dataset.lang || 'en';
 }
-function confirmLang() {
-  document.getElementById('lang-overlay').style.display = 'none';
-  document.getElementById('lang-label').textContent = langLabels[selLangCode] || 'English';
+
+function openLang() {
+  const overlay = document.getElementById('lang-overlay');
+  if (!overlay) return;
+  syncLanguageButtons(selLangCode);
+  overlay.style.display = 'flex';
 }
-function openLang() { document.getElementById('lang-overlay').style.display = 'flex'; }
+
+function syncLanguageButtons(lang) {
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('sel', btn.dataset.lang === lang);
+  });
+  const label = document.getElementById('lang-label');
+  if (label) label.textContent = langLabels[lang] || 'English';
+}
+
+function normalizeTranslationText(text) {
+  return String(text || '').replace(/\s+/g, ' ').trim();
+}
+
+function shouldTranslateText(text) {
+  const value = normalizeTranslationText(text);
+  if (!value || value.length < 2) return false;
+  if (translationPreserveText.has(value)) return false;
+  if (/^[\d\s.,:+\-/%()]+$/.test(value)) return false;
+  return /[A-Za-z]/.test(value);
+}
+
+function isTranslatableNode(node) {
+  const parent = node.parentElement;
+  if (!parent || parent.closest(translationSkipSelector)) return false;
+  return shouldTranslateText(node.nodeValue);
+}
+
+function captureTranslationTargets() {
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      return isTranslatableNode(node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    }
+  });
+
+  translationNodes = [];
+  let node;
+  while ((node = walker.nextNode())) {
+    node.__hweiOriginalText = node.__hweiOriginalText || node.nodeValue;
+    translationNodes.push(node);
+  }
+
+  translationAttributes = [];
+  document.querySelectorAll('[placeholder], [title], [aria-label], img[alt]').forEach(el => {
+    if (el.closest(translationSkipSelector)) return;
+    ['placeholder', 'title', 'aria-label', 'alt'].forEach(attr => {
+      const value = el.getAttribute(attr);
+      if (!shouldTranslateText(value)) return;
+      const key = `hweiOriginal${attr.replace(/[^a-z]/gi, '')}`;
+      el.dataset[key] = el.dataset[key] || value;
+      translationAttributes.push({ el, attr, original: el.dataset[key] });
+    });
+  });
+}
+
+function restoreEnglishText() {
+  translationNodes.forEach(node => {
+    if (node.__hweiOriginalText != null) node.nodeValue = node.__hweiOriginalText;
+  });
+  translationAttributes.forEach(item => item.el.setAttribute(item.attr, item.original));
+}
+
+function getTranslationCache(lang, pageKey) {
+  try {
+    return JSON.parse(safeStorageGet(`${translationCachePrefix}${lang}:${pageKey}`) || '{}');
+  } catch (error) {
+    return {};
+  }
+}
+
+function setTranslationCache(lang, pageKey, cache) {
+  safeStorageSet(`${translationCachePrefix}${lang}:${pageKey}`, JSON.stringify(cache));
+}
+
+function chunkArray(items, size) {
+  const chunks = [];
+  for (let index = 0; index < items.length; index += size) chunks.push(items.slice(index, index + size));
+  return chunks;
+}
+
+async function fetchTranslations(texts, target) {
+  const translations = [];
+  for (const chunk of chunkArray(texts, 45)) {
+    const response = await fetch('/api/translate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ target, texts: chunk })
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.ok) throw new Error(result.message || 'Translation failed.');
+    translations.push(...result.translations);
+  }
+  return translations;
+}
+
+async function applyLanguage(lang) {
+  const targetLang = lang || 'en';
+  captureTranslationTargets();
+  restoreEnglishText();
+  document.documentElement.lang = targetLang;
+  syncLanguageButtons(targetLang);
+  safeStorageSet(langStorageKey, targetLang);
+
+  if (targetLang === 'en') return;
+
+  const pageKey = window.location.pathname.split('/').pop() || 'index.html';
+  const cache = getTranslationCache(targetLang, pageKey);
+  const targets = [
+    ...translationNodes.map(node => ({ type: 'node', ref: node, original: normalizeTranslationText(node.__hweiOriginalText) })),
+    ...translationAttributes.map(item => ({ type: 'attribute', ref: item, original: normalizeTranslationText(item.original) }))
+  ].filter(item => item.original);
+
+  const missing = Array.from(new Set(targets.map(item => item.original).filter(text => !cache[text])));
+  if (missing.length) {
+    const label = document.getElementById('lang-label');
+    if (label) label.textContent = 'Translating...';
+    const translated = await fetchTranslations(missing, targetLang);
+    missing.forEach((text, index) => { cache[text] = translated[index] || text; });
+    setTranslationCache(targetLang, pageKey, cache);
+  }
+
+  targets.forEach(item => {
+    const translated = cache[item.original] || item.original;
+    if (item.type === 'node') item.ref.nodeValue = item.ref.__hweiOriginalText.replace(item.original, translated);
+    else item.ref.el.setAttribute(item.ref.attr, translated);
+  });
+  syncLanguageButtons(targetLang);
+}
+
+async function confirmLang() {
+  const overlay = document.getElementById('lang-overlay');
+  const confirmButton = overlay?.querySelector('.lang-confirm');
+  const originalConfirmText = confirmButton?.textContent;
+  if (confirmButton) {
+    confirmButton.disabled = true;
+    confirmButton.textContent = selLangCode === 'en' ? 'Loading English...' : 'Translating...';
+  }
+  try {
+    await applyLanguage(selLangCode);
+    if (overlay) overlay.style.display = 'none';
+  } catch (error) {
+    console.warn(error);
+    syncLanguageButtons('en');
+  } finally {
+    if (confirmButton) {
+      confirmButton.disabled = false;
+      confirmButton.textContent = originalConfirmText || 'Continue to Guide';
+    }
+  }
+}
 
 // ── NAVIGATION ──
 function goPage(pageId, navEl, scrollTo) {
@@ -193,7 +403,7 @@ function initMatchupDifficultyJump() {
     if (!jumpLink) return;
 
     event.preventDefault();
-    const target = document.getElementById('botlane-toc');
+    const target = document.getElementById('matchup-toc');
     smoothScrollElementToCenter(target);
   });
 }
@@ -217,7 +427,7 @@ function initTierListSmoothJump() {
 
 function initTocSmoothJump() {
   document.addEventListener('click', (event) => {
-    const tocLink = event.target.closest('#botlane-toc a.toc-link');
+    const tocLink = event.target.closest('#matchup-toc a.toc-link');
     if (!tocLink) return;
 
     const href = tocLink.getAttribute('href') || '';
@@ -247,6 +457,719 @@ function switchTab(btn, id) {
   container.querySelector('#' + id).classList.add('active');
 }
 
+function switchCoreBuild(btn, id) {
+  const shell = btn.closest('.core-builds-shell');
+  if (!shell) return;
+  shell.querySelectorAll('.core-build-tab').forEach(tab => tab.classList.remove('active'));
+  shell.querySelectorAll('.core-build-pane').forEach(pane => pane.classList.remove('active'));
+  btn.classList.add('active');
+  shell.querySelector('#' + id)?.classList.add('active');
+}
+
+const HWEI_RUNE_PAGES = {
+  default: {
+    kicker: 'Recommended Page',
+    title: 'Recommended Comet',
+    summary: 'Default Hwei bot/APC page for scaling lane control and reliable late-game damage.',
+    primary: {
+      type: 'Primary',
+      tree: 'Sorcery',
+      mark: 'S',
+      runes: ['Arcane Comet', 'Manaflow Band', 'Transcendence', 'Gathering Storm']
+    },
+    secondary: {
+      type: 'Secondary',
+      tree: 'Precision',
+      mark: 'P',
+      runes: ['Legend: Haste', 'Cut Down']
+    },
+    shards: ['Ability Haste', 'Adaptive Force', 'Flat Health'],
+    useCase: 'Default into most bot lanes when you want Comet poke, haste scaling, and stronger objective fights after lane.',
+    swapNote: 'Swap to the Early Game page when lane pressure matters more than late-game Gathering Storm value.'
+  },
+  early: {
+    kicker: 'Lane Pressure',
+    title: 'Early Game Comet',
+    summary: 'Early-focused Comet page for stronger poke and safer health shards in volatile lanes.',
+    primary: {
+      type: 'Primary',
+      tree: 'Sorcery',
+      mark: 'S',
+      runes: ['Arcane Comet', 'Manaflow Band', 'Transcendence', 'Scorch']
+    },
+    secondary: {
+      type: 'Secondary',
+      tree: 'Precision',
+      mark: 'P',
+      runes: ['Legend: Haste', 'Cut Down']
+    },
+    shards: ['Adaptive Force', 'Adaptive Force', 'Flat Health'],
+    useCase: 'Take this when Hwei can contest early waves, your support can trade, or the lane is decided before first dragon.',
+    swapNote: 'Go back to Recommended when both teams are farming and you can comfortably wait for Gathering Storm.'
+  },
+  melee: {
+    kicker: 'Versus Melee',
+    title: 'Aery Melee Comp',
+    summary: 'Aery variation for melee-heavy enemy comps where Hwei gets repeated short trades and shield value.',
+    primary: {
+      type: 'Primary',
+      tree: 'Sorcery',
+      mark: 'S',
+      runes: ['Summon Aery', 'Manaflow Band', 'Transcendence', 'Gathering Storm']
+    },
+    secondary: {
+      type: 'Secondary',
+      tree: 'Precision',
+      mark: 'P',
+      runes: ['Legend: Haste', 'Cut Down']
+    },
+    shards: ['Ability Haste', 'Adaptive Force', 'Flat Health'],
+    useCase: 'Use when the enemy bot lane or team comp has multiple melee champions walking into Hwei spell range.',
+    swapNote: 'Use Comet instead when the main threats are ranged and you need longer-range poke to connect.'
+  }
+};
+
+const HWEI_RUNE_FAQS = [
+  {
+    question: 'Which page should I use by default?',
+    answer: 'Use Recommended Comet in most games. It gives reliable poke, scaling damage, ability haste, and enough lane stability for standard bot/APC matchups.'
+  },
+  {
+    question: 'When should I take the Early Game Comet page?',
+    answer: 'Take it when the lane will be decided early: volatile supports, heavy trading, or matchups where Scorch damage and double adaptive shards help you win the first few waves.'
+  },
+  {
+    question: 'When is Aery better than Comet?',
+    answer: 'Aery is best when enemies have to walk into you repeatedly. It is strongest into melee-heavy lanes and comps where Hwei can land many short trades instead of relying on long-range poke.'
+  },
+  {
+    question: 'Why Legend: Haste instead of mana runes?',
+    answer: 'Hwei values repeated spell rotations in fights. Manaflow Band covers the main mana need, while Legend: Haste makes his Q/E/W cycles feel better as the game opens up.'
+  },
+  {
+    question: 'Why Cut Down as the second Precision rune?',
+    answer: 'Bot lane and front-to-back fights often put Hwei into high-health targets. Cut Down gives him better damage into bruisers, tanks, and durable marksmen setups.'
+  },
+  {
+    question: 'Can I import these into League Client?',
+    answer: 'Yes, use Import Runes on any normal rune page while League Client is open. The FAQ page is reference-only, so the import button is hidden here.'
+  }
+];
+
+const RUNE_TREE_ICONS = {
+  Sorcery: 'images/runes/sorcery.png',
+  Precision: 'images/runes/precision.png',
+  Inspiration: 'images/runes/inspiration.png'
+};
+
+const RUNE_ICONS = {
+  'Summon Aery': 'images/runes/summon-aery.png',
+  'Arcane Comet': 'images/runes/arcane-comet.png',
+  "Stormraider's Surge": 'images/runes/stormraiders-surge.png',
+  'Deathfire Touch': 'images/runes/deathfire-touch.png',
+  'Axiom Arcanist': 'images/runes/axiom-arcanist.png',
+  'Manaflow Band': 'images/runes/manaflow-band.png',
+  'Nimbus Cloak': 'images/runes/nimbus-cloak.png',
+  Transcendence: 'images/runes/transcendence.png',
+  Celerity: 'images/runes/celerity.png',
+  'Absolute Focus': 'images/runes/absolute-focus.png',
+  Scorch: 'images/runes/scorch.png',
+  Waterwalking: 'images/runes/waterwalking.png',
+  'Gathering Storm': 'images/runes/gathering-storm.png',
+  'Absorb Life': 'images/runes/absorb-life.png',
+  Triumph: 'images/runes/triumph.png',
+  'Presence of Mind': 'images/runes/presence-of-mind.png',
+  'Legend: Alacrity': 'images/runes/legend-alacrity.png',
+  'Legend: Haste': 'images/runes/legend-haste.png',
+  'Legend: Bloodline': 'images/runes/legend-bloodline.png',
+  'Coup de Grace': 'images/runes/coup-de-grace.png',
+  'Cut Down': 'images/runes/cut-down.png',
+  'Last Stand': 'images/runes/last-stand.png',
+  'First Strike': 'images/runes/first-strike.png',
+  'Magical Footwear': 'images/runes/magical-footwear.png',
+  'Cash Back': 'images/runes/cash-back.png',
+  'Triple Tonic': 'images/runes/triple-tonic.png',
+  'Biscuit Delivery': 'images/runes/biscuit-delivery.png',
+  'Cosmic Insight': 'images/runes/cosmic-insight.png'
+};
+
+const RUNE_STYLE_IDS = {
+  Precision: 8000,
+  Sorcery: 8200,
+  Inspiration: 8300
+};
+
+const RUNE_IDS = {
+  'Summon Aery': 8214,
+  'Arcane Comet': 8229,
+  "Stormraider's Surge": 8230,
+  'Deathfire Touch': 8992,
+  'Axiom Arcanist': 8224,
+  'Manaflow Band': 8226,
+  Transcendence: 8210,
+  Scorch: 8237,
+  'Gathering Storm': 8236,
+  'Legend: Haste': 9105,
+  'Cut Down': 8017
+};
+
+const SHARD_IDS = {
+  'Ability Haste': 5007,
+  'Adaptive Force': 5008,
+  'Scaling Health': 5001,
+  'Flat Health': 5011
+};
+
+const RUNE_DESCRIPTIONS = {
+  'Summon Aery': 'Your attacks and abilities send Aery to a target, damaging enemies or shielding allies.',
+  'Arcane Comet': 'Damaging a champion with an ability hurls a damaging comet at their location.',
+  "Stormraider's Surge": 'Dealing a large chunk of a champion\'s maximum health grants a burst of move speed and slow resist.',
+  'Deathfire Touch': 'Damaging a champion with an ability burns them over time.',
+  'Axiom Arcanist': 'Your ultimate is stronger, and champion takedowns reduce its current cooldown.',
+  'Manaflow Band': 'Hitting enemy champions with abilities permanently increases maximum mana, then restores missing mana over time.',
+  'Nimbus Cloak': 'After casting a summoner spell, gain a short burst of move speed and pass through units.',
+  Transcendence: 'Gain ability haste at levels 5 and 8. At level 11, takedowns reduce basic ability cooldowns.',
+  Celerity: 'Move speed bonuses are more effective on you, and you gain a small amount of move speed.',
+  'Absolute Focus': 'While above 70% health, gain extra adaptive damage.',
+  Scorch: 'Your first damaging ability hit every few seconds burns enemy champions.',
+  Waterwalking: 'Gain move speed and adaptive damage while in the river.',
+  'Gathering Storm': 'Gain increasing adaptive damage as the game goes longer.',
+  'Absorb Life': 'Killing a target heals you.',
+  Triumph: 'Champion takedowns restore missing health and grant additional gold.',
+  'Presence of Mind': 'Damaging enemy champions restores mana or energy. Takedowns restore more.',
+  'Legend: Alacrity': 'Champion takedowns grant permanent attack speed.',
+  'Legend: Haste': 'Champion takedowns grant permanent basic ability haste.',
+  'Legend: Bloodline': 'Champion takedowns grant permanent life steal up to a cap, then increase maximum health.',
+  'Coup de Grace': 'Deal more damage to low-health enemy champions.',
+  'Cut Down': 'Deal more damage to high-health enemy champions.',
+  'Last Stand': 'Deal more damage to champions while you are low on health.',
+  'First Strike': 'When you initiate champion combat, deal extra damage briefly and gain gold based on damage dealt.',
+  'Magical Footwear': 'Get free boots later in the game. Takedowns make them arrive sooner.',
+  'Cash Back': 'Get some gold back when you purchase legendary items.',
+  'Triple Tonic': 'Gain elixirs at levels 3, 6, and 9 for gold, combat power, and a skill point.',
+  'Biscuit Delivery': 'Gain biscuits during early lane. Consuming or selling one increases max health and restores health.',
+  'Cosmic Insight': 'Gain summoner spell haste and item haste.'
+};
+
+const RUNE_ROWS = {
+  Sorcery: [
+    ['Summon Aery', 'Arcane Comet', "Stormraider's Surge", 'Deathfire Touch'],
+    ['Axiom Arcanist', 'Manaflow Band', 'Nimbus Cloak'],
+    ['Transcendence', 'Celerity', 'Absolute Focus'],
+    ['Scorch', 'Waterwalking', 'Gathering Storm']
+  ],
+  Precision: [
+    ['Absorb Life', 'Triumph', 'Presence of Mind'],
+    ['Legend: Alacrity', 'Legend: Haste', 'Legend: Bloodline'],
+    ['Coup de Grace', 'Cut Down', 'Last Stand']
+  ],
+  Inspiration: [
+    ['First Strike'],
+    ['Magical Footwear', 'Cash Back', 'Triple Tonic'],
+    ['Biscuit Delivery'],
+    ['Cosmic Insight']
+  ]
+};
+
+const KEYSTONE_RUNES = new Set(['Summon Aery', 'Arcane Comet', "Stormraider's Surge", 'Deathfire Touch', 'First Strike']);
+
+const SHARD_MARKS = {
+  'Ability Haste': 'AH',
+  'Adaptive Force': 'AP',
+  'Scaling Health': 'HP',
+  'Flat Health': '+HP'
+};
+
+const SHARD_ICONS = {
+  'Ability Haste': 'images/runes/stat-haste.png',
+  'Adaptive Force': 'images/runes/stat-adaptive.png',
+  'Scaling Health': 'images/runes/stat-health-scaling.png',
+  'Flat Health': 'images/runes/stat-health-flat.png'
+};
+
+const SHARD_DESCRIPTIONS = {
+  'Ability Haste': 'Grants ability haste for more frequent spell rotations.',
+  'Adaptive Force': 'Grants adaptive damage, converting to ability power for Hwei.',
+  'Scaling Health': 'Grants health that increases as the game progresses.',
+  'Flat Health': 'Grants immediate health for a stronger early lane.'
+};
+
+function escapeAttribute(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function runeInitials(name) {
+  return name
+    .split(/\s+/)
+    .map(part => part[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+function renderRuneIcon(name, className = '') {
+  const icon = RUNE_ICONS[name];
+  const classes = ['rune-node-icon', className].filter(Boolean).join(' ');
+  if (!icon) {
+    return `<span class="${classes}"><span>${runeInitials(name)}</span></span>`;
+  }
+  return `<span class="${classes}"><img src="${icon}" alt="${name}"></span>`;
+}
+
+function renderRuneTree(treeData) {
+  const treeIcon = RUNE_TREE_ICONS[treeData.tree];
+  const selectedRunes = new Set(treeData.runes);
+  const rows = (RUNE_ROWS[treeData.tree] || [treeData.runes]).filter(row => {
+    return treeData.type === 'Primary' || !row.some(rune => KEYSTONE_RUNES.has(rune));
+  });
+  return `
+    <div class="rune-tree-heading">
+      <div class="rune-tree-mark">${treeIcon ? `<img src="${treeIcon}" alt="${treeData.tree}">` : treeData.mark}</div>
+      <div>
+        <div class="rune-tree-name">${treeData.tree}</div>
+        <div class="rune-tree-type">${treeData.type}</div>
+      </div>
+    </div>
+    <div class="rune-list">
+      ${rows.map((row, rowIndex) => `
+        <div class="rune-choice-row${treeData.type === 'Primary' && rowIndex === 0 ? ' keystone-row' : ''}">
+          ${row.map(rune => `
+            <div class="rune-node${selectedRunes.has(rune) ? ' selected' : ' muted'}${KEYSTONE_RUNES.has(rune) ? ' keystone' : ''}" data-rune-name="${escapeAttribute(rune)}" tabindex="0" aria-label="${escapeAttribute(rune)}">
+              ${renderRuneIcon(rune)}
+            </div>
+          `).join('')}
+        </div>
+      `).join('')}
+    </div>
+    <div class="rune-selected-list">
+      ${treeData.runes.map(rune => `<span>${rune}</span>`).join('')}
+    </div>
+  `;
+}
+
+function renderRunePreview(page) {
+  return [...page.primary.runes.slice(0, 4), ...page.secondary.runes.slice(0, 2)]
+    .map((rune, index) => renderRuneIcon(rune, index === 0 ? 'preview-keystone' : 'preview-icon'))
+    .join('');
+}
+
+function renderShard(shard) {
+  const mark = SHARD_MARKS[shard] || runeInitials(shard);
+  const icon = SHARD_ICONS[shard];
+  return `<span class="rune-shard" data-rune-name="${escapeAttribute(shard)}" tabindex="0" aria-label="${escapeAttribute(shard)}"><span class="rune-shard-icon">${icon ? `<img src="${icon}" alt="">` : mark}</span><span>${shard}</span></span>`;
+}
+
+function renderRuneFaq() {
+  return `
+    <div class="rune-faq-grid">
+      ${HWEI_RUNE_FAQS.map(item => `
+        <article class="rune-faq-card">
+          <h5>${item.question}</h5>
+          <p>${item.answer}</p>
+        </article>
+      `).join('')}
+    </div>
+  `;
+}
+
+function getRuneTooltipContent(name) {
+  return {
+    name,
+    description: RUNE_DESCRIPTIONS[name] || SHARD_DESCRIPTIONS[name] || 'Rune details unavailable.'
+  };
+}
+
+function getRuneTooltip() {
+  let tooltip = document.getElementById('rune-tooltip');
+  if (tooltip) return tooltip;
+
+  tooltip = document.createElement('div');
+  tooltip.id = 'rune-tooltip';
+  tooltip.className = 'rune-tooltip';
+  tooltip.setAttribute('role', 'tooltip');
+  tooltip.innerHTML = '<div class="rune-tooltip-title"></div><div class="rune-tooltip-copy"></div>';
+  document.body.appendChild(tooltip);
+  return tooltip;
+}
+
+function positionRuneTooltip(target, tooltip) {
+  const rect = target.getBoundingClientRect();
+  const tooltipRect = tooltip.getBoundingClientRect();
+  const gap = 12;
+  let left = rect.left + rect.width / 2 - tooltipRect.width / 2;
+  let top = rect.top - tooltipRect.height - gap;
+
+  if (top < 12) top = rect.bottom + gap;
+  left = Math.max(12, Math.min(left, window.innerWidth - tooltipRect.width - 12));
+
+  tooltip.style.left = `${left}px`;
+  tooltip.style.top = `${top}px`;
+}
+
+function showRuneTooltip(target) {
+  const name = target.dataset.runeName;
+  if (!name) return;
+
+  const tooltip = getRuneTooltip();
+  const content = getRuneTooltipContent(name);
+  tooltip.querySelector('.rune-tooltip-title').textContent = content.name;
+  tooltip.querySelector('.rune-tooltip-copy').textContent = content.description;
+  tooltip.classList.add('visible');
+  target.setAttribute('aria-describedby', 'rune-tooltip');
+  positionRuneTooltip(target, tooltip);
+}
+
+function hideRuneTooltip(target) {
+  const tooltip = document.getElementById('rune-tooltip');
+  if (tooltip) tooltip.classList.remove('visible');
+  if (target) target.removeAttribute('aria-describedby');
+}
+
+function initRuneTooltips() {
+  const selector = document.querySelector('.rune-selector');
+  if (!selector) return;
+
+  selector.addEventListener('mouseover', event => {
+    const target = event.target.closest('.rune-page-display [data-rune-name]');
+    if (target && selector.contains(target)) showRuneTooltip(target);
+  });
+  selector.addEventListener('mouseout', event => {
+    const target = event.target.closest('.rune-page-display [data-rune-name]');
+    if (target && !target.contains(event.relatedTarget)) hideRuneTooltip(target);
+  });
+  selector.addEventListener('focusin', event => {
+    const target = event.target.closest('.rune-page-display [data-rune-name]');
+    if (target) showRuneTooltip(target);
+  });
+  selector.addEventListener('focusout', event => {
+    const target = event.target.closest('.rune-page-display [data-rune-name]');
+    if (target) hideRuneTooltip(target);
+  });
+  window.addEventListener('scroll', () => hideRuneTooltip(document.querySelector('[aria-describedby="rune-tooltip"]')), true);
+  window.addEventListener('resize', () => hideRuneTooltip(document.querySelector('[aria-describedby="rune-tooltip"]')));
+}
+
+function setRunePage(pageId) {
+  const selector = document.querySelector('.rune-selector');
+  if (!selector) return;
+
+  selector.dataset.selectedRunePage = pageId;
+  document.querySelectorAll('.rune-page-option').forEach(option => {
+    const active = option.dataset.runePage === pageId;
+    option.classList.toggle('active', active);
+    option.setAttribute('aria-selected', active ? 'true' : 'false');
+    const preview = option.querySelector('.rune-page-icons');
+    const optionPage = HWEI_RUNE_PAGES[option.dataset.runePage];
+    if (preview) preview.innerHTML = optionPage ? renderRunePreview(optionPage) : '';
+  });
+
+  const kicker = document.getElementById('rune-display-kicker');
+  const title = document.getElementById('rune-display-title');
+  const summary = document.getElementById('rune-display-summary');
+  const primary = document.getElementById('rune-primary-tree');
+  const secondary = document.getElementById('rune-secondary-tree');
+  const shards = document.getElementById('rune-shards');
+  const useCase = document.getElementById('rune-use-case');
+  const swapNote = document.getElementById('rune-swap-note');
+  const importAction = document.querySelector('.rune-import-action');
+  const pageContent = document.getElementById('rune-page-content');
+  const faqPanel = document.getElementById('rune-faq-panel');
+
+  if (pageId === 'faq') {
+    if (kicker) kicker.textContent = 'Runes Reference';
+    if (title) title.textContent = 'Runes FAQ';
+    if (summary) summary.textContent = 'Answers for choosing, swapping, and importing Hwei rune pages.';
+    if (importAction) importAction.hidden = true;
+    if (pageContent) pageContent.hidden = true;
+    if (faqPanel) {
+      faqPanel.hidden = false;
+      faqPanel.innerHTML = renderRuneFaq();
+    }
+    hideRuneTooltip(document.querySelector('[aria-describedby="rune-tooltip"]'));
+    return;
+  }
+
+  const page = HWEI_RUNE_PAGES[pageId] || HWEI_RUNE_PAGES.default;
+  if (importAction) importAction.hidden = false;
+  if (pageContent) pageContent.hidden = false;
+  if (faqPanel) faqPanel.hidden = true;
+
+  if (kicker) kicker.textContent = page.kicker;
+  if (title) title.textContent = page.title;
+  if (summary) summary.textContent = page.summary;
+  if (primary) primary.innerHTML = renderRuneTree(page.primary);
+  if (secondary) secondary.innerHTML = renderRuneTree(page.secondary);
+  if (shards) shards.innerHTML = page.shards.map(renderShard).join('');
+  if (useCase) useCase.textContent = page.useCase;
+  if (swapNote) swapNote.textContent = page.swapNote;
+}
+
+function buildRuneImportPayload(page) {
+  return {
+    name: `Hwei Guide - ${page.title}`,
+    primaryStyleId: RUNE_STYLE_IDS[page.primary.tree],
+    subStyleId: RUNE_STYLE_IDS[page.secondary.tree],
+    selectedPerkIds: [
+      ...page.primary.runes.map(rune => RUNE_IDS[rune]),
+      ...page.secondary.runes.map(rune => RUNE_IDS[rune]),
+      ...page.shards.map(shard => SHARD_IDS[shard])
+    ]
+  };
+}
+
+function setRuneImportStatus(message, state = '') {
+  const status = document.getElementById('rune-import-status');
+  if (!status) return;
+  status.textContent = message;
+  status.classList.toggle('success', state === 'success');
+  status.classList.toggle('error', state === 'error');
+}
+
+function initRuneSelector() {
+  const selector = document.querySelector('.rune-selector');
+  if (!selector) return;
+
+  selector.querySelectorAll('.rune-page-option').forEach(option => {
+    option.addEventListener('click', () => setRunePage(option.dataset.runePage));
+  });
+
+  const copyBtn = document.getElementById('rune-copy-btn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      const page = HWEI_RUNE_PAGES[selector.dataset.selectedRunePage] || HWEI_RUNE_PAGES.default;
+      const payload = buildRuneImportPayload(page);
+      const missingIds = payload.selectedPerkIds.some(id => !Number.isInteger(id));
+      if (missingIds || !payload.primaryStyleId || !payload.subStyleId) {
+        setRuneImportStatus('Rune ID mapping is incomplete for this page.', 'error');
+        return;
+      }
+
+      copyBtn.disabled = true;
+      copyBtn.textContent = 'Importing';
+      setRuneImportStatus('Looking for your open League Client...');
+
+      try {
+        const response = await fetch('/api/lcu/runes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.ok) {
+          throw new Error(result.message || 'Unable to import runes.');
+        }
+        copyBtn.textContent = 'Imported';
+        setRuneImportStatus(result.message || `Imported ${page.title}.`, 'success');
+        setTimeout(() => { copyBtn.textContent = 'Import Runes'; }, 1600);
+      } catch (error) {
+        copyBtn.textContent = 'Import Failed';
+        setRuneImportStatus(error.message || 'Open League Client and try again.', 'error');
+        setTimeout(() => { copyBtn.textContent = 'Import Runes'; }, 1800);
+      } finally {
+        copyBtn.disabled = false;
+      }
+    });
+  }
+
+  setRunePage(selector.dataset.selectedRunePage || 'default');
+  initRuneTooltips();
+}
+
+const ITEM_SET_IDS = {
+  doransRing: '1056',
+  healthPotion: '2003',
+  wardingTotem: '3340',
+  sorcerersShoes: '3020',
+  ionianBoots: '3158',
+  seraphsEmbrace: '3040',
+  liandrysTorment: '6653',
+  cosmicDrive: '4629',
+  blackfireTorch: '2503',
+  shadowflame: '4645',
+  tearOfTheGoddess: '3070',
+  echoesOfHelia: '6620',
+  diademOfSongs: '2530',
+  voidStaff: '3135',
+  cryptbloom: '3137',
+  zhonyasHourglass: '3157'
+};
+
+const HWEI_ITEM_SET_BLOCKS = {
+  starting: {
+    type: 'Starting Items',
+    items: [
+      { id: ITEM_SET_IDS.doransRing, count: 1 },
+      { id: ITEM_SET_IDS.healthPotion, count: 2 },
+      { id: ITEM_SET_IDS.wardingTotem, count: 1 }
+    ]
+  },
+  boots: {
+    type: 'Boots',
+    items: [
+      { id: ITEM_SET_IDS.sorcerersShoes, count: 1 },
+      { id: ITEM_SET_IDS.ionianBoots, count: 1 }
+    ]
+  },
+  situational: {
+    type: 'Situational',
+    items: [
+      { id: ITEM_SET_IDS.shadowflame, count: 1 },
+      { id: ITEM_SET_IDS.voidStaff, count: 1 },
+      { id: ITEM_SET_IDS.cryptbloom, count: 1 },
+      { id: ITEM_SET_IDS.zhonyasHourglass, count: 1 },
+      { id: ITEM_SET_IDS.ionianBoots, count: 1 }
+    ]
+  }
+};
+
+const HWEI_ITEM_SET_BUILDS = {
+  'scaling-burn': {
+    title: 'Hwei Bot - Scaling Burn',
+    label: 'Scaling Burn',
+    coreType: 'Core - Scaling Burn',
+    items: [
+      { id: ITEM_SET_IDS.seraphsEmbrace, count: 1 },
+      { id: ITEM_SET_IDS.liandrysTorment, count: 1 },
+      { id: ITEM_SET_IDS.cosmicDrive, count: 1 }
+    ]
+  },
+  'tempo-burst': {
+    title: 'Hwei Bot - Tempo Burst',
+    label: 'Tempo Burst',
+    coreType: 'Core - Tempo Burst',
+    items: [
+      { id: ITEM_SET_IDS.blackfireTorch, count: 1 },
+      { id: ITEM_SET_IDS.cosmicDrive, count: 1 },
+      { id: ITEM_SET_IDS.shadowflame, count: 1 }
+    ]
+  },
+  'utility-weave': {
+    title: 'Hwei Bot - Utility Weave',
+    label: 'Utility Weave',
+    coreType: 'Core - Utility Weave',
+    items: [
+      { id: ITEM_SET_IDS.tearOfTheGoddess, count: 1 },
+      { id: ITEM_SET_IDS.liandrysTorment, count: 1 },
+      { id: ITEM_SET_IDS.echoesOfHelia, count: 1 },
+      { id: ITEM_SET_IDS.diademOfSongs, count: 1 }
+    ]
+  }
+};
+
+function cloneItemBlock(block) {
+  return {
+    type: block.type,
+    recMath: false,
+    minSummonerLevel: -1,
+    maxSummonerLevel: -1,
+    showIfSummonerSpell: '',
+    hideIfSummonerSpell: '',
+    items: block.items.map(item => ({ id: String(item.id), count: item.count }))
+  };
+}
+
+function createItemSet(title, blocks, sortrank = 0) {
+  return {
+    title,
+    type: 'custom',
+    map: 'any',
+    mode: 'any',
+    priority: false,
+    sortrank,
+    associatedChampions: [910],
+    associatedMaps: [11],
+    blocks: blocks.map(cloneItemBlock)
+  };
+}
+
+function buildHweiItemSet(copyType) {
+  const build = HWEI_ITEM_SET_BUILDS[copyType];
+  if (build) {
+    return createItemSet(build.title, [
+      HWEI_ITEM_SET_BLOCKS.starting,
+      HWEI_ITEM_SET_BLOCKS.boots,
+      { type: build.coreType, items: build.items },
+      HWEI_ITEM_SET_BLOCKS.situational
+    ]);
+  }
+
+  return createItemSet('Hwei Bot - All Builds', [
+    HWEI_ITEM_SET_BLOCKS.starting,
+    HWEI_ITEM_SET_BLOCKS.boots,
+    ...Object.values(HWEI_ITEM_SET_BUILDS).map(itemBuild => ({
+      type: itemBuild.coreType,
+      items: itemBuild.items
+    })),
+    HWEI_ITEM_SET_BLOCKS.situational
+  ]);
+}
+
+async function copyTextToClipboard(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return;
+    } catch (error) {
+      // Fall through to the legacy copy path when browser permissions block Clipboard API.
+    }
+  }
+
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.setAttribute('readonly', '');
+  textArea.style.position = 'fixed';
+  textArea.style.left = '-9999px';
+  document.body.appendChild(textArea);
+  textArea.select();
+  const copied = document.execCommand('copy');
+  document.body.removeChild(textArea);
+  if (!copied) throw new Error('Clipboard copy was blocked by the browser.');
+}
+
+function setItemCopyStatus(message, state = '') {
+  const status = document.getElementById('item-copy-status');
+  if (!status) return;
+  status.textContent = message;
+  status.classList.toggle('success', state === 'success');
+  status.classList.toggle('error', state === 'error');
+}
+
+function initItemSetCopy() {
+  const buttons = document.querySelectorAll('[data-item-set-copy]');
+  if (!buttons.length) return;
+
+  buttons.forEach(button => {
+    button.addEventListener('click', async () => {
+      const copyType = button.dataset.itemSetCopy || 'all';
+      const itemSet = buildHweiItemSet(copyType);
+      const label = copyType === 'all' ? 'all Hwei builds' : (HWEI_ITEM_SET_BUILDS[copyType]?.label || itemSet.title);
+      const originalText = button.textContent;
+
+      button.disabled = true;
+      button.textContent = 'Copying';
+      setItemCopyStatus(`Copying ${label} item set...`);
+
+      try {
+        await copyTextToClipboard(JSON.stringify(itemSet, null, 2));
+        button.textContent = 'Copied';
+        setItemCopyStatus(`Copied ${label}. In League: Collection > Items > Import Item Sets > Paste copied set.`, 'success');
+      } catch (error) {
+        button.textContent = 'Copy Failed';
+        setItemCopyStatus(error.message || 'Clipboard copy failed. Try again from the browser page.', 'error');
+      } finally {
+        setTimeout(() => {
+          button.disabled = false;
+          button.textContent = originalText;
+        }, 1800);
+      }
+    });
+  });
+}
+
 // ── SET ACTIVE NAVIGATION BASED ON CURRENT PAGE ──
 document.addEventListener('DOMContentLoaded', function() {
   const currentPath = window.location.pathname;
@@ -255,6 +1178,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Map page names to nav items
   const navMap = {
     'home': 'Intro / Home',
+    'index': 'Intro / Home',
     'abilities': 'Abilities',
     'laning': 'Laning / Early Game',
     'pregame': 'Pregame',
@@ -272,18 +1196,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   transformMatchupCards();
+  initRuneSelector();
+  initItemSetCopy();
   initMatchupSortControls();
   initMatchupDifficultyJump();
   initTierListSmoothJump();
   initTocSmoothJump();
+  applyLanguage(selLangCode).catch(error => {
+    console.warn(error);
+    syncLanguageButtons('en');
+  });
 });
 
 function transformMatchupCards() {
   const idToImageFile = {
-    aphelios:'Aphelios.png', ashe:'Ashe.png', 'aurelion-sol':'AurelionSol.png', brand:'Brand.png', caitlyn:'Caitlyn.png', corki:'Corki.png', draven:'Draven.png', ezreal:'Ezreal.png', heimerdinger:'Heimerdinger.png', hwei:'Hwei.jpg', jhin:'Jhin.png', jinx:'Jinx.png', 'kaisa':'KaiSa.png', kalista:'Kalista.png', karma:'Karma.png', karthus:'Karthus.png', 'kogmaw':'KogMaw.png', lucian:'Lucian.png', lux:'Lux.png', mel:'Mel.jpg', 'miss-fortune':'MissFortune.png', morgana:'Morgana.png', nilah:'Nilah.png', samira:'Samira.png', senna:'Senna.png', syndra:'Syndra.png', seraphine:'Seraphine.png', sivir:'Sivir.png', smolder:'Smolder.jpg', tristana:'Tristana.png', twitch:'Twitch.png', varus:'Varus.png', vayne:'Vayne.png', xayah:'Xayah.png', yunara:'Yunara.jpg', zeri:'Zeri.png', ziggs:'Ziggs.png', zyra:'Zyra.png'
+    aphelios:'Aphelios.png', ashe:'Ashe.png', 'aurelion-sol':'AurelionSol.png', brand:'Brand.png', caitlyn:'Caitlyn.png', corki:'Corki.png', draven:'Draven.png', ezreal:'Ezreal.png', heimerdinger:'Heimerdinger.png', hwei:'Hwei.jpg', jhin:'Jhin.png', jinx:'Jinx.png', 'kaisa':'KaiSa.png', kalista:'Kalista.png', karma:'Karma.png', karthus:'Karthus.png', 'kogmaw':'KogMaw.png', lucian:'Lucian.png', lux:'Lux.png', 'miss-fortune':'MissFortune.png', morgana:'Morgana.png', nilah:'Nilah.png', samira:'Samira.png', senna:'Senna.png', syndra:'Syndra.png', seraphine:'Seraphine.png', sivir:'Sivir.png', smolder:'Smolder.jpg', tristana:'Tristana.png', twitch:'Twitch.png', varus:'Varus.png', vayne:'Vayne.png', xayah:'Xayah.png', yunara:'Yunara.jpg', zeri:'Zeri.png', ziggs:'Ziggs.png', zyra:'Zyra.png'
   };
   const wikiById = {
-    aphelios:'Aphelios', ashe:'Ashe', 'aurelion-sol':'Aurelion_Sol', brand:'Brand', caitlyn:'Caitlyn', corki:'Corki', draven:'Draven', ezreal:'Ezreal', heimerdinger:'Heimerdinger', hwei:'Hwei', jhin:'Jhin', jinx:'Jinx', kaisa:"Kai'Sa", kalista:'Kalista', karma:'Karma', karthus:'Karthus', kogmaw:"Kog'Maw", lucian:'Lucian', lux:'Lux', mel:'Mel', 'miss-fortune':'Miss_Fortune', morgana:'Morgana', nilah:'Nilah', samira:'Samira', senna:'Senna', syndra:'Syndra', seraphine:'Seraphine', sivir:'Sivir', smolder:'Smolder', tristana:'Tristana', twitch:'Twitch', varus:'Varus', vayne:'Vayne', xayah:'Xayah', yunara:'Yunara', zeri:'Zeri', ziggs:'Ziggs', zyra:'Zyra'
+    aphelios:'Aphelios', ashe:'Ashe', 'aurelion-sol':'Aurelion_Sol', brand:'Brand', caitlyn:'Caitlyn', corki:'Corki', draven:'Draven', ezreal:'Ezreal', heimerdinger:'Heimerdinger', hwei:'Hwei', jhin:'Jhin', jinx:'Jinx', kaisa:"Kai'Sa", kalista:'Kalista', karma:'Karma', karthus:'Karthus', kogmaw:"Kog'Maw", lucian:'Lucian', lux:'Lux', 'miss-fortune':'Miss_Fortune', morgana:'Morgana', nilah:'Nilah', samira:'Samira', senna:'Senna', syndra:'Syndra', seraphine:'Seraphine', sivir:'Sivir', smolder:'Smolder', tristana:'Tristana', twitch:'Twitch', varus:'Varus', vayne:'Vayne', xayah:'Xayah', yunara:'Yunara', zeri:'Zeri', ziggs:'Ziggs', zyra:'Zyra'
   };
   const wikiBase = 'https://wiki.leagueoflegends.com/en-us/';
 
@@ -294,18 +1224,18 @@ function transformMatchupCards() {
   const standardBuild = ['blackfireTorch.jpg','sorcBoots.jpg','cosmicDrive.jpg','Shadowflame.jpg','rabadons.jpg','voidStaff.jpg','zhonyas.jpg'];
 
   const tierMap = {
-    aphelios: 'heavily-mel-favored', draven: 'heavily-mel-favored', jinx: 'heavily-mel-favored',
-    nilah: 'heavily-mel-favored', varus: 'heavily-mel-favored', twitch: 'heavily-mel-favored', seraphine: 'heavily-mel-favored',
-    ashe: 'mel-favored', caitlyn: 'mel-favored', corki: 'mel-favored', kalista: 'mel-favored', ziggs: 'mel-favored',
-    'miss-fortune': 'mel-favored', senna: 'mel-favored', samira: 'mel-favored', hwei: 'mel-favored', xayah: 'mel-favored',
-    'aurelion-sol': 'mel-favored', brand: 'mel-favored', heimerdinger: 'mel-favored', karma: 'mel-favored', 'kogmaw': 'mel-favored',
-    lux: 'mel-favored', morgana: 'mel-favored', smolder: 'mel-favored', yunara: 'mel-favored', zeri: 'mel-favored',
-    ezreal: 'even', jhin: 'even', 'kaisa': 'even', tristana: 'even', vayne: 'even', zyra: 'even', mel: 'even',
+    aphelios: 'heavily-hwei-favored', draven: 'heavily-hwei-favored', jinx: 'heavily-hwei-favored',
+    nilah: 'heavily-hwei-favored', varus: 'heavily-hwei-favored', twitch: 'heavily-hwei-favored', seraphine: 'heavily-hwei-favored',
+    ashe: 'hwei-favored', caitlyn: 'hwei-favored', corki: 'hwei-favored', kalista: 'hwei-favored', ziggs: 'hwei-favored',
+    'miss-fortune': 'hwei-favored', senna: 'hwei-favored', samira: 'hwei-favored', hwei: 'hwei-favored', xayah: 'hwei-favored',
+    'aurelion-sol': 'hwei-favored', brand: 'hwei-favored', heimerdinger: 'hwei-favored', karma: 'hwei-favored', 'kogmaw': 'hwei-favored',
+    lux: 'hwei-favored', morgana: 'hwei-favored', smolder: 'hwei-favored', yunara: 'hwei-favored', zeri: 'hwei-favored', mel: 'hwei-favored',
+    ezreal: 'even', jhin: 'even', 'kaisa': 'even', tristana: 'even', vayne: 'even', zyra: 'even',
     lucian: 'enemy-favored', syndra: 'enemy-favored', karthus: 'enemy-favored',
     sivir: 'unfavorable'
   };
   const tierLabels = {
-    'heavily-mel-favored': 'Heavily Favored', 'mel-favored': 'Mel Favored',
+    'heavily-hwei-favored': 'Heavily Hwei Favored', 'hwei-favored': 'Hwei Favored',
     'even': 'Even', 'enemy-favored': 'Enemy Favored', 'unfavorable': 'Unfavorable'
   };
 
@@ -353,7 +1283,7 @@ function transformMatchupCards() {
               <h3 class="matchup-name">${name}</h3>
               <span class="matchup-tier-badge ${tierClass}">${tierLabel}</span>
             </div>
-            <a class="matchup-diff-badge matchup-diff-badge-link" href="#botlane-toc" aria-label="Jump to champions table of contents" title="Jump to champions list">
+            <a class="matchup-diff-badge matchup-diff-badge-link" href="#matchup-toc" aria-label="Jump to champions table of contents" title="Jump to champions list">
               <div class="matchup-difficulty-title">Difficulty</div>
               ${difficultySteps}
             </a>

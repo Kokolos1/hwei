@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mid Game - The Ultimate Mel Compendium</title>
-  <meta name="description" content="Mel mid game strategy: lane assignments, global threats, matchup assessment, teamfighting, and more.">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+  <title>Mid Game - The Ultimate Hwei Compendium</title>
+  <meta name="description" content="Hwei bot/APC mid game strategy: lane assignments, objective threats, matchup assessment, teamfighting, and more.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 
   <style>
@@ -383,6 +383,112 @@
 
     .forgot-dark .fd-body strong { color: var(--white); }
 
+    .mid-takeaway {
+      border:1px solid rgba(76,187,110,.22);
+      border-left:4px solid var(--brand);
+      border-radius:6px;
+      background:rgba(76,187,110,.08);
+      color:var(--text-body);
+      padding:12px 14px;
+      font-size:.9rem;
+      line-height:1.55;
+      margin-top:12px;
+    }
+
+    .mid-takeaway strong { color:var(--brand-deeper); }
+
+    .content-block > .card { margin-bottom:0 !important; }
+
+    .is-hidden { display:none; }
+    .mt-soft { margin-top:10px; }
+    .mt-tight { margin-top:4px; }
+    .mb-16 { margin-bottom:16px; }
+
+    .media-block {
+      border-radius:8px;
+      box-shadow:0 14px 30px rgba(10,8,15,.18);
+    }
+
+    .media-block-label {
+      font-family:'Inter','Source Serif 4',serif;
+      font-size:.72rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .media-inner.media-tall {
+      flex:1;
+      aspect-ratio:unset;
+      min-height:260px;
+    }
+
+    .media-block.media-wide {
+      margin-bottom:16px;
+      max-height:420px;
+    }
+
+    .media-inner.media-wide-inner {
+      aspect-ratio:21/9;
+      max-height:380px;
+    }
+
+    .embed-fill {
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
+    }
+
+    .card.accent-gold { border-left:4px solid var(--gold); }
+    .card.accent-brand { border-left:4px solid var(--brand); }
+
+    .mid-muted-note {
+      margin-top:8px;
+      font-size:.88rem;
+      color:var(--text-muted);
+    }
+
+    .mid-body-note { margin-top:8px; }
+
+    .mid-list {
+      list-style:disc;
+      padding-left:18px;
+      font-size:.9rem;
+      line-height:1.8;
+      color:var(--text-body);
+    }
+
+    .mid-never-stack {
+      display:grid;
+      gap:8px;
+    }
+
+    .mid-never-stack .never-item {
+      margin:0 !important;
+      border-radius:6px;
+      border:1px solid rgba(189,70,55,.18);
+      border-left:4px solid var(--red);
+      background:linear-gradient(180deg,rgba(189,70,55,.09),rgba(189,70,55,.055));
+      font-weight:650;
+    }
+
+    .pos-card {
+      border-radius:8px;
+      box-shadow:var(--shadow);
+    }
+
+    .pos-card p {
+      font-size:.88rem;
+      line-height:1.6;
+      color:var(--text-body);
+    }
+
+    .pos-dot.gold { background:var(--gold); }
+    .pos-dot.red { background:var(--red); }
+
+    .rule-card.tight-bottom { margin-bottom:16px; }
+
     /* Subnav offset already handled by page-subnav sticky */
   </style>
 </head>
@@ -418,7 +524,7 @@
     <div class="topnav-brand-left">
       <div>
         <div class="topnav-brand-eyebrow">Ultimate Compendium</div>
-        <div class="topnav-brand-title">The Ultimate Mel Compendium</div>
+        <div class="topnav-brand-title">The Ultimate Hwei Compendium</div>
       </div>
       <div class="topnav-divider"></div>
       <div class="topnav-author">by <strong>evandabank</strong></div>
@@ -445,7 +551,7 @@
       <!-- HERO -->
       <div class="page-hero">
         <h2>Mid Game &amp; Teamfighting</h2>
-        <p class="hero-desc">Lane assignments shift, objectives define the flow, and one good teamfight can swing the entire game. Master every piece of the mid game as Mel.</p>
+        <p class="hero-desc">After bot tower pressure breaks, lane assignments shift, dragons define the flow, and one clean Hwei choke setup can swing the entire game.</p>
       </div>
 
       <!-- IN-PAGE SUBNAV -->
@@ -468,7 +574,7 @@
             <h3>Lane Assignments</h3>
             <div class="mg-rule"></div>
           </div>
-          <div class="mg-sub">Where you farm and who you face in the sidelanes</div>
+          <div class="mg-sub">Where the bot/APC goes after lane phase</div>
 
           <div class="split-left">
             <div class="media-block">
@@ -478,7 +584,7 @@
               <div class="media-inner photo">
                 <img src="images/LeagueMap.jpg" alt="Mid game lane assignment diagram"
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="media-placeholder" style="display:none;">
+                <div class="media-placeholder is-hidden">
                   <div class="ph-icon">🗺️</div>
                   <div class="ph-label">Photo Placeholder</div>
                   <div class="ph-hint">images/LeagueMap.jpg</div>
@@ -487,24 +593,25 @@
             </div>
 
             <div class="content-block">
-              <div class="card" style="margin-bottom:0;">
+              <div class="card">
                 <div class="card-title">How Lanes Change at Mid Game</div>
-                <p>During the mid game, we will be swapping to lane inside the midlane, while our sololaners will occupy the sidelanes. It's important that we keep the waves pushed in midlane and manage resources properly. It's our job to appear at/carry every single fight, so placing ourselves in the midlane makes our job easier as we are now centrally located on the map.</p>
+                <p>During the mid game, Hwei bot usually moves toward the central lane while solo laners take side waves. That central position lets you clear safely, protect your support's vision movement, and arrive first to dragon or Baron entrances.</p>
               </div>
 
-              <div class="card" style="margin-bottom:0;">
+              <div class="card">
                 <div class="card-title">Midlaner vs. Toplaner — Very Different Threats</div>
-                <p>First, identify <strong>who you are laning against</strong>. If it's the enemy midlaner, we need to know their kit and how they can trade. Syndra is much scarier (due to her CC) than a Jayce for instance. If it's the enemy <strong>toplaner</strong>, this becomes much trickier. The majority of toplaners are melee bruisers (Fiora, Renekton, Riven, Ambessa) who can kill us quickly in melee range. Usually though, you will lane against the enemy botlaner which will make getting mid priority relatively easy. Watch the video in the next section for a full rundown on this.</p>
-                <div class="info-box" style="margin-top: 10px;">
-                  On mid waves, USE CAUTION <strong> clear waves, stay under tower, land poke from safety if needed. </strong> Midwaves are where most botlaners die wayyy too much. Do NOT step up without confidence that you won't die on the wave.
+                <p>First, identify <strong>who can actually punish you on the next wave</strong>. If the enemy support or jungler is missing, widen your spacing and hold EQ. If the enemy carry is answering mid alone, you can usually clear first and prepare the next objective setup.</p>
+                <div class="info-box mt-soft">
+                  On mid waves, use caution: clear waves, stay near safe exits, and land poke from range if needed. Do not step forward unless you know where the enemy engage tools are.
                 </div>
               </div>
 
-              <div class="card" style="margin-bottom:0; border-left: 4px solid var(--gold);">
+              <div class="card accent-gold">
                 <div class="card-title">Mid Game Warding</div>
                 <p>Generally, we use our blue trinket to either spot enemies walking through a corridor (Ex. the small path to dragon), to spot an enemy camping a bush, or to see if the enemy is on an objective. Blue/white circles in the image to the left are the most common blue ward locations.</p>
-                <p style="margin-top:8px; font-size:0.88rem; color:var(--text-muted);">You will rarely have enough wards to cover all angles- track the enemy team on the minimap and play accordingly.</p>
+                <p class="mid-muted-note">You will rarely have enough wards to cover all angles- track the enemy team on the minimap and play accordingly.</p>
               </div>
+              <div class="mid-takeaway"><strong>Takeaway:</strong> central lane lets you clear safely, protect support vision movement, and arrive first to dragon or Baron entrances.</div>
             </div>
           </div>
         </div>
@@ -523,22 +630,22 @@
           <div class="split-right">
             <!-- Text -->
             <div class="content-block">
-              <div class="card" style="margin-bottom:0;">
+              <div class="card">
                 <div class="card-title">Reading the Enemy Laner</div>
-                <p>Even after laning phase ends, you need to evaluate how threatening your current lane opponent is. Have they finished their first item? Are they fed? Are they a champion who spikes at this point in the game? Honing this skill will come with playing more games of Mel and League in general, but it's important to always be thinking of your opponents current strength.</p>
+                <p>Even after laning phase ends, you need to evaluate how threatening your current lane opponent is. Have they finished their first item? Are they fed? Are they a champion who spikes at this point in the game? Honing this skill will come with playing more games of Hwei and League in general, but it's important to always be thinking of your opponents current strength.</p>
               </div>
 
-              <div class="card" style="margin-bottom:0;">
+              <div class="card">
                 <div class="card-title">How Aggressively Can You Trade?</div>
                 <p>If you have been <strong>winning lane</strong> and know your opponent's kit, you can take confident short trades. Poke, back off, repeat. If you are <strong>laning against an unfamiliar opponents</strong>, respect their damage completely. For instance, many bruisers will all-in you the moment you overstep even an inch. A good example is Renekton who can flash stun and kill you without any counterplay.</p>
-                <div class="info-box" style="margin-top:10px;">
-                  The strength of any mage, including Mel, is their <strong>range</strong>. Use it to poke and clear waves from a distance. If they close the gap, that's when you E, W, and back away or all-in them.
+                <div class="info-box mt-soft">
+                  The strength of any mage, including Hwei, is their <strong>range</strong>. Use it to poke and clear waves from a distance. If they close the gap, use the right defensive subject: EQ to stop a diver, WQ to reposition, or WW to absorb unavoidable damage.
                 </div>
               </div>
 
-              <div class="card" style="margin-bottom:0; border-left:4px solid var(--brand);">
+              <div class="card accent-brand">
                 <div class="card-title">Useful Questions to Ask Each Wave</div>
-                <ul style="list-style:disc; padding-left:18px; font-size:0.9rem; line-height:1.8; color:var(--text-body);">
+                <ul class="mid-list">
                   <li>Is my W up? Can I absorb a trade safely?</li>
                   <li>Do I know where their jungler is?</li>
                   <li>Is the enemy laner ahead or behind in gold?</li>
@@ -546,6 +653,7 @@
                   <li><strong>Does killing them here actually help my team?</strong></li>
                 </ul>
               </div>
+              <div class="mid-takeaway"><strong>Takeaway:</strong> keep asking whether the next trade actually helps your team or just exposes you to a punish.</div>
             </div>
 
             <!-- Video -->
@@ -553,11 +661,11 @@
               <div class="media-block-label">
                 <span class="icon">▶</span> Matchup Assessment in Action
               </div>
-              <div class="media-inner" style="flex:1; aspect-ratio:unset; min-height:260px;">
+              <div class="media-inner media-tall">
                 <iframe
                   src="https://www.youtube.com/embed/Aajp_Z0ErDU"
                   title="Midgame Matchup Assessment"
-                  style="width:100%;height:100%;border:0;display:block;"
+                  class="embed-fill"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   referrerpolicy="strict-origin-when-cross-origin"
                   allowfullscreen>
@@ -589,7 +697,7 @@
                 <iframe
                   src="https://www.youtube.com/embed/JFHjXRLu9LI"
                   title="Midgame Threat Assessment"
-                  style="width:100%;height:100%;border:0;display:block;"
+                  class="embed-fill"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   referrerpolicy="strict-origin-when-cross-origin"
                   allowfullscreen>
@@ -599,26 +707,28 @@
 
             <!-- Text -->
             <div class="content-block">
-              <div class="card" style="margin-bottom:0;">
+              <div class="card">
                 <div class="card-title">Who Is the Biggest Threat Right Now?</div>
-                <p>In almost every mid game, one player on each team will have a clear gold lead and be a genuine threat to end the game on their own. Whether it's the enemy toplaner with 10 kills or the enemy ADC with two full items. <strong>You must always know who that player is.</strong> In tandem with their strength, they will usually have a shutdown. Your goal is to shut this player down, saving spells for them and always being cognisent of their position on the map.</p>
+                <p>In almost every mid game, one player on each team will have a clear gold lead and be a genuine threat to end the game on their own. Whether it is the enemy top laner with 10 kills, a fed marksman, or a diver with a shutdown, <strong>you must always know who that player is.</strong> Save your safest control tools for the champion who can actually end the fight.</p>
               </div>
 
-              <div class="card" style="margin-bottom:0;">
+              <div class="card">
                 <div class="card-title">Useless vs. Threatening Enemies</div>
-                <p>The flip side is equally important: some enemies may be so far behind that they are essentially out of the game. A Kassadin at 2/8 with no items is not a threat. A Zed at 7/1 with full Duskblade is a kill threat on every member of your team.</p>
-                <p style="margin-top:8px;">Knowing <em>who you can ignore</em> is just as valuable as knowing who to focus. It lets you commit your W and your positioning to the fights that actually matter.</p>
+                <p>The flip side is equally important: some enemies may be so far behind that they are essentially out of the game. A Kassadin at 2/8 with no items is not the same problem as a 7/1 Zed who can kill your backline.</p>
+                <p class="mid-body-note">Knowing <em>who you can ignore</em> is just as valuable as knowing who to focus. It lets you commit EQ, WW, and your positioning to the fights that actually matter.</p>
               </div>
 
-              <div class="never-item" style="margin-bottom:6px;">
-                <span class="never-x">✕</span>
-                <span>Do not tunnel on a low-HP enemy if the fed carry is free to kill your team</span>
+              <div class="mid-never-stack">
+                <div class="never-item">
+                  <span class="never-x">✕</span>
+                  <span>Do not tunnel on a low-HP enemy if the fed carry is free to kill your team</span>
+                </div>
+                <div class="never-item">
+                  <span class="never-x">✕</span>
+                  <span>Do not burn flash to kill a useless opponent. Your flash is your most valuable tool.</span>
+                </div>
               </div>
-              <div class="never-item" style="margin-bottom:6px;">
-                <span class="never-x">✕</span>
-                <span>Do not burn flash to kill a useless opponent. Your flash is your most valuable tool.</span>
-              </div>
-              <div class="info-box" style="margin-top:4px;">
+              <div class="info-box mt-tight">
                 <strong>Every fight:</strong> Think about the locations of the enemies that matter. If you don't know where their strongest member is (fed Riven, Zed, etc.), then position conservatively and assume they are flanking.
               </div>
             </div>
@@ -627,24 +737,24 @@
 
 
         <!-- ══════════════════════════════════════
-             05 — THE GOLDEN RULE  (text only)
+             05 — CORE RULE  (text only)
         ══════════════════════════════════════ -->
         <div class="mg-section" id="sec-golden">
           <div class="mg-section-head">
             <div class="mg-num">04</div>
-            <h3>The Golden Rule: Should I Fight?</h3>
+            <h3>The Core Rule: Should I Fight?</h3>
             <div class="mg-rule"></div>
           </div>
           <div class="mg-sub">The most important question you will ask in the mid game</div>
 
-          <div class="rule-card" style="margin-bottom: 16px;">
+          <div class="rule-card tight-bottom">
             <h4>Ask This Before Every Objective Fight</h4>
             <p>The answer will often be <strong>yes</strong>, but sometimes the answer will be <strong>no</strong>. It is too often that games are thrown in a dragon fight that is clearly not winnable. If the enemy Ezreal has a full 2-item powerspike and nobody on your team has the damage to kill him, you will lose the fight unless the Ezreal does something horribly wrong. <strong>Do not be afraid to give objectives in conditions like this.</strong></p>
 
             <div class="rule-examples">
               <div class="rule-ex">
                 <span class="verdict fight">FIGHT ✓</span>
-                <span>Your team has two items each, the enemy ADC is split farming top, and Dragon is about to spawn. 5v4 with vision- contest it.</span>
+                <span>Your team has two items each, the enemy marksman is split farming top, and Dragon is about to spawn. 5v4 with vision- contest it.</span>
               </div>
               <div class="rule-ex">
                 <span class="verdict fight">FIGHT ✓</span>
@@ -660,6 +770,7 @@
               </div>
             </div>
           </div>
+          <div class="mid-takeaway"><strong>Takeaway:</strong> do not be afraid to give objectives when the fight is clearly not winnable.</div>
         </div>
 
 
@@ -674,15 +785,15 @@
           </div>
           <div class="mg-sub">Where to stand and who to hit</div>
 
-          <div class="media-block" style="margin-bottom: 16px; max-height: 420px;">
+          <div class="media-block media-wide">
             <div class="media-block-label">
               <span class="icon">▶</span> Teamfight Positioning Video
             </div>
-            <div class="media-inner" style="aspect-ratio: 21/9; max-height: 380px;">
+            <div class="media-inner media-wide-inner">
               <iframe
                 src="https://www.youtube.com/embed/KN5VwQOP2qs"
                 title="Teamfight Positioning Video"
-                style="width:100%;height:100%;border:0;display:block;"
+                class="embed-fill"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerpolicy="strict-origin-when-cross-origin"
                 allowfullscreen>
@@ -694,15 +805,15 @@
           <div class="g3">
             <div class="pos-card">
               <div class="pos-title"><div class="pos-dot"></div> Stay in the Back</div>
-              <p style="font-size:0.88rem; line-height:1.6; color:var(--text-body);">Your frontline is a shield. Let them absorb the engage while you cast from behind. The moment you step in front of your tanks, you become the target.</p>
+              <p>Your frontline is a shield. Let them absorb the engage while you cast from behind. The moment you step in front of your tanks, you become the target.</p>
             </div>
             <div class="pos-card">
-              <div class="pos-title"><div class="pos-dot" style="background:var(--gold);"></div> Watch the Flanks</div>
-              <p style="font-size:0.88rem; line-height:1.6; color:var(--text-body);">Standing far back is worthless if a champion like Qiyana, Zed, or Kat comes from the side or behind. Before every fight, position yourself to be close to your teamates, far from the enemy backline, and away from any enemy flank angles.</p>
+              <div class="pos-title"><div class="pos-dot gold"></div> Watch the Flanks</div>
+              <p>Standing far back is worthless if a champion like Qiyana, Zed, or Kat comes from the side or behind. Before every fight, position yourself to be close to your teamates, far from the enemy backline, and away from any enemy flank angles.</p>
             </div>
             <div class="pos-card">
-              <div class="pos-title"><div class="pos-dot" style="background:var(--red);"></div> Prioritize Targets</div>
-              <p style="font-size:0.88rem; line-height:1.6; color:var(--text-body);">Hit the fed carry or the squishy that is most overextended. Dumping your entire rotation into the enemy tank is one of the most common mistakes mage players make. Don't die/ move out of position for one kill in a fight.</p>
+              <div class="pos-title"><div class="pos-dot red"></div> Prioritize Targets</div>
+              <p>Hit the fed carry or the squishy that is most overextended. Dumping your entire rotation into the enemy tank is one of the most common mistakes mage players make. Don't die/ move out of position for one kill in a fight.</p>
             </div>
           </div>
         </div>
@@ -713,8 +824,8 @@
   <!-- FOOTER -->
   <footer style="background: var(--navy); color: rgba(255,255,255,0.6); padding: 24px 48px; text-align: center; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1);">
     <div style="max-width: 800px; margin: 0 auto;">
-      <p>The Ultimate Mel Compendium by evandabank • © 2026</p>
-      <p style="margin-top: 8px; font-size: 0.75rem;">Built with ❤️ for the League of Legends community</p>
+      <p>The Ultimate Hwei Compendium by evandabank • © 2026</p>
+      <p style="margin-top: 8px; font-size: 0.75rem;">Built for the League of Legends community</p>
     </div>
   </footer>
 </div>

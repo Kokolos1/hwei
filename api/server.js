@@ -4,6 +4,7 @@ const session = require('express-session');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
 const path = require('path');
+const { importRunePage, lcuErrorResponse } = require('./lcu');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,7 +30,7 @@ const REDIRECT_URI = process.env.PATREON_REDIRECT_URI;
 const FRONTEND_URL = process.env.FRONTEND_URL || `http://localhost:${PORT}`;
 const SCOPES = 'identity identity.memberships';
 const REQUIRED_TIER_ID = (process.env.PATREON_ALLOWED_TIER_ID || '').trim();
-const REQUIRED_TIER_NAME = (process.env.PATREON_ALLOWED_TIER_NAME || 'Mel Apprentice').trim();
+const REQUIRED_TIER_NAME = (process.env.PATREON_ALLOWED_TIER_NAME || 'Hwei Apprentice').trim();
 
 if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
   console.warn('Warning: PATREON_CLIENT_ID, PATREON_CLIENT_SECRET and PATREON_REDIRECT_URI should be set in environment.');
@@ -328,6 +329,20 @@ app.post('/auth/patreon/refresh', requireSiteAccess, express.json(), async (req,
 // API for frontend to check current user
 app.get('/api/me', requireSiteAccess, (req, res) => {
   res.json({ authenticated: true, user: req.session.user });
+});
+
+app.post('/api/lcu/runes', requireSiteAccess, express.json({ limit: '32kb' }), async (req, res) => {
+  try {
+    const result = await importRunePage(req.body);
+    res.json({
+      ok: true,
+      message: `Imported ${result.page.name} into League Client.`,
+      page: result.page
+    });
+  } catch (error) {
+    const response = lcuErrorResponse(error);
+    res.status(response.status).json(response.body);
+  }
 });
 
 app.get('/logout', (req, res) => {

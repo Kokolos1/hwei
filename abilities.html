@@ -3,14 +3,278 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Abilities - The Ultimate Mel Compendium</title>
-  <meta name="description" content="Complete Mel abilities breakdown including skill order, power spikes, and all core combat sequences.">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+  <title>Abilities - The Ultimate Hwei Compendium</title>
+  <meta name="description" content="Complete Hwei abilities breakdown including spellbook choices, skill order, combos, and teamfight usage.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .spell-purpose { font-size:.72rem; text-transform:uppercase; letter-spacing:1.7px; color:var(--brand); margin-bottom:10px; }
+    .combo-note { background:var(--navy); color:rgba(255,255,255,.78); border-top:3px solid var(--brand); padding:18px; }
+    .combo-note strong { color:var(--white); }
+    #combos-sec .hwei-combo-grid {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+    }
+    #combos-sec .hwei-combo-card {
+      display:grid;
+      grid-template-columns:minmax(260px,.9fr) minmax(0,1.1fr);
+      min-height:0;
+      margin:0;
+      padding:0;
+      overflow:hidden;
+      border-radius:8px;
+      background:
+        radial-gradient(circle at 100% 0, rgba(111,90,168,.08), transparent 18rem),
+        linear-gradient(180deg,#fffdf8,#fbf5ea);
+    }
+    #combos-sec .hwei-combo-video-slot {
+      min-height:220px;
+      aspect-ratio:16/9;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(226,198,111,.18), transparent 46%),
+        linear-gradient(145deg,#17111f,#2b2238);
+      border-right:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color:rgba(255,255,255,.7);
+      padding:18px;
+    }
+    #combos-sec .hwei-combo-video-inner {
+      width:100%;
+      height:100%;
+      min-height:160px;
+      border:1px dashed rgba(226,198,111,.38);
+      border-radius:8px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    #combos-sec .hwei-combo-video-kicker {
+      font-size:.7rem;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      color:var(--gold-light);
+      font-weight:800;
+    }
+    #combos-sec .hwei-combo-video-label {
+      font-family:'Playfair Display',serif;
+      font-size:1.4rem;
+      font-weight:900;
+      color:var(--white);
+    }
+    #combos-sec .hwei-combo-content {
+      padding:22px 24px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      min-width:0;
+    }
+    #combos-sec .hwei-combo-label {
+      font-size:.7rem;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      color:var(--brand-deeper);
+      font-weight:800;
+      margin-bottom:8px;
+    }
+    #combos-sec .hwei-combo-title {
+      font-family:'Playfair Display',serif;
+      font-size:1.25rem;
+      line-height:1.15;
+      color:var(--navy);
+      margin:0 0 10px;
+    }
+    #combos-sec .hwei-combo-seq {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:6px;
+      margin-bottom:12px;
+    }
+    #combos-sec .hwei-combo-key {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:42px;
+      min-height:32px;
+      padding:6px 12px;
+      border-radius:4px;
+      background:var(--navy);
+      color:var(--gold-light);
+      font-family:'Playfair Display',serif;
+      font-weight:900;
+      line-height:1;
+    }
+    #combos-sec .hwei-combo-arrow {
+      color:var(--text-light);
+      font-weight:800;
+      padding:0 1px;
+    }
+    #combos-sec .hwei-combo-copy {
+      color:var(--text-body);
+      font-size:.95rem;
+      line-height:1.65;
+      margin:0;
+    }
+    #combos-sec .hwei-combo-note {
+      margin-top:18px;
+      border-radius:8px;
+    }
+    #leveling-sec .leveling-grid {
+      display:grid;
+      grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);
+      gap:16px;
+      align-items:stretch;
+    }
+    #leveling-sec .leveling-card {
+      background:
+        radial-gradient(circle at 100% 0, rgba(201,161,74,.12), transparent 18rem),
+        linear-gradient(180deg,#fffdf8,#fbf5ea);
+      border:1px solid var(--border);
+      border-top:3px solid var(--brand);
+      border-radius:8px;
+      box-shadow:var(--shadow);
+      padding:22px;
+      min-width:0;
+    }
+    #leveling-sec .leveling-card.priority-card { border-top-color:var(--disaster); }
+    #leveling-sec .leveling-card.first-levels-card { border-top-color:var(--serenity); }
+    #leveling-sec .leveling-card-label {
+      color:var(--brand-deeper);
+      font-size:.7rem;
+      font-weight:800;
+      letter-spacing:2px;
+      margin-bottom:8px;
+      text-transform:uppercase;
+    }
+    #leveling-sec .leveling-card h4 {
+      color:var(--navy);
+      font-family:'Playfair Display',serif;
+      font-size:1.25rem;
+      line-height:1.15;
+      margin:0 0 12px;
+    }
+    #leveling-sec .leveling-card p {
+      color:var(--text-body);
+      font-size:.95rem;
+      line-height:1.65;
+      margin:0;
+    }
+    #leveling-sec .leveling-priority-track {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+      margin:18px 0;
+    }
+    #leveling-sec .priority-step {
+      background:rgba(255,255,255,.72);
+      border:1px solid var(--border);
+      border-radius:8px;
+      padding:14px 12px;
+      text-align:center;
+    }
+    #leveling-sec .priority-key {
+      align-items:center;
+      background:var(--navy);
+      border-radius:6px;
+      color:var(--gold-light);
+      display:inline-flex;
+      font-family:'Playfair Display',serif;
+      font-size:1.05rem;
+      font-weight:900;
+      height:42px;
+      justify-content:center;
+      margin-bottom:8px;
+      width:42px;
+      overflow:hidden;
+    }
+    #leveling-sec .priority-key img,
+    #leveling-sec .level-key img {
+      display:block;
+      height:100%;
+      width:100%;
+      object-fit:cover;
+    }
+    #leveling-sec .priority-name {
+      color:var(--navy);
+      display:block;
+      font-size:.78rem;
+      font-weight:800;
+      letter-spacing:1px;
+      margin-bottom:4px;
+      text-transform:uppercase;
+    }
+    #leveling-sec .priority-reason {
+      color:var(--text-muted);
+      display:block;
+      font-size:.82rem;
+      line-height:1.35;
+    }
+    #leveling-sec .first-level-list {
+      display:grid;
+      gap:10px;
+      margin:18px 0;
+    }
+    #leveling-sec .first-level-step {
+      align-items:center;
+      background:rgba(255,255,255,.72);
+      border:1px solid var(--border);
+      border-radius:8px;
+      display:grid;
+      grid-template-columns:auto auto minmax(0,1fr);
+      gap:12px;
+      padding:12px 14px;
+    }
+    #leveling-sec .level-number {
+      color:var(--text-light);
+      font-size:.68rem;
+      font-weight:900;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+    }
+    #leveling-sec .level-key {
+      align-items:center;
+      background:var(--navy);
+      border-radius:6px;
+      color:var(--gold-light);
+      display:inline-flex;
+      font-family:'Playfair Display',serif;
+      font-size:1rem;
+      font-weight:900;
+      height:36px;
+      justify-content:center;
+      width:36px;
+      overflow:hidden;
+    }
+    #leveling-sec .level-copy strong {
+      color:var(--navy);
+      display:block;
+      font-size:.9rem;
+      line-height:1.25;
+      margin-bottom:2px;
+    }
+    #leveling-sec .level-copy span {
+      color:var(--text-muted);
+      display:block;
+      font-size:.84rem;
+      line-height:1.35;
+    }
+    @media (max-width: 820px) {
+      #combos-sec .hwei-combo-card { grid-template-columns:1fr; }
+      #combos-sec .hwei-combo-video-slot { border-right:0; border-bottom:1px solid var(--border); }
+      #combos-sec .hwei-combo-content { padding:20px; }
+      #leveling-sec .leveling-grid,
+      #leveling-sec .leveling-priority-track { grid-template-columns:1fr; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- LANGUAGE MODAL -->
 <div id="lang-overlay">
   <div class="lang-modal">
     <div class="lang-eyebrow">evandabank Presents</div>
@@ -34,24 +298,23 @@
   </div>
 </div>
 
-<!-- TOP NAV -->
 <header class="topnav-header" id="topnav">
   <div class="topnav-brand-bar">
     <div class="topnav-brand-left">
       <div>
         <div class="topnav-brand-eyebrow">Ultimate Compendium</div>
-        <div class="topnav-brand-title">The Ultimate Mel Compendium</div>
+        <div class="topnav-brand-title">The Ultimate Hwei Compendium</div>
       </div>
       <div class="topnav-divider"></div>
       <div class="topnav-author">by <strong>evandabank</strong></div>
     </div>
     <div class="topnav-brand-right">
-      <button class="lang-switch-btn" onclick="openLang()"><span id="lang-label">English</span></button>
+      <button class="lang-switch-btn" onclick="openLang()">🌐 <span id="lang-label">English</span></button>
     </div>
   </div>
   <nav class="topnav-nav">
     <a href="index.html" class="nav-item">Intro / Home</a>
-    <a href="abilities.html" class="nav-item">Abilities</a>
+    <a href="abilities.html" class="nav-item active">Abilities</a>
     <a href="pregame.html" class="nav-item">Pregame</a>
     <a href="laning.html" class="nav-item">Laning / Early Game</a>
     <a href="midgame.html" class="nav-item">Mid Game</a>
@@ -62,267 +325,372 @@
 
 <div class="layout">
   <main class="main">
-
     <div class="page active" id="page-abilities">
       <div class="page-hero">
         <div class="hero-eyebrow">Abilities &amp; Combos</div>
-        <h2>Abilities &amp; Combos</h2>
-        <p class="hero-desc">Full kit breakdown, ability leveling order, powerspike timings, and every core combat sequence you need.</p>
+        <h2>Hwei's Spellbook</h2>
+        <p class="hero-desc">Hwei does not play like a normal four-spell mage. He chooses a subject first, then paints the exact spell the fight needs.</p>
       </div>
+
       <div class="page-subnav">
-        <div class="subnav-item active" onclick="subnavScroll(this,'abilities-sec')">Abilities</div>
+        <div class="subnav-item active" onclick="subnavScroll(this,'abilities-sec')">Core Kit</div>
         <div class="subnav-item" onclick="subnavScroll(this,'combos-sec')">Combos</div>
+        <div class="subnav-item" onclick="subnavScroll(this,'leveling-sec')">Leveling</div>
       </div>
+
       <div class="page-body">
+        <div id="abilities-sec" style="margin-bottom:36px;scroll-margin-top:150px">
+          <div class="section-head"><h3>Core Kit</h3><div class="section-rule"></div></div>
+          <div class="section-sub">Click a subject to review its role in Hwei's kit</div>
 
-        <div id="abilities-sec" style="margin-bottom:36px;scroll-margin-top:130px">
-          <div class="section-head"><h3>Abilities</h3><div class="section-rule"></div></div>
-          <div class="section-sub">Click any ability to expand details</div>
-
-          <!-- ABILITY CARD ROW -->
           <div class="ability-row" id="ability-row">
             <div class="abl-card" id="abl-passive" onclick="toggleAbility('passive')">
-              <div class="abl-img-wrap"><img class="abl-img" src="images/Passive.png" alt="Passive"></div>
-              <div class="abl-footer">
-                <span class="abl-letter">P</span>
-                <span class="abl-name">Passive</span>
-                <span class="abl-chevron" id="chev-passive">▾</span>
-              </div>
+              <div class="abl-img-wrap"><img class="abl-img" src="images/abilities/upscaled/hwei-passive.png" alt="Signature of the Visionary"></div>
+              <div class="abl-footer"><span class="abl-letter">P</span><span class="abl-name">Signature</span><span class="abl-chevron">v</span></div>
             </div>
             <div class="abl-card" id="abl-q" onclick="toggleAbility('q')">
-              <div class="abl-img-wrap"><img class="abl-img" src="images/Q.png" alt="Radiant Volley"></div>
-              <div class="abl-footer">
-                <span class="abl-letter">Q</span>
-                <span class="abl-name">Radiant Volley</span>
-                <span class="abl-chevron" id="chev-q">▾</span>
-              </div>
+              <div class="abl-img-wrap"><img class="abl-img" src="images/abilities/upscaled/hwei-q.png" alt="Subject: Disaster"></div>
+              <div class="abl-footer"><span class="abl-letter">Q</span><span class="abl-name">Disaster</span><span class="abl-chevron">v</span></div>
             </div>
             <div class="abl-card" id="abl-w" onclick="toggleAbility('w')">
-              <div class="abl-img-wrap"><img class="abl-img" src="images/W.png" alt="Barrier Reflect"></div>
-              <div class="abl-footer">
-                <span class="abl-letter">W</span>
-                <span class="abl-name">Barrier / Reflect</span>
-                <span class="abl-chevron" id="chev-w">▾</span>
-              </div>
+              <div class="abl-img-wrap"><img class="abl-img" src="images/abilities/upscaled/hwei-w.png" alt="Subject: Serenity"></div>
+              <div class="abl-footer"><span class="abl-letter">W</span><span class="abl-name">Serenity</span><span class="abl-chevron">v</span></div>
             </div>
             <div class="abl-card" id="abl-e" onclick="toggleAbility('e')">
-              <div class="abl-img-wrap"><img class="abl-img" src="images/E.png" alt="Solar Snare"></div>
-              <div class="abl-footer">
-                <span class="abl-letter">E</span>
-                <span class="abl-name">Solar Snare</span>
-                <span class="abl-chevron" id="chev-e">▾</span>
-              </div>
+              <div class="abl-img-wrap"><img class="abl-img" src="images/abilities/upscaled/hwei-e.png" alt="Subject: Torment"></div>
+              <div class="abl-footer"><span class="abl-letter">E</span><span class="abl-name">Torment</span><span class="abl-chevron">v</span></div>
             </div>
             <div class="abl-card" id="abl-r" onclick="toggleAbility('r')">
-              <div class="abl-img-wrap"><img class="abl-img" src="images/R.png" alt="Golden Eclipse"></div>
-              <div class="abl-footer">
-                <span class="abl-letter">R</span>
-                <span class="abl-name">Golden Eclipse</span>
-                <span class="abl-chevron" id="chev-r">▾</span>
-              </div>
+              <div class="abl-img-wrap"><img class="abl-img" src="images/abilities/upscaled/hwei-r.png" alt="Spiraling Despair"></div>
+              <div class="abl-footer"><span class="abl-letter">R</span><span class="abl-name">Despair</span><span class="abl-chevron">v</span></div>
             </div>
           </div>
 
-          <!-- PASSIVE PANEL -->
           <div class="abl-panel" id="panel-passive">
             <div class="abl-panel-inner">
-              <div class="abl-panel-header">
-                <div class="key-badge" style="width:44px;height:44px;font-size:1.1rem">P</div>
-                <div>
-                  <div class="abl-panel-title">Searing Brilliance</div>
-                  <div class="abl-panel-sub">Passive Stack Execution System</div>
-                </div>
-              </div>
-              <div class="abl-panel-body">
-                <div class="abl-video-wrap">
-                  <iframe class="abl-video" src="https://www.youtube.com/embed/t3WcazaFOoo?autoplay=1&loop=1&mute=1&playlist=t3WcazaFOoo&controls=0&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                </div>
-                <div class="abl-panel-text">
-                  <p style="margin-bottom:14px">Mel's passive allows her to stack essence on enemy champions. These stacks increase an enemy's execute threshold. This threshold can be seen by a mark over the head of the enemy and a small bar on their HP. Lowkey just watch the video below to get the hang of it.</p>
-                  <p style="margin-bottom:6px;font-weight:600;color:#ffffff">Key Tips</p>
-                  <ul class="tip-list">
-                    <li><span class="tip-num"></span><span>Stack management is essential for ultimate timing</span></li>
-                    <li><span class="tip-num"></span><span>Passive stacks enable execute threshold indicators</span></li>
-                    <li><span class="tip-num"></span><span>Multiple abilities can apply stacks efficiently</span></li>
-                  </ul>
-                </div>
+              <div class="abl-panel-header"><div class="key-badge">P</div><div><div class="abl-panel-title">Signature of the Visionary</div><div class="abl-panel-sub">Two damaging spells create the detonation</div></div></div>
+              <div class="abl-panel-text">
+                <p>Damaging an enemy champion primes them. Hitting that champion with another damaging ability completes the signature, creating a delayed area detonation. This is why Hwei wants clean two-spell sequences instead of random single-spell poke.</p>
+                <ul class="tip-list">
+                  <li><span class="tip-num"></span><span>Try to layer crowd control into damage so the second spell is reliable.</span></li>
+                  <li><span class="tip-num"></span><span>Passive detonations punish clumped enemies around objectives and minion waves.</span></li>
+                  <li><span class="tip-num"></span><span>WE empowered hits can help you keep pressure and mana while setting up follow-up spells.</span></li>
+                </ul>
               </div>
             </div>
           </div>
 
-          <!-- Q PANEL -->
           <div class="abl-panel" id="panel-q">
             <div class="abl-panel-inner">
-              <div class="abl-panel-header">
-                <div class="key-badge" style="width:44px;height:44px;font-size:1.1rem">Q</div>
-                <div>
-                  <div class="abl-panel-title">Radiant Volley</div>
-                  <div class="abl-panel-sub">Primary Poke &amp; Stack Tool</div>
+              <div class="abl-panel-header"><div class="key-badge">Q</div><div><div class="abl-panel-title">Subject: Disaster</div><div class="abl-panel-sub">Damage spellbook</div></div></div>
+              <div class="spell-detail-shell">
+                <div class="spell-variant-tabs" role="tablist" aria-label="Disaster spells">
+                  <button class="spell-variant-tab active" type="button" onclick="switchSpellVariant(this,'spell-qq')"><span>QQ</span><small>Devastating Fire</small></button>
+                  <button class="spell-variant-tab" type="button" onclick="switchSpellVariant(this,'spell-qw')"><span>QW</span><small>Severing Bolt</small></button>
+                  <button class="spell-variant-tab" type="button" onclick="switchSpellVariant(this,'spell-qe')"><span>QE</span><small>Molten Fissure</small></button>
                 </div>
-              </div>
-              <div class="abl-panel-body">
-                <div class="abl-video-wrap">
-                  <iframe class="abl-video" src="https://www.youtube.com/embed/xaBd7ORKAkY?autoplay=1&loop=1&mute=1&playlist=xaBd7ORKAkY&controls=0&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <div id="spell-qq" class="spell-variant-pane active disaster">
+                  <div class="spell-video-placeholder"><div class="abl-video-icon">QQ</div><div class="abl-video-label">Video placeholder: Devastating Fire</div></div>
+                  <div class="spell-variant-copy">
+                    <div class="spell-purpose">Fast poke and front-loaded damage</div>
+                    <h4>Devastating Fire</h4>
+                    <p>Use when the target is in normal spell range and you need immediate damage. It is the cleanest lane trade spell after a CC setup.</p>
+                  </div>
                 </div>
-                <div class="abl-panel-text">
-                  <p style="margin-bottom:14px">Mel's Q is a long-range ability that fires a series of missiles. It functions like Kai'Sa Q, but it's an untargeted skillshot.</p>
-                  <p style="margin-bottom:6px;font-weight:600;color:#ffffff">Keynote</p>
-                  <p style="margin-bottom:14px">You will almost always hit 1 missile, but hitting all the missiles is tricky. Look to combo this spell with your E or your teammates' CC abilities.</p>
-                  <p style="margin-bottom:6px;font-weight:600;color:#ffffff">How to Use</p>
-                  <p style="margin-bottom:14px">This ability is your bread and butter. It's an excellent poke tool and can provide you with tons of stacks for your passive. Importantly though, do not always worry about hitting all of the projectiles. This ability is on a short cooldown and can be cycled very quickly. Honestly, you only need to hit 1 missile to get good poke and proc your Scorch/Comet or First Strike. No need to be perfect here — just aim it reasonably well and look to abuse the enemy on-cooldown.</p>
-                  <p style="margin-bottom:6px;font-weight:600;color:#ffffff">Key Tips</p>
-                  <ul class="tip-list">
-                    <li><span class="tip-num"></span><span>Cast on cooldown for consistent passive stacks</span></li>
-                    <li><span class="tip-num"></span><span>Combo with E or teammate CC for full missile hits</span></li>
-                    <li><span class="tip-num"></span><span>Focus on 1–2 missile hits rather than perfection</span></li>
-                  </ul>
+                <div id="spell-qw" class="spell-variant-pane disaster">
+                  <div class="spell-video-placeholder"><div class="abl-video-icon">QW</div><div class="abl-video-label">Video placeholder: Severing Bolt</div></div>
+                  <div class="spell-variant-copy">
+                    <div class="spell-purpose">Long-range snipe</div>
+                    <h4>Severing Bolt</h4>
+                    <p>Best against isolated or immobilized targets, especially low-health enemies. Do not spam it into healthy moving targets unless you are zoning.</p>
+                  </div>
+                </div>
+                <div id="spell-qe" class="spell-variant-pane disaster">
+                  <div class="spell-video-placeholder"><div class="abl-video-icon">QE</div><div class="abl-video-label">Video placeholder: Molten Fissure</div></div>
+                  <div class="spell-variant-copy">
+                    <div class="spell-purpose">Waveclear and zone control</div>
+                    <h4>Molten Fissure</h4>
+                    <p>Your bread-and-butter wave tool. It clears lanes, blocks choke points, and forces enemies to choose between damage and bad pathing.</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- W PANEL -->
           <div class="abl-panel" id="panel-w">
             <div class="abl-panel-inner">
-              <div class="abl-panel-header">
-                <div class="key-badge" style="width:44px;height:44px;font-size:1.1rem">W</div>
-                <div>
-                  <div class="abl-panel-title">Barrier / Reflect</div>
-                  <div class="abl-panel-sub">Most Complicated Ability in the Game</div>
+              <div class="abl-panel-header"><div class="key-badge">W</div><div><div class="abl-panel-title">Subject: Serenity</div><div class="abl-panel-sub">Utility spellbook</div></div></div>
+              <div class="spell-detail-shell">
+                <div class="spell-variant-tabs" role="tablist" aria-label="Serenity spells">
+                  <button class="spell-variant-tab active" type="button" onclick="switchSpellVariant(this,'spell-wq')"><span>WQ</span><small>Fleeting Current</small></button>
+                  <button class="spell-variant-tab" type="button" onclick="switchSpellVariant(this,'spell-ww')"><span>WW</span><small>Pool of Reflection</small></button>
+                  <button class="spell-variant-tab" type="button" onclick="switchSpellVariant(this,'spell-we')"><span>WE</span><small>Stirring Lights</small></button>
                 </div>
-              </div>
-              <div class="abl-panel-body">
-                <div class="abl-video-wrap">
-                  <iframe class="abl-video" src="https://www.youtube.com/embed/Ts8xw5m6zMY?autoplay=1&loop=1&mute=1&playlist=Ts8xw5m6zMY&controls=0&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <div id="spell-wq" class="spell-variant-pane active serenity">
+                  <div class="spell-video-placeholder"><div class="abl-video-icon">WQ</div><div class="abl-video-label">Video placeholder: Fleeting Current</div></div>
+                  <div class="spell-variant-copy">
+                    <div class="spell-purpose">Movement and rotations</div>
+                    <h4>Fleeting Current</h4>
+                    <p>Use to move between waves, follow a play, disengage with teammates, or create enough speed to land a follow-up control spell.</p>
+                  </div>
                 </div>
-                <div class="abl-panel-text">
-                  <p style="margin-bottom:14px">Mel's W puts up a barrier for 0.75 seconds that grants her a burst of movespeed, reflects enemy projectiles, and prevents her from taking damage from all sources.</p>
-                  <p style="margin-bottom:6px;font-weight:600;color:#ffffff">Keynote</p>
-                  <p style="margin-bottom:10px">This is one of the most complicated abilities in the game. Firstly, the W will reflect spells back to their source at the point of reflection — the enemy still has time to dodge it, especially for long-range reflections.</p>
-                  <p style="margin-bottom:10px">Mel does <em>not</em> need to be the target of the spell to reflect it. If Mel walks in front of a Miss Fortune Q aimed at a teammate, the spell will still reflect back to hit Miss Fortune. And because Miss Fortune Q is a targeted spell, it is <strong>undodgeable</strong> as a reflection — targeted spells always hit the person who cast them.</p>
-                  <p style="margin-bottom:6px">Now, what will be reflected? Anything that Yasuo and Braum can block is considered a projectile. As a rule of thumb, anything fired horizontally — Veigar Baleful Strike, Katarina Q, Senna W — will be reflected. Anything shot from the ground or sky — Xerath R, Pantheon R, Veigar W — will <em>not</em> be reflected, though the damage will still be mitigated.</p>
-                  <p style="margin-bottom:6px;font-weight:600;color:#ffffff;margin-top:14px">Key Tips</p>
-                  <ul class="tip-list">
-                    <li><span class="tip-num"></span><span>Can intercept spells aimed at teammates</span></li>
-                    <li><span class="tip-num"></span><span>Targeted spells always hit their caster when reflected</span></li>
-                    <li><span class="tip-num"></span><span>Very long cooldown (~35 seconds) — use wisely</span></li>
-                  </ul>
+                <div id="spell-ww" class="spell-variant-pane serenity">
+                  <div class="spell-video-placeholder"><div class="abl-video-icon">WW</div><div class="abl-video-label">Video placeholder: Pool of Reflection</div></div>
+                  <div class="spell-variant-copy">
+                    <div class="spell-purpose">Shield zone</div>
+                    <h4>Pool of Reflection</h4>
+                    <p>Drop this when damage is unavoidable or your team is holding a position. It is stronger when allies can stay inside the pool.</p>
+                  </div>
+                </div>
+                <div id="spell-we" class="spell-variant-pane serenity">
+                  <div class="spell-video-placeholder"><div class="abl-video-icon">WE</div><div class="abl-video-label">Video placeholder: Stirring Lights</div></div>
+                  <div class="spell-variant-copy">
+                    <div class="spell-purpose">Mana and empowered hits</div>
+                    <h4>Stirring Lights</h4>
+                    <p>Default lane utility when you are safe. It adds damage to your next hits and restores mana, letting you keep spell tempo.</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- E PANEL -->
           <div class="abl-panel" id="panel-e">
             <div class="abl-panel-inner">
-              <div class="abl-panel-header">
-                <div class="key-badge" style="width:44px;height:44px;font-size:1.1rem">E</div>
-                <div>
-                  <div class="abl-panel-title">Solar Snare</div>
-                  <div class="abl-panel-sub">Root / Slow — Passive Stack Engine</div>
+              <div class="abl-panel-header"><div class="key-badge">E</div><div><div class="abl-panel-title">Subject: Torment</div><div class="abl-panel-sub">Control spellbook</div></div></div>
+              <div class="spell-detail-shell">
+                <div class="spell-variant-tabs" role="tablist" aria-label="Torment spells">
+                  <button class="spell-variant-tab active" type="button" onclick="switchSpellVariant(this,'spell-eq')"><span>EQ</span><small>Grim Visage</small></button>
+                  <button class="spell-variant-tab" type="button" onclick="switchSpellVariant(this,'spell-ew')"><span>EW</span><small>Gaze of the Abyss</small></button>
+                  <button class="spell-variant-tab" type="button" onclick="switchSpellVariant(this,'spell-ee')"><span>EE</span><small>Crushing Maw</small></button>
                 </div>
-              </div>
-              <div class="abl-panel-body">
-                <div class="abl-video-wrap">
-                  <iframe class="abl-video" src="https://www.youtube.com/embed/VidVvuNBw-Q?autoplay=1&loop=1&mute=1&playlist=VidVvuNBw-Q&controls=0&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <div id="spell-eq" class="spell-variant-pane active torment">
+                  <div class="spell-video-placeholder"><div class="abl-video-icon">EQ</div><div class="abl-video-label">Video placeholder: Grim Visage</div></div>
+                  <div class="spell-variant-copy">
+                    <div class="spell-purpose">Anti-engage fear</div>
+                    <h4>Grim Visage</h4>
+                    <p>Your most important defensive spell. Hold it against engage supports, divers, and melee carries until they commit, then fear them and reset spacing.</p>
+                  </div>
                 </div>
-                <div class="abl-panel-text">
-                  <p style="margin-bottom:14px">Mel's E is a black hole that travels in a straight line for a set distance (this distance does not change). Enemies in the center of the hole will take extra damage and be rooted. Enemies hit by any part of the hole will take a small amount of damage and stack Mel's passive.</p>
-                  <p style="margin-bottom:6px;font-weight:600;color:#ffffff">Keynote</p>
-                  <p style="margin-bottom:14px">Mel's E is an excellent source of passive stacking. It's important to note just how many stacks we can get here. In the case that we use Mel's E and the center hits the enemy champion, we will proc around 7 stacks. However, the hole does not stop after hitting a champion — if we managed to hit the enemy at the end of its range, rooting them in the process, we can get upwards of 10–12 stacks.</p>
-                  <p style="margin-bottom:6px;font-weight:600;color:#ffffff">How to Use</p>
-                  <p style="margin-bottom:14px">Mel's E can be hard to hit and will almost never result in rooting the enemy when cast from long range. Instead, begin auto attacking the enemy champion, only using E after the enemy has attempted to trade back, luring them into closer combat. If we use our E effectively and root the enemy champion, combined with the safety of having our W as a defensive spell, almost no champion in the early game can outtrade us. The only fallback is that our W is on a really long cooldown (~35 seconds). When W is on cooldown, be careful using E aggressively — failing to land the root can leave us open to a counter-engage from the enemy laner.</p>
-                  <p style="margin-bottom:6px;font-weight:600;color:#ffffff">Key Tips</p>
-                  <ul class="tip-list">
-                    <li><span class="tip-num"></span><span>Use after enemy commits to trade, not as opener</span></li>
-                    <li><span class="tip-num"></span><span>~7 stacks for center hit, 10–12 stacks at max range root</span></li>
-                    <li><span class="tip-num"></span><span>Don't use aggressively when W is on cooldown</span></li>
-                  </ul>
+                <div id="spell-ew" class="spell-variant-pane torment">
+                  <div class="spell-video-placeholder"><div class="abl-video-icon">EW</div><div class="abl-video-label">Video placeholder: Gaze of the Abyss</div></div>
+                  <div class="spell-variant-copy">
+                    <div class="spell-purpose">Trap, vision, root threat</div>
+                    <h4>Gaze of the Abyss</h4>
+                    <p>Place it in corridors, river entrances, and objective setups. It is less reliable in open lane but excellent when enemies must walk forward.</p>
+                  </div>
+                </div>
+                <div id="spell-ee" class="spell-variant-pane torment">
+                  <div class="spell-video-placeholder"><div class="abl-video-icon">EE</div><div class="abl-video-label">Video placeholder: Crushing Maw</div></div>
+                  <div class="spell-variant-copy">
+                    <div class="spell-purpose">Pull and area setup</div>
+                    <h4>Crushing Maw</h4>
+                    <p>Use to clump enemies into QE, interrupt movement, or punish champions standing near their wave. It is also a strong peel tool when EQ is not needed.</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- R PANEL -->
           <div class="abl-panel" id="panel-r">
-            <div class="abl-panel-inner" style="border-top:3px solid var(--gold)">
-              <div class="abl-panel-header">
-                <div class="key-badge" style="width:44px;height:44px;font-size:1.1rem;background:var(--gold);color:var(--navy)">R</div>
-                <div>
-                  <div class="abl-panel-title" style="color:var(--gold-light)">Golden Eclipse</div>
-                  <div class="abl-panel-sub">Wait for the Golden Glow</div>
-                </div>
-              </div>
-              <div class="abl-panel-body">
-                <div class="abl-video-wrap">
-                  <iframe class="abl-video" src="https://www.youtube.com/embed/jZvs2Sn85Jo?autoplay=1&loop=1&mute=1&playlist=jZvs2Sn85Jo&controls=0&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                </div>
-                <div class="abl-panel-text">
-                  <p style="margin-bottom:14px">Mel's ultimate does damage to all enemies with her passive applied to them. This damage is a flat number that increases slightly per the number of passive stacks applied to the enemy.</p>
-                  <p style="margin-bottom:6px;font-weight:600;color:#ffffff">Keynote</p>
-                  <p style="margin-bottom:14px">When an enemy is in our ultimate execute threshold, they will have a glowing icon over their heads. Additionally, our ultimate HUD icon will start glowing golden. Outside of very rare circumstances where you want to explode your ultimate early to avoid your stacks expiring, you will typically want to wait for these indicators before casting this spell.</p>
-                  <p style="margin-bottom:6px;font-weight:600;color:#ffffff">Key Tips</p>
-                  <ul class="tip-list">
-                    <li><span class="tip-num"></span><span>Wait for glowing icon indicators before casting</span></li>
-                    <li><span class="tip-num"></span><span>Ultimate HUD icon glows golden when enemy is in execute range</span></li>
-                  </ul>
-                </div>
+            <div class="abl-panel-inner">
+              <div class="abl-panel-header"><div class="key-badge">R</div><div><div class="abl-panel-title">Spiraling Despair</div><div class="abl-panel-sub">Expanding slow and delayed burst</div></div></div>
+              <div class="abl-panel-text">
+                <p>Hwei's ultimate attaches to the first enemy champion hit, expands, repeatedly slows nearby enemies, deals damage over time, then bursts. It is strongest when enemies are already crowd controlled or forced through a choke point.</p>
               </div>
             </div>
           </div>
-
         </div>
 
-        <div id="combos-sec" style="scroll-margin-top:130px">
-          <div class="section-head"><h3>Combos</h3><div class="section-rule"></div></div>
-          <div class="section-sub">Standard combos for Mel</div>
+        <div id="combos-sec" style="margin-bottom:36px;scroll-margin-top:150px">
+          <div class="section-head"><h3>Core Combos</h3><div class="section-rule"></div></div>
+          <div class="section-sub">Eight practical patterns, each with space reserved for a future video</div>
 
-          <div class="combo-grid">
-            <article class="combo-card">
-              <div class="combo-media">
-                <video src="https://www.byrdonline.com/evandabank/src/MelEQ.mp4" autoplay loop muted playsinline></video>
+          <div class="hwei-combo-grid">
+            <article class="combo-card hwei-combo-card">
+              <div class="hwei-combo-video-slot" aria-label="Video placeholder for WE QQ lane poke">
+                <div class="hwei-combo-video-inner">
+                  <div class="hwei-combo-video-kicker">Video Placeholder</div>
+                  <div class="hwei-combo-video-label">WE + QQ</div>
+                </div>
               </div>
-              <div class="combo-content">
-                <h4>E + Q Combo</h4>
-                <div class="combo-flow"><span>E</span><span>→</span><span>Q</span></div>
-                <p>Use E first for the slow/root to guarantee more Q missiles connect. This is the core trading pattern for Mel in nearly every lane.</p>
+              <div class="hwei-combo-content">
+                <div class="hwei-combo-label">Lane poke</div>
+                <h4 class="hwei-combo-title">Empowered fire trade</h4>
+                <div class="hwei-combo-seq"><span class="hwei-combo-key">WE</span><span class="hwei-combo-arrow">+</span><span class="hwei-combo-key">QQ</span></div>
+                <p class="hwei-combo-copy">Use WE before the trade, then land QQ while the target is in normal spell range. This is the default short trade when you are safe from all-in pressure.</p>
               </div>
             </article>
 
-            <article class="combo-card">
-              <div class="combo-media">
-                <video src="https://www.byrdonline.com/evandabank/src/MelEFQ.mp4" autoplay loop muted playsinline></video>
+            <article class="combo-card hwei-combo-card">
+              <div class="hwei-combo-video-slot" aria-label="Video placeholder for WE QE wave trade">
+                <div class="hwei-combo-video-inner">
+                  <div class="hwei-combo-video-kicker">Video Placeholder</div>
+                  <div class="hwei-combo-video-label">WE + QE</div>
+                </div>
               </div>
-              <div class="combo-content">
-                <h4>E + Flash Extension</h4>
-                <div class="combo-flow"><span>E</span><span>→</span><span>Flash</span><span>→</span><span>Q</span></div>
-                <p>Flash during E cast-time to reposition mid-animation, similar to Ahri E+Flash. Use to surprise enemies or extend E range.</p>
+              <div class="hwei-combo-content">
+                <div class="hwei-combo-label">Wave control</div>
+                <h4 class="hwei-combo-title">Empowered fissure push</h4>
+                <div class="hwei-combo-seq"><span class="hwei-combo-key">WE</span><span class="hwei-combo-arrow">+</span><span class="hwei-combo-key">QE</span></div>
+                <p class="hwei-combo-copy">Empower first, then paint QE through the wave and enemy path. Use this when you want to trade while thinning or crashing the wave.</p>
               </div>
             </article>
 
-            <article class="combo-card">
-              <div class="combo-media">
-                <video src="https://www.byrdonline.com/evandabank/src/MelEAQAU.mp4" autoplay loop muted playsinline></video>
+            <article class="combo-card hwei-combo-card">
+              <div class="hwei-combo-video-slot" aria-label="Video placeholder for EQ QQ anti engage">
+                <div class="hwei-combo-video-inner">
+                  <div class="hwei-combo-video-kicker">Video Placeholder</div>
+                  <div class="hwei-combo-video-label">EQ + QQ</div>
+                </div>
               </div>
-              <div class="combo-content">
-                <h4>Maximum DPS - Auto Weave</h4>
-                <div class="combo-flow"><span>E</span><span>→</span><span>Auto</span><span>→</span><span>Q</span><span>→</span><span>Auto</span><span>→</span><span>R</span></div>
-                <p>Weave autos between abilities for maximum damage. Great versus melee champions; use more caution against high-range mages.</p>
+              <div class="hwei-combo-content">
+                <div class="hwei-combo-label">Anti-engage</div>
+                <h4 class="hwei-combo-title">Fear into fire</h4>
+                <div class="hwei-combo-seq"><span class="hwei-combo-key">EQ</span><span class="hwei-combo-arrow">+</span><span class="hwei-combo-key">QQ</span></div>
+                <p class="hwei-combo-copy">Hold EQ until the diver or engage support commits, fear them away, then punish with QQ. This keeps your spacing intact while still winning the trade.</p>
+              </div>
+            </article>
+
+            <article class="combo-card hwei-combo-card">
+              <div class="hwei-combo-video-slot" aria-label="Video placeholder for EQ QQ R all in">
+                <div class="hwei-combo-video-inner">
+                  <div class="hwei-combo-video-kicker">Video Placeholder</div>
+                  <div class="hwei-combo-video-label">EQ + QQ + R</div>
+                </div>
+              </div>
+              <div class="hwei-combo-content">
+                <div class="hwei-combo-label">Pick confirm</div>
+                <h4 class="hwei-combo-title">Fear into ultimate</h4>
+                <div class="hwei-combo-seq"><span class="hwei-combo-key">EQ</span><span class="hwei-combo-arrow">+</span><span class="hwei-combo-key">QQ</span><span class="hwei-combo-arrow">+</span><span class="hwei-combo-key">R</span></div>
+                <p class="hwei-combo-copy">When EQ lands on a priority target, use QQ immediately and commit R if the fight or kill is real. The fear makes the ultimate much harder to dodge.</p>
+              </div>
+            </article>
+
+            <article class="combo-card hwei-combo-card">
+              <div class="hwei-combo-video-slot" aria-label="Video placeholder for EW QW long range catch">
+                <div class="hwei-combo-video-inner">
+                  <div class="hwei-combo-video-kicker">Video Placeholder</div>
+                  <div class="hwei-combo-video-label">EW + QW</div>
+                </div>
+              </div>
+              <div class="hwei-combo-content">
+                <div class="hwei-combo-label">Long-range catch</div>
+                <h4 class="hwei-combo-title">Root into snipe</h4>
+                <div class="hwei-combo-seq"><span class="hwei-combo-key">EW</span><span class="hwei-combo-arrow">+</span><span class="hwei-combo-key">QW</span></div>
+                <p class="hwei-combo-copy">Place EW where the enemy has to walk, then use QW once the root connects. This is strongest in river entrances, jungle corridors, and post-wave setups.</p>
+              </div>
+            </article>
+
+            <article class="combo-card hwei-combo-card">
+              <div class="hwei-combo-video-slot" aria-label="Video placeholder for EE QE clump punish">
+                <div class="hwei-combo-video-inner">
+                  <div class="hwei-combo-video-kicker">Video Placeholder</div>
+                  <div class="hwei-combo-video-label">EE + QE</div>
+                </div>
+              </div>
+              <div class="hwei-combo-content">
+                <div class="hwei-combo-label">Clump punish</div>
+                <h4 class="hwei-combo-title">Maw into fissure</h4>
+                <div class="hwei-combo-seq"><span class="hwei-combo-key">EE</span><span class="hwei-combo-arrow">+</span><span class="hwei-combo-key">QE</span></div>
+                <p class="hwei-combo-copy">Pull enemies together with EE, then draw QE through the clump or their escape route. This is a reliable way to punish enemies standing near the wave.</p>
+              </div>
+            </article>
+
+            <article class="combo-card hwei-combo-card">
+              <div class="hwei-combo-video-slot" aria-label="Video placeholder for QE EE objective choke">
+                <div class="hwei-combo-video-inner">
+                  <div class="hwei-combo-video-kicker">Video Placeholder</div>
+                  <div class="hwei-combo-video-label">QE + EE</div>
+                </div>
+              </div>
+              <div class="hwei-combo-content">
+                <div class="hwei-combo-label">Objective choke</div>
+                <h4 class="hwei-combo-title">Fissure into pull</h4>
+                <div class="hwei-combo-seq"><span class="hwei-combo-key">QE</span><span class="hwei-combo-arrow">+</span><span class="hwei-combo-key">EE</span></div>
+                <p class="hwei-combo-copy">Paint QE across a narrow path first, then use EE to drag enemies back through the damage zone. Look for this around dragon, Baron, and turret exits.</p>
+              </div>
+            </article>
+
+            <article class="combo-card hwei-combo-card">
+              <div class="hwei-combo-video-slot" aria-label="Video placeholder for EE R QE teamfight">
+                <div class="hwei-combo-video-inner">
+                  <div class="hwei-combo-video-kicker">Video Placeholder</div>
+                  <div class="hwei-combo-video-label">EE + R + QE</div>
+                </div>
+              </div>
+              <div class="hwei-combo-content">
+                <div class="hwei-combo-label">Teamfight burst</div>
+                <h4 class="hwei-combo-title">Clump into despair</h4>
+                <div class="hwei-combo-seq"><span class="hwei-combo-key">EE</span><span class="hwei-combo-arrow">+</span><span class="hwei-combo-key">R</span><span class="hwei-combo-arrow">+</span><span class="hwei-combo-key">QE</span></div>
+                <p class="hwei-combo-copy">Use EE to make the first target predictable, attach R while enemies are grouped, then layer QE under the slow. This is the big fight pattern when the enemy team is stacked.</p>
               </div>
             </article>
           </div>
 
-          <div class="info-box" style="margin-top:10px">Note: W is matchup-dependent and should be weaved for counters and burst mitigation. These are baseline sequences; adjust as needed.</div>
+          <div class="combo-note hwei-combo-note">
+            <strong>Rule of thumb:</strong> if engage can reach you, keep EQ available. If no one can start on you, spend E more aggressively for EW traps or EE clumps.
+          </div>
+        </div>
+
+        <div id="leveling-sec" style="scroll-margin-top:150px">
+          <div class="section-head"><h3>Leveling Order</h3><div class="section-rule"></div></div>
+          <div class="section-sub">Current general bot/APC priority</div>
+
+          <div class="leveling-grid">
+            <article class="leveling-card priority-card">
+              <div class="leveling-card-label">Skill Priority</div>
+              <h4>Max damage first, control second</h4>
+              <div class="leveling-priority-track" aria-label="Hwei skill priority Q then E then W">
+                <div class="priority-step">
+                  <span class="priority-key"><img src="images/abilities/hwei-q.png" alt="Q"></span>
+                  <span class="priority-name">First max</span>
+                  <span class="priority-reason">Waveclear, poke, and reliable damage</span>
+                </div>
+                <div class="priority-step">
+                  <span class="priority-key"><img src="images/abilities/hwei-e.png" alt="E"></span>
+                  <span class="priority-name">Second max</span>
+                  <span class="priority-reason">Lower cooldown on fear, trap, and pull</span>
+                </div>
+                <div class="priority-step">
+                  <span class="priority-key"><img src="images/abilities/hwei-w.png" alt="W"></span>
+                  <span class="priority-name">Last max</span>
+                  <span class="priority-reason">Utility stays useful with fewer points</span>
+                </div>
+              </div>
+              <p><strong>Q &gt; E &gt; W</strong> is the default bot/APC order. Q gives Hwei the lane control he needs to farm and pressure, while E second makes his defensive and setup tools available more often.</p>
+            </article>
+
+            <article class="leveling-card first-levels-card">
+              <div class="leveling-card-label">Typical First Three Levels</div>
+              <h4>Unlock the full spellbook safely</h4>
+              <div class="first-level-list" aria-label="Hwei first three levels">
+                <div class="first-level-step">
+                  <span class="level-number">Level 1</span>
+                  <span class="level-key"><img src="images/abilities/hwei-e.png" alt="E"></span>
+                  <div class="level-copy"><strong>Safety first</strong><span>Start E when engage or early all-in can punish you.</span></div>
+                </div>
+                <div class="first-level-step">
+                  <span class="level-number">Level 2</span>
+                  <span class="level-key"><img src="images/abilities/hwei-q.png" alt="Q"></span>
+                  <div class="level-copy"><strong>Wave and trade access</strong><span>Add your damage subject so you can contest the lane.</span></div>
+                </div>
+                <div class="first-level-step">
+                  <span class="level-number">Level 3</span>
+                  <span class="level-key"><img src="images/abilities/hwei-w.png" alt="W"></span>
+                  <div class="level-copy"><strong>Full spellbook online</strong><span>Unlock Serenity for mana, movement, and shielding options.</span></div>
+                </div>
+              </div>
+              <p>Use this as the stable default. Swap into Q level 1 only when the lane gives you enough safety to contest push immediately.</p>
+            </article>
+          </div>
         </div>
       </div>
     </div>
-
   </main>
 
-  <!-- FOOTER -->
   <footer style="background: var(--navy); color: rgba(255,255,255,0.6); padding: 24px 48px; text-align: center; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1);">
     <div style="max-width: 800px; margin: 0 auto;">
-      <p>The Ultimate Mel Compendium by evandabank • © 2026</p>
+      <p>The Ultimate Hwei Compendium by evandabank • © 2026</p>
       <p style="margin-top: 8px; font-size: 0.75rem;">Built for the League of Legends community</p>
     </div>
   </footer>

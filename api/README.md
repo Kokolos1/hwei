@@ -10,7 +10,7 @@ Local test checklist
 PATREON_CLIENT_ID=your_client_id_here
 PATREON_CLIENT_SECRET=your_client_secret_here
 PATREON_REDIRECT_URI=http://localhost:3000/auth/patreon/callback
-PATREON_ALLOWED_TIER_NAME=Mel Apprentice
+PATREON_ALLOWED_TIER_NAME=Hwei Apprentice
 # Optional: PATREON_ALLOWED_TIER_ID=your_tier_id_here
 SESSION_SECRET=some-random-secret
 FRONTEND_URL=http://localhost:3000
@@ -30,7 +30,7 @@ npm run dev
 4. After approving Patreon, you should be redirected back to `http://localhost:3000/` only if the Patreon account is currently entitled to the configured tier. You can verify authentication by visiting `http://localhost:3000/api/me`.
 
 If you prefer to serve the static site separately (different port), tell me and I can add CORS with credentials support so the frontend at another origin can call `/api/me`.
-# MelGuide Patreon OAuth API
+# HweiGuide Patreon OAuth API
 
 Small Express server to handle Patreon OAuth (authorization code grant), restrict the site to a specific Patreon tier, and provide a minimal `/api/me` endpoint for the frontend.
 
