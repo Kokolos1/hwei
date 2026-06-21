@@ -24,6 +24,9 @@ const PROTECTED_ROOT_FILES = new Set(['versions.json']);
 const PROTECTED_STATIC_DIRS = ['css', 'images', 'js', 'shared'];
 
 const IN_PROD = process.env.NODE_ENV === 'production';
+const DEPLOY_MARKER = process.env.RAILWAY_GIT_COMMIT_SHA
+  || process.env.RAILWAY_DEPLOYMENT_ID
+  || 'local';
 const CLIENT_ID = process.env.PATREON_CLIENT_ID;
 const CLIENT_SECRET = process.env.PATREON_CLIENT_SECRET;
 const REDIRECT_URI = process.env.PATREON_REDIRECT_URI;
@@ -47,6 +50,9 @@ if (IN_PROD) {
 }
 
 function preventStaleGuideCache(req, res, next) {
+  res.set('X-Hwei-Guide-Server', 'express');
+  res.set('X-Hwei-Guide-Deploy', DEPLOY_MARKER);
+
   if (req.method !== 'GET') return next();
 
   const requestPath = req.path || '/';
@@ -227,6 +233,15 @@ app.get('/signin', (req, res) => {
     return res.redirect('/');
   }
   return res.sendFile(SIGNIN_FILE);
+});
+
+app.get('/api/deploy-info', (req, res) => {
+  res.json({
+    ok: true,
+    server: 'express',
+    deploy: DEPLOY_MARKER,
+    nodeEnv: process.env.NODE_ENV || 'development'
+  });
 });
 
 // Start OAuth flow
