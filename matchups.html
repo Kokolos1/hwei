@@ -182,6 +182,32 @@
         radial-gradient(circle at 100% 0,rgba(226,198,111,0.08),transparent 11rem),
         linear-gradient(180deg,rgba(35,27,48,0.96),rgba(18,14,25,0.98));
     }
+    .matchup-card-disclaimer {
+      display:grid;
+      gap:8px;
+      margin:14px 0 16px;
+      padding:14px 16px;
+      border:1px solid rgba(229,91,58,0.34);
+      border-left:4px solid #d95d39;
+      border-radius:8px;
+      background:
+        radial-gradient(circle at 0 0,rgba(226,198,111,0.17),transparent 16rem),
+        linear-gradient(180deg,rgba(74,35,33,0.96),rgba(39,25,31,0.98));
+      box-shadow:0 16px 30px rgba(42,16,15,0.18);
+    }
+    .matchup-card-disclaimer-title {
+      color:#f3c66d;
+      font-size:.72rem;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+    .matchup-card-disclaimer p {
+      margin:0;
+      color:rgba(255,238,216,0.82);
+      font-size:.92rem;
+      line-height:1.55;
+    }
     .matchup-control-field {
       display:grid;
       gap:7px;
@@ -589,6 +615,10 @@
         <div id="matchup-cards-sec" style="scroll-margin-top:150px">
           <div class="section-head"><h3>Matchup Cards</h3><div class="section-rule"></div></div>
           <div class="section-sub">Alphabetical Hwei APC matchup notes</div>
+          <div class="matchup-card-disclaimer">
+            <div class="matchup-card-disclaimer-title">Matchup Card Note</div>
+            <p>Add guidance here for how players should read matchup difficulty, summoner and rune recommendations, and support-dependent lane adjustments.</p>
+          </div>
           <div class="matchup-card-controls" aria-label="Matchup card controls">
             <div class="matchup-control-field">
               <label for="matchup-card-search">Search champion</label>
