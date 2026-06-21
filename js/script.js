@@ -470,7 +470,7 @@ const HWEI_RUNE_PAGES = {
   default: {
     kicker: 'Recommended Page',
     title: 'Recommended Comet',
-    summary: 'Default Hwei bot/APC page for scaling lane control and reliable late-game damage.',
+    summary: 'Default Hwei rune page. Generally just the strongest runes you can take outside of special circumstances. Run this in 80% of games.',
     primary: {
       type: 'Primary',
       tree: 'Sorcery',
@@ -484,8 +484,8 @@ const HWEI_RUNE_PAGES = {
       runes: ['Legend: Haste', 'Cut Down']
     },
     shards: ['Ability Haste', 'Adaptive Force', 'Flat Health'],
-    useCase: 'Default into most bot lanes when you want Comet poke, haste scaling, and stronger objective fights after lane.',
-    swapNote: 'Swap to the Early Game page when lane pressure matters more than late-game Gathering Storm value.'
+    useCase: 'Default into pretty much every lane unless you need aery into a melee comp, or scorch/second adaptive shard for stronger early trades.',
+    swapNote: 'Can be swapped if you generally prefer scorch (not much difference with gathering storm). Precision secondary is mandatory.'
   },
   early: {
     kicker: 'Lane Pressure',
@@ -683,8 +683,8 @@ const SHARD_MARKS = {
 const SHARD_ICONS = {
   'Ability Haste': 'images/runes/stat-haste.png',
   'Adaptive Force': 'images/runes/stat-adaptive.png',
-  'Scaling Health': 'images/runes/stat-health-scaling.png',
-  'Flat Health': 'images/runes/stat-health-flat.png'
+  'Scaling Health': 'images/runes/stat-health-flat.png',
+  'Flat Health': 'images/runes/stat-health-scaling.png'
 };
 
 const SHARD_DESCRIPTIONS = {
