@@ -330,6 +330,31 @@
       line-height:1.66;
       font-size:.95rem;
     }
+    .matchup-plan.tip-item {
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr);
+      gap:10px;
+      align-items:start;
+      margin-top:-8px;
+      padding:10px 12px;
+      border:1px solid rgba(226,198,111,0.12);
+      border-radius:8px;
+      background:rgba(255,255,255,0.035);
+    }
+    .matchup-tip-marker {
+      display:inline-grid;
+      place-items:center;
+      min-width:26px;
+      height:26px;
+      border-radius:999px;
+      background:rgba(226,198,111,0.14);
+      color:var(--gold-light);
+      font-family:'Inter','Source Serif 4',serif;
+      font-size:.78rem;
+      font-weight:900;
+      line-height:1;
+    }
+    .matchup-tip-text { min-width:0; }
     .matchup-recommendations {
       display:grid;
       grid-template-columns:minmax(190px,0.8fr) minmax(260px,1.2fr);
@@ -666,11 +691,11 @@
             <article class="matchup-detail-card hard" id="matchup-brand">
               <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Brand" target="_blank" rel="noopener" aria-label="Open Brand League wiki"><img class="matchup-card-icon" src="images/champions/Brand.png" alt="Brand"></a><div><h4>Brand</h4></div></div><a class="difficulty-pill hard" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 7 out of 10"><span class="difficulty-score">7</span><span class="difficulty-max">/10</span></a></div>
               <p class="matchup-plan">Brand is a rare sight in botlane. When playing against Brand, you are in for a fairly tough lane. The primary advantage we have over Brand is the difficulty Brand has hitting his Q. You essentially NEED to dodge it in order to win the lane. Here are some key tips to always follow against brand:</p>
-              <p class="matchup-plan">1. His E bounces really far off the wave. With Scorch+DFT, it does a lot of damage. Always move away from the wave when he is looking to hit you with this.</p>
-              <p class="matchup-plan">2. His W outranges you. Respect this range. Once he misses his W, that’s when you can look to play a bit more aggressive</p>
-              <p class="matchup-plan">3. Brand cannot kill you in one combo, typically even with ultimate. This makes your life kinda easy. Even if he hits a combo, you can always base (even if on a bad timer). This is a lot better than dieing</p>
-              <p class="matchup-plan">4. Brand’s weakness is that he is immobile and easy to dive. This is a very simple thing to exploit. Just let your team handle it and follow up. I know it feels like you have low agency to impact that matchup, and you do. Outside of Brand messing up and eating too much poke, he kinda wins until your team engages.</p>
-              <p class="matchup-plan">5. Rylais is broken on Brand and makes his spells super easy to hit. He also applies it for 4 seconds which is disgustingly strong. Don’t try to 1v1 him if on equal items and he has Rylais.</p>
+              <p class="matchup-plan tip-item"><span class="matchup-tip-marker">1</span><span class="matchup-tip-text">His E bounces really far off the wave. With Scorch+DFT, it does a lot of damage. Always move away from the wave when he is looking to hit you with this.</span></p>
+              <p class="matchup-plan tip-item"><span class="matchup-tip-marker">2</span><span class="matchup-tip-text">His W outranges you. Respect this range. Once he misses his W, that’s when you can look to play a bit more aggressive</span></p>
+              <p class="matchup-plan tip-item"><span class="matchup-tip-marker">3</span><span class="matchup-tip-text">Brand cannot kill you in one combo, typically even with ultimate. This makes your life kinda easy. Even if he hits a combo, you can always base (even if on a bad timer). This is a lot better than dieing</span></p>
+              <p class="matchup-plan tip-item"><span class="matchup-tip-marker">4</span><span class="matchup-tip-text">Brand’s weakness is that he is immobile and easy to dive. This is a very simple thing to exploit. Just let your team handle it and follow up. I know it feels like you have low agency to impact that matchup, and you do. Outside of Brand messing up and eating too much poke, he kinda wins until your team engages.</span></p>
+              <p class="matchup-plan tip-item"><span class="matchup-tip-marker">5</span><span class="matchup-tip-text">Rylais is broken on Brand and makes his spells super easy to hit. He also applies it for 4 seconds which is disgustingly strong. Don’t try to 1v1 him if on equal items and he has Rylais.</span></p>
               <div class="matchup-recommendations">
                 <div class="matchup-rec-box summoners">
                   <div class="matchup-rec-title">Recommended Summoners</div>
@@ -697,7 +722,7 @@
             <article class="matchup-detail-card hard" id="matchup-caitlyn">
               <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Caitlyn" target="_blank" rel="noopener" aria-label="Open Caitlyn League wiki"><img class="matchup-card-icon" src="images/champions/Caitlyn.png" alt="Caitlyn"></a><div><h4>Caitlyn</h4></div></div><a class="difficulty-pill hard" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 7 out of 10"><span class="difficulty-score">7</span><span class="difficulty-max">/10</span></a></div>
               <p class="matchup-plan">Caitlyn is very glass cannon. Super squishy, but does a lot of damage. Most new mage players struggle against Caitlyn as her auto attacks give her significant range. Couple of things to remember here.</p>
-              <p class="matchup-plan">1. Caitlyn as a champion heavily rewards fundamentals. She is extremely squishy and when off-tempo, her champion kinda sucks. What does that mean?</p>
+              <p class="matchup-plan tip-item"><span class="matchup-tip-marker">1</span><span class="matchup-tip-text">Caitlyn as a champion heavily rewards fundamentals. She is extremely squishy and when off-tempo, her champion kinda sucks. What does that mean?</span></p>
               <p class="matchup-plan">Well, if you can manage to knock Cailtyn off her game, shoving her under tower, even killing her once, the champion is honestly terrible. But a Caitlyn from ahead is extremely oppressive and can snowball very effectively.</p>
               <p class="matchup-plan">We outrange Cailtyn with our basic spells, but her Q is the longest range spell in this lane. It’s easy to dodge though, so you shouldn’t get hit by it too often. Outside of this, always watch out for Caitlyn traps and play from range. Caitlyn’s weakness is being outranged, so just sit inside of your spell (but not her auto range) to win trades.</p>
               <div class="matchup-recommendations">
@@ -726,8 +751,8 @@
             <article class="matchup-detail-card medium" id="matchup-corki">
               <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Corki" target="_blank" rel="noopener" aria-label="Open Corki League wiki"><img class="matchup-card-icon" src="images/champions/Corki.png" alt="Corki"></a><div><h4>Corki</h4></div></div><a class="difficulty-pill" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 5 out of 10"><span class="difficulty-score">5</span><span class="difficulty-max">/10</span></a></div>
               <p class="matchup-plan">Corki is the better version of Draven. We will almost never win a raw 1v1 against Corki. If you miss any of your spells, it’s completely cooked. Keep our range and try to poke him out. The weakness of Corki is his short range and weak scaling (though if he gets a lead, he becomes a monster). Some advice to stay safe against Corki:</p>
-              <p class="matchup-plan">Never take an all-in fight until you have a significant lead or can 1 shot the Corki</p>
-              <p class="matchup-plan">Keep your E off-cooldown (don’t trade with it often). We need to save this for when Corki tries to W forward to trade on you.</p>
+              <p class="matchup-plan tip-item"><span class="matchup-tip-marker">Tip</span><span class="matchup-tip-text">Never take an all-in fight until you have a significant lead or can 1 shot the Corki</span></p>
+              <p class="matchup-plan tip-item"><span class="matchup-tip-marker">Tip</span><span class="matchup-tip-text">Keep your E off-cooldown (don’t trade with it often). We need to save this for when Corki tries to W forward to trade on you.</span></p>
               <p class="matchup-plan">If you can manage to just QQ the Corki from range, you will succeed. Otherwise, play off of your supports spells, and stay safe. We definitely outscale in this lane, I would recommend playing safe until around level 7-9 when you start to get more AP and points in spells.</p>
               <div class="matchup-recommendations">
                 <div class="matchup-rec-box summoners">
@@ -1069,8 +1094,8 @@
             <article class="matchup-detail-card hard" id="matchup-lux">
               <div class="matchup-card-head"><div class="matchup-title-group"><a class="matchup-card-icon-link" href="https://wiki.leagueoflegends.com/en-us/Lux" target="_blank" rel="noopener" aria-label="Open Lux League wiki"><img class="matchup-card-icon" src="images/champions/Lux.png" alt="Lux"></a><div><h4>Lux</h4></div></div><a class="difficulty-pill hard" href="#matchup-toc" aria-label="Jump back to Champion Index, difficulty score 7 out of 10"><span class="difficulty-score">7</span><span class="difficulty-max">/10</span></a></div>
               <p class="matchup-plan">Lux is quite strong into Hwei. At essentially every point in the game, if we both hit our spells, Lux will win the trade. We are outranged, out damaged, and to be honest, the Lux champion just counters us. We have 2 saving graces here though.</p>
-              <p class="matchup-plan">Using W-Q allows us to dodge her spells and run at her at the same time. This requires some confidence, but if you pull it off, it’s a good way to get a solo kill. This will negate the range advantage that Lux has.</p>
-              <p class="matchup-plan">Lux has no mobility and struggles against engage. This is the reason why Lux mid isn’t super popular, as junglers with engage (such as Jarvan) can easily kill her on repeat. As such, we need to follow up on our support and jungler from range. Be careful not to ego the 1v1 unnecessarily. Allow your support/jungler to be the engage/wincon. You are the secondary follow-up.</p>
+              <p class="matchup-plan tip-item"><span class="matchup-tip-marker">1</span><span class="matchup-tip-text">Using W-Q allows us to dodge her spells and run at her at the same time. This requires some confidence, but if you pull it off, it’s a good way to get a solo kill. This will negate the range advantage that Lux has.</span></p>
+              <p class="matchup-plan tip-item"><span class="matchup-tip-marker">2</span><span class="matchup-tip-text">Lux has no mobility and struggles against engage. This is the reason why Lux mid isn’t super popular, as junglers with engage (such as Jarvan) can easily kill her on repeat. As such, we need to follow up on our support and jungler from range. Be careful not to ego the 1v1 unnecessarily. Allow your support/jungler to be the engage/wincon. You are the secondary follow-up.</span></p>
               <div class="matchup-recommendations">
                 <div class="matchup-rec-box summoners">
                   <div class="matchup-rec-title">Recommended Summoners</div>
