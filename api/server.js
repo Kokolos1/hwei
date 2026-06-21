@@ -46,6 +46,24 @@ if (IN_PROD) {
   app.set('trust proxy', 1);
 }
 
+function preventStaleGuideCache(req, res, next) {
+  if (req.method !== 'GET') return next();
+
+  const requestPath = req.path || '/';
+  const ext = path.extname(requestPath).toLowerCase();
+  const shouldBypassCache = requestPath === '/'
+    || !ext
+    || ['.html', '.css', '.js', '.json'].includes(ext);
+
+  if (shouldBypassCache) {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+  }
+
+  return next();
+}
+
 // Session configuration
 app.use(session({
   secret: process.env.SESSION_SECRET || 'change-me',
@@ -54,6 +72,7 @@ app.use(session({
   proxy: IN_PROD,
   cookie: { secure: IN_PROD, httpOnly: true, sameSite: 'lax' }
 }));
+app.use(preventStaleGuideCache);
 
 function makeState() {
   return crypto.randomBytes(16).toString('hex');
