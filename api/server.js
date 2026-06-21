@@ -28,9 +28,15 @@ const CLIENT_ID = process.env.PATREON_CLIENT_ID;
 const CLIENT_SECRET = process.env.PATREON_CLIENT_SECRET;
 const REDIRECT_URI = process.env.PATREON_REDIRECT_URI;
 const FRONTEND_URL = process.env.FRONTEND_URL || `http://localhost:${PORT}`;
-const SCOPES = 'identity identity.memberships';
+const SCOPES = 'identity identity[email] identity.memberships';
 const REQUIRED_TIER_ID = (process.env.PATREON_ALLOWED_TIER_ID || '').trim();
 const REQUIRED_TIER_NAME = (process.env.PATREON_ALLOWED_TIER_NAME || 'Hwei Apprentice').trim();
+const ALLOWED_EMAILS = new Set(
+  (process.env.PATREON_ALLOWED_EMAILS || '')
+    .split(',')
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean)
+);
 
 if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
   console.warn('Warning: PATREON_CLIENT_ID, PATREON_CLIENT_SECRET and PATREON_REDIRECT_URI should be set in environment.');
@@ -54,6 +60,10 @@ function makeState() {
 }
 
 function normalizeTierName(value) {
+  return String(value || '').trim().toLowerCase();
+}
+
+function normalizeEmail(value) {
   return String(value || '').trim().toLowerCase();
 }
 
@@ -258,6 +268,7 @@ app.get('/auth/patreon/callback', async (req, res) => {
     // fetch identity with entitled tiers so access can be matched to an exact Patreon tier
     const identityParams = new URLSearchParams({
       include: 'memberships.currently_entitled_tiers',
+      'fields[user]': 'email,full_name,image_url',
       'fields[member]': 'patron_status,is_free_trial,is_gifted',
       'fields[tier]': 'title,amount_cents'
     });
@@ -268,12 +279,16 @@ app.get('/auth/patreon/callback', async (req, res) => {
     const identityJson = await identityRes.json();
 
     const access = extractPatreonAccess(identityJson);
+    const userEmail = normalizeEmail(identityJson.data && identityJson.data.attributes && identityJson.data.attributes.email);
+    const hasEmailAccess = userEmail && ALLOWED_EMAILS.has(userEmail);
 
-    if (!access.hasAccess) {
+    if (!access.hasAccess && !hasEmailAccess) {
       const entitledTierSummary = access.entitledTiers.map((tier) => tier.title || tier.id).filter(Boolean);
       console.warn('Patreon login denied: required tier missing.', {
         requiredTierId: REQUIRED_TIER_ID || null,
         requiredTierName: REQUIRED_TIER_NAME,
+        allowedEmailCount: ALLOWED_EMAILS.size,
+        userEmail: userEmail || null,
         entitledTiers: entitledTierSummary
       });
       clearPatreonSession(req, true);
@@ -285,6 +300,7 @@ app.get('/auth/patreon/callback', async (req, res) => {
       attributes: identityJson.data && identityJson.data.attributes,
       entitled_tiers: access.entitledTiers,
       matched_tier: access.matchedTier,
+      access_source: hasEmailAccess ? 'email' : 'tier',
       has_access: true,
       raw: identityJson
     };
