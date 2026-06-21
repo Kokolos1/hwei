@@ -36,11 +36,16 @@ if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
   console.warn('Warning: PATREON_CLIENT_ID, PATREON_CLIENT_SECRET and PATREON_REDIRECT_URI should be set in environment.');
 }
 
+if (IN_PROD) {
+  app.set('trust proxy', 1);
+}
+
 // Session configuration
 app.use(session({
   secret: process.env.SESSION_SECRET || 'change-me',
   resave: false,
   saveUninitialized: false,
+  proxy: IN_PROD,
   cookie: { secure: IN_PROD, httpOnly: true, sameSite: 'lax' }
 }));
 
