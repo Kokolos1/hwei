@@ -886,6 +886,82 @@ body {
   grid-template-columns:repeat(4,minmax(0,1fr));
 }
 
+.situational-items-split {
+  position:relative;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:30px;
+  align-items:stretch;
+}
+
+.situational-items-split::before {
+  content:'';
+  position:absolute;
+  top:4px;
+  bottom:4px;
+  left:50%;
+  width:1px;
+  background:linear-gradient(
+    180deg,
+    transparent,
+    rgba(226,198,111,0.28) 12%,
+    rgba(216,111,78,0.5) 50%,
+    rgba(226,198,111,0.28) 88%,
+    transparent
+  );
+  box-shadow:0 0 18px rgba(216,111,78,0.18);
+  transform:translateX(-50%);
+  pointer-events:none;
+}
+
+.situational-item-group {
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+}
+
+.situational-item-group .item-grid-situational {
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-auto-rows:minmax(210px,1fr);
+  flex:1;
+}
+
+#items-sec .situational-item-group .item-card-shop {
+  height:100%;
+}
+
+.situational-group-note {
+  margin-top:18px;
+  min-height:92px;
+  padding:0 6px 4px;
+}
+
+.situational-group-note h4 {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:0 0 10px;
+  color:var(--gold-light);
+  font-size:1.15rem;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+}
+
+.situational-group-note h4::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg,rgba(226,198,111,0.58),transparent);
+}
+
+.situational-group-note p {
+  min-height:42px;
+  margin:0;
+  border-left:3px solid rgba(216,111,78,0.34);
+  background:rgba(201,161,74,0.07);
+  border-radius:6px;
+}
+
 .item-grid-boots {
   grid-template-columns:repeat(2,minmax(220px,1fr));
   max-width:760px;
@@ -2168,6 +2244,25 @@ iframe.abl-video {
   .item-import-panel { grid-template-columns:1fr; }
   .item-import-actions { justify-content:flex-start; }
   .item-shop-panel .item-tabs { grid-template-columns:repeat(2,1fr); }
+  .situational-items-split {
+    grid-template-columns:1fr;
+    gap:22px;
+  }
+  .situational-items-split::before {
+    top:50%;
+    right:6px;
+    bottom:auto;
+    left:6px;
+    width:auto;
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(216,111,78,0.48),transparent);
+    transform:none;
+  }
+  .situational-item-group .item-grid-situational { grid-template-columns:1fr; }
+  .situational-item-group .item-grid-situational {
+    grid-auto-rows:auto;
+    flex:none;
+  }
   .item-grid,
   .item-grid-situational,
   .build-path,
