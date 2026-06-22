@@ -364,25 +364,22 @@
               <button class="tab-btn active" onclick="switchTab(this,'t-start')">Starting Items</button>
               <button class="tab-btn" onclick="switchTab(this,'t-boots')">Boots</button>
               <button class="tab-btn" onclick="switchTab(this,'t-core')">Core Builds</button>
-              <button class="tab-btn" onclick="switchTab(this,'t-situational')">Situational</button>
+              <button class="tab-btn" onclick="switchTab(this,'t-situational')">4th-6th Items</button>
             </div>
 
             <div id="t-start" class="tab-pane active">
               <div class="item-grid item-grid-start">
                 <div class="item-card item-card-shop">
-                  <div class="item-tag">Start</div>
                   <div class="item-icon"><img src="images/doransring.jpg" alt="Doran's Ring"></div>
                   <div class="name">Doran's Ring</div>
                   <div class="note">Default start for lane power, health, and mana support.</div>
                 </div>
                 <div class="item-card item-card-shop">
-                  <div class="item-tag">Sustain</div>
                   <div class="item-icon"><img src="images/healthPotion.jpg" alt="Health Potions"></div>
                   <div class="name">2 Health Potions</div>
                   <div class="note">Use early enough that you can contest the next wave instead of recalling late.</div>
                 </div>
                 <div class="item-card item-card-shop">
-                  <div class="item-tag">Vision</div>
                   <div class="item-icon"><img src="images/wardingtotem.jpg" alt="Warding Totem"></div>
                   <div class="name">Warding Totem</div>
                   <div class="note">Swap to Farsight in late game when face-checking becomes lethal.</div>
@@ -419,6 +416,10 @@
                   <button class="core-build-tab" type="button" data-core-build="build-blackfire" onclick="switchCoreBuild(this,'build-blackfire')">
                     <span>Tempo Burst</span>
                     <small>Blackfire > Cosmic > Shadowflame</small>
+                  </button>
+                  <button class="core-build-tab" type="button" data-core-build="build-magic-pen" onclick="switchCoreBuild(this,'build-magic-pen')">
+                    <span>Full Magic Pen</span>
+                    <small>Blackfire > Shadowflame > Void Staff</small>
                   </button>
                   <button class="core-build-tab" type="button" data-core-build="build-helia" onclick="switchCoreBuild(this,'build-helia')">
                     <span>Utility Weave</span>
@@ -484,6 +485,36 @@
                     </div>
                   </div>
                   <div class="item-callout">Use when bot lane tempo matters and your team can fight around your first two completed items.</div>
+                </div>
+
+                <div id="build-magic-pen" class="core-build-pane">
+                  <div class="build-path" aria-label="Full Magic Pen core item order">
+                    <div class="build-step">
+                      <div class="build-step-meta">1st Core</div>
+                      <div class="item-icon"><img src="images/items/blackfire-torch.png" alt="Blackfire Torch"></div>
+                      <div class="build-step-body">
+                        <div class="name">Blackfire Torch</div>
+                        <div class="note">Gives Hwei the mana and waveclear needed to reach his penetration spikes without losing tempo.</div>
+                      </div>
+                    </div>
+                    <div class="build-step">
+                      <div class="build-step-meta">2nd Core</div>
+                      <div class="item-icon"><img src="images/items/shadowflame.png" alt="Shadowflame"></div>
+                      <div class="build-step-body">
+                        <div class="name">Shadowflame</div>
+                        <div class="note">Turns catches and low-health targets into lethal burst once Hwei is landing clean two-spell patterns.</div>
+                      </div>
+                    </div>
+                    <div class="build-step">
+                      <div class="build-step-meta">3rd Core</div>
+                      <div class="item-icon"><img src="images/voidStaff.jpg" alt="Void Staff"></div>
+                      <div class="build-step-body">
+                        <div class="name">Void Staff</div>
+                        <div class="note">Completes the penetration setup when enemies start buying magic resist or your team needs maximum damage threat.</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item-callout">Use when you need Hwei to punish squishies and still cut through early magic resist with full damage pressure.</div>
                 </div>
 
                 <div id="build-helia" class="core-build-pane">
@@ -553,10 +584,10 @@
                   <div class="note">Use into unavoidable dive, hard engage, or stasis-dependent teamfights.</div>
                 </div>
                 <div class="item-card item-card-shop">
-                  <div class="item-tag">Haste</div>
-                  <div class="item-icon"><img src="images/IonianBoots.jpg" alt="Ionian Boots"></div>
-                  <div class="name">Ionian Boots</div>
-                  <div class="note">Alternative when haste and summoner cooldowns matter more than magic penetration.</div>
+                  <div class="item-tag">Capstone</div>
+                  <div class="item-icon"><img src="images/rabadons.jpg" alt="Rabadon's Deathcap"></div>
+                  <div class="name">Rabadon's Deathcap</div>
+                  <div class="note">High-AP finisher when you need maximum spell damage after your core build is online.</div>
                 </div>
               </div>
             </div>

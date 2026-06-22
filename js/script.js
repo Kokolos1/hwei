@@ -995,7 +995,8 @@ const ITEM_SET_IDS = {
   diademOfSongs: '2530',
   voidStaff: '3135',
   cryptbloom: '3137',
-  zhonyasHourglass: '3157'
+  zhonyasHourglass: '3157',
+  rabadonsDeathcap: '3089'
 };
 
 const HWEI_ITEM_SET_BLOCKS = {
@@ -1021,7 +1022,7 @@ const HWEI_ITEM_SET_BLOCKS = {
       { id: ITEM_SET_IDS.voidStaff, count: 1 },
       { id: ITEM_SET_IDS.cryptbloom, count: 1 },
       { id: ITEM_SET_IDS.zhonyasHourglass, count: 1 },
-      { id: ITEM_SET_IDS.ionianBoots, count: 1 }
+      { id: ITEM_SET_IDS.rabadonsDeathcap, count: 1 }
     ]
   }
 };
@@ -1045,6 +1046,16 @@ const HWEI_ITEM_SET_BUILDS = {
       { id: ITEM_SET_IDS.blackfireTorch, count: 1 },
       { id: ITEM_SET_IDS.cosmicDrive, count: 1 },
       { id: ITEM_SET_IDS.shadowflame, count: 1 }
+    ]
+  },
+  'full-magic-pen': {
+    title: 'Hwei Bot - Full Magic Pen',
+    label: 'Full Magic Pen',
+    coreType: 'Core - Full Magic Pen',
+    items: [
+      { id: ITEM_SET_IDS.blackfireTorch, count: 1 },
+      { id: ITEM_SET_IDS.shadowflame, count: 1 },
+      { id: ITEM_SET_IDS.voidStaff, count: 1 }
     ]
   },
   'utility-weave': {
