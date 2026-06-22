@@ -996,7 +996,10 @@ const ITEM_SET_IDS = {
   voidStaff: '3135',
   cryptbloom: '3137',
   zhonyasHourglass: '3157',
-  rabadonsDeathcap: '3089'
+  rabadonsDeathcap: '3089',
+  bloodlettersCurse: '4010',
+  bansheesVeil: '3102',
+  morellonomicon: '3165'
 };
 
 const HWEI_ITEM_SET_BLOCKS = {
@@ -1022,7 +1025,10 @@ const HWEI_ITEM_SET_BLOCKS = {
       { id: ITEM_SET_IDS.voidStaff, count: 1 },
       { id: ITEM_SET_IDS.cryptbloom, count: 1 },
       { id: ITEM_SET_IDS.zhonyasHourglass, count: 1 },
-      { id: ITEM_SET_IDS.rabadonsDeathcap, count: 1 }
+      { id: ITEM_SET_IDS.rabadonsDeathcap, count: 1 },
+      { id: ITEM_SET_IDS.bloodlettersCurse, count: 1 },
+      { id: ITEM_SET_IDS.bansheesVeil, count: 1 },
+      { id: ITEM_SET_IDS.morellonomicon, count: 1 }
     ]
   }
 };
