@@ -999,7 +999,8 @@ const ITEM_SET_IDS = {
   rabadonsDeathcap: '3089',
   bloodlettersCurse: '4010',
   bansheesVeil: '3102',
-  morellonomicon: '3165'
+  morellonomicon: '3165',
+  stormsurge: '4646'
 };
 
 const HWEI_ITEM_SET_BLOCKS = {
@@ -1061,7 +1062,7 @@ const HWEI_ITEM_SET_BUILDS = {
     items: [
       { id: ITEM_SET_IDS.blackfireTorch, count: 1 },
       { id: ITEM_SET_IDS.shadowflame, count: 1 },
-      { id: ITEM_SET_IDS.voidStaff, count: 1 }
+      { id: ITEM_SET_IDS.stormsurge, count: 1 }
     ]
   },
   'utility-weave': {
