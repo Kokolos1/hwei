@@ -352,10 +352,7 @@
                 <div class="item-import-title">Copy an item set, then paste it in Collection &gt; Items &gt; Import Item Sets.</div>
               </div>
               <div class="item-import-actions">
-                <button class="item-copy-btn primary" type="button" data-item-set-copy="all">Copy All Builds</button>
-                <button class="item-copy-btn" type="button" data-item-set-copy="scaling-burn">Scaling Burn</button>
-                <button class="item-copy-btn" type="button" data-item-set-copy="tempo-burst">Tempo Burst</button>
-                <button class="item-copy-btn" type="button" data-item-set-copy="utility-weave">Utility Weave</button>
+                <button class="item-copy-btn primary" type="button" data-item-set-copy="all">Copy Builds</button>
               </div>
               <div class="item-copy-status" id="item-copy-status" role="status" aria-live="polite"></div>
             </div>
@@ -409,13 +406,13 @@
             <div id="t-core" class="tab-pane">
               <div class="core-builds-shell">
                 <div class="core-build-tabs" role="tablist" aria-label="Hwei core builds">
-                  <button class="core-build-tab active" type="button" data-core-build="build-seraphs" onclick="switchCoreBuild(this,'build-seraphs')">
-                    <span>Scaling Burn</span>
-                    <small>Seraph's > Liandry's > Cosmic</small>
-                  </button>
-                  <button class="core-build-tab" type="button" data-core-build="build-blackfire" onclick="switchCoreBuild(this,'build-blackfire')">
+                  <button class="core-build-tab active" type="button" data-core-build="build-blackfire" onclick="switchCoreBuild(this,'build-blackfire')">
                     <span>Primary BFT Build</span>
                     <small>Blackfire > Cosmic > Shadowflame</small>
+                  </button>
+                  <button class="core-build-tab" type="button" data-core-build="build-seraphs" onclick="switchCoreBuild(this,'build-seraphs')">
+                    <span>Scaling Burn</span>
+                    <small>Seraph's > Liandry's > Cosmic</small>
                   </button>
                   <button class="core-build-tab" type="button" data-core-build="build-magic-pen" onclick="switchCoreBuild(this,'build-magic-pen')">
                     <span>Full Magic Pen</span>
@@ -427,7 +424,37 @@
                   </button>
                 </div>
 
-                <div id="build-seraphs" class="core-build-pane active">
+                <div id="build-blackfire" class="core-build-pane active">
+                  <div class="build-path" aria-label="Primary BFT Build core item order">
+                    <div class="build-step">
+                      <div class="build-step-meta">1st Core</div>
+                      <div class="item-icon"><img src="images/items/blackfire-torch.png" alt="Blackfire Torch"></div>
+                      <div class="build-step-body">
+                        <div class="name">Blackfire Torch</div>
+                        <div class="note">Strongest early game mana item (for almost all mages). Excellent stats, waveclear, and damage.</div>
+                      </div>
+                    </div>
+                    <div class="build-step">
+                      <div class="build-step-meta">2nd Core</div>
+                      <div class="item-icon"><img src="images/items/cosmic-drive.png" alt="Cosmic Drive"></div>
+                      <div class="build-step-body">
+                        <div class="name">Cosmic Drive</div>
+                        <div class="note">7 seconds of movespeed applied from torch's burn effect. Provides some much needed early CDR.</div>
+                      </div>
+                    </div>
+                    <div class="build-step">
+                      <div class="build-step-meta">3rd Core</div>
+                      <div class="item-icon"><img src="images/items/shadowflame.png" alt="Shadowflame"></div>
+                      <div class="build-step-body">
+                        <div class="name">Shadowflame</div>
+                        <div class="note">Provides more damage 3rd item than any other (including Rabadon's). Build 2nd against really squishy enemies and pivot to pen build. Skip against tanky enemies.</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item-callout">Use when bot lane tempo matters and your team can fight around your first two completed items.</div>
+                </div>
+
+                <div id="build-seraphs" class="core-build-pane">
                   <div class="build-path" aria-label="Scaling Burn core item order">
                     <div class="build-step">
                       <div class="build-step-meta">1st Core</div>
@@ -455,36 +482,6 @@
                     </div>
                   </div>
                   <div class="item-callout">Best default when the game is slower and Hwei needs mana, shield value, and scaling DPS.</div>
-                </div>
-
-                <div id="build-blackfire" class="core-build-pane">
-                  <div class="build-path" aria-label="Tempo Burst core item order">
-                    <div class="build-step">
-                      <div class="build-step-meta">1st Core</div>
-                      <div class="item-icon"><img src="images/items/blackfire-torch.png" alt="Blackfire Torch"></div>
-                      <div class="build-step-body">
-                        <div class="name">Blackfire Torch</div>
-                        <div class="note">Strongest early game mana item (for almost all mages). Excellent stats, waveclear, and damage.</div>
-                      </div>
-                    </div>
-                    <div class="build-step">
-                      <div class="build-step-meta">2nd Core</div>
-                      <div class="item-icon"><img src="images/items/cosmic-drive.png" alt="Cosmic Drive"></div>
-                      <div class="build-step-body">
-                        <div class="name">Cosmic Drive</div>
-                        <div class="note">7 seconds of movespeed applied from torch's burn effect. Provides some much needed early CDR.</div>
-                      </div>
-                    </div>
-                    <div class="build-step">
-                      <div class="build-step-meta">3rd Core</div>
-                      <div class="item-icon"><img src="images/items/shadowflame.png" alt="Shadowflame"></div>
-                      <div class="build-step-body">
-                        <div class="name">Shadowflame</div>
-                        <div class="note">Provides more damage 3rd item than any other (including Rabadon's). Build 2nd against really squishy enemies and pivot to pen build. Skip against tanky enemies.</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="item-callout">Use when bot lane tempo matters and your team can fight around your first two completed items.</div>
                 </div>
 
                 <div id="build-magic-pen" class="core-build-pane">

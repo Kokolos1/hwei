@@ -1035,6 +1035,16 @@ const HWEI_ITEM_SET_BLOCKS = {
 };
 
 const HWEI_ITEM_SET_BUILDS = {
+  'tempo-burst': {
+    title: 'Hwei Bot - Primary BFT Build',
+    label: 'Primary BFT Build',
+    coreType: 'Core - Primary BFT Build',
+    items: [
+      { id: ITEM_SET_IDS.blackfireTorch, count: 1 },
+      { id: ITEM_SET_IDS.cosmicDrive, count: 1 },
+      { id: ITEM_SET_IDS.shadowflame, count: 1 }
+    ]
+  },
   'scaling-burn': {
     title: 'Hwei Bot - Scaling Burn',
     label: 'Scaling Burn',
@@ -1043,16 +1053,6 @@ const HWEI_ITEM_SET_BUILDS = {
       { id: ITEM_SET_IDS.seraphsEmbrace, count: 1 },
       { id: ITEM_SET_IDS.liandrysTorment, count: 1 },
       { id: ITEM_SET_IDS.cosmicDrive, count: 1 }
-    ]
-  },
-  'tempo-burst': {
-    title: 'Hwei Bot - Tempo Burst',
-    label: 'Tempo Burst',
-    coreType: 'Core - Tempo Burst',
-    items: [
-      { id: ITEM_SET_IDS.blackfireTorch, count: 1 },
-      { id: ITEM_SET_IDS.cosmicDrive, count: 1 },
-      { id: ITEM_SET_IDS.shadowflame, count: 1 }
     ]
   },
   'full-magic-pen': {
