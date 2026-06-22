@@ -490,7 +490,7 @@ const HWEI_RUNE_PAGES = {
   early: {
     kicker: 'Lane Pressure',
     title: 'Early Game Comet',
-    summary: 'Early-focused Comet page for stronger poke and safer health shards in volatile lanes.',
+    summary: 'Early-focused Comet page. Run into snowball lanes (Draven). Essentially just scorch & second adaptive shard for max poke damage early',
     primary: {
       type: 'Primary',
       tree: 'Sorcery',
@@ -510,7 +510,7 @@ const HWEI_RUNE_PAGES = {
   melee: {
     kicker: 'Versus Melee',
     title: 'Aery Melee Comp',
-    summary: 'Aery variation for melee-heavy enemy comps where Hwei gets repeated short trades and shield value.',
+    summary: 'Aery variation for melee-heavy enemy comps. Only run when you can proc aery frequently.',
     primary: {
       type: 'Primary',
       tree: 'Sorcery',
@@ -532,27 +532,27 @@ const HWEI_RUNE_PAGES = {
 const HWEI_RUNE_FAQS = [
   {
     question: 'Which page should I use by default?',
-    answer: 'Use Recommended Comet in most games. It gives reliable poke, scaling damage, ability haste, and enough lane stability for standard bot/APC matchups.'
+    answer: 'Use Recommended Comet in most games. It gives reliable poke, scaling damage, ability haste, and enough lane stability for standard bot/APC matchups. Basically just the highest WR/best runes for Hwei.'
   },
   {
     question: 'When should I take the Early Game Comet page?',
-    answer: 'Take it when the lane will be decided early: volatile supports, heavy trading, or matchups where Scorch damage and double adaptive shards help you win the first few waves.'
+    answer: 'Take it when the lane will be decided early. Obvious lanes include Draven, or other snowbally ADCS. Check matchups for more information. I only run this rune page about 10% of the time.'
   },
   {
     question: 'When is Aery better than Comet?',
-    answer: 'Aery is best when enemies have to walk into you repeatedly. It is strongest into melee-heavy lanes and comps where Hwei can land many short trades instead of relying on long-range poke.'
+    answer: 'Aery is best when enemies are low-range & you can proc it frequently. Strongest when you dont land long-range poke. Theoretically, Aery also scales marginally better than Comet.'
   },
   {
-    question: 'Why Legend: Haste instead of mana runes?',
-    answer: 'Hwei values repeated spell rotations in fights. Manaflow Band covers the main mana need, while Legend: Haste makes his Q/E/W cycles feel better as the game opens up.'
+    question: 'Why Legend: Haste instead of POM (Presence of Mind)?',
+    answer: 'Hwei already runs manaflow band inside of sorcery in all pages for his primary setup. You CAN run POM if you find yourself needing extra mana, though personally, I never go OOM after lane-phase with just manaflow.'
   },
   {
     question: 'Why Cut Down as the second Precision rune?',
-    answer: 'Bot lane and front-to-back fights often put Hwei into high-health targets. Cut Down gives him better damage into bruisers, tanks, and durable marksmen setups.'
+    answer: 'Cut Down is insanely broken. Does almost the same damage as your Keystone rune on average. Highest winrate of the runes  in this row (and averages 600 more than the 2nd best option). Super OP and a must-take every game.'
   },
   {
     question: 'Can I import these into League Client?',
-    answer: 'Yes, use Import Runes on any normal rune page while League Client is open. The FAQ page is reference-only, so the import button is hidden here.'
+    answer: 'Yes, use Import Runes on any normal rune page while League Client is open. Only works if you have an open rune page (delete a page you dont use to make space).'
   }
 ];
 
