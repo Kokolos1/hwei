@@ -2,7 +2,6 @@ const fs = require('fs');
 const https = require('https');
 const http = require('http');
 const path = require('path');
-const { importRunePage, lcuErrorResponse } = require('./api/lcu');
 
 const root = process.cwd();
 const port = Number(process.env.PORT || 8000);
@@ -85,31 +84,6 @@ function translateBatch(texts, target) {
 http.createServer((req, res) => {
   let requestPath = decodeURIComponent(req.url.split('?')[0]);
   if (requestPath === '/') requestPath = '/index.html';
-
-  if (req.method === 'POST' && requestPath === '/api/lcu/runes') {
-    readJsonBody(req, async (parseError, body) => {
-      if (parseError) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: false, message: 'Invalid JSON request body.' }));
-        return;
-      }
-
-      try {
-        const result = await importRunePage(body);
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({
-          ok: true,
-          message: `Imported ${result.page.name} into League Client.`,
-          page: result.page
-        }));
-      } catch (error) {
-        const response = lcuErrorResponse(error);
-        res.writeHead(response.status, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(response.body));
-      }
-    });
-    return;
-  }
 
   if (req.method === 'POST' && requestPath === '/api/translate') {
     readJsonBody(req, async (parseError, body) => {

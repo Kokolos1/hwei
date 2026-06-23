@@ -551,8 +551,8 @@ const HWEI_RUNE_FAQS = [
     answer: 'Cut Down is insanely broken. Does almost the same damage as your Keystone rune on average. Highest winrate of the runes  in this row (and averages 600 more than the 2nd best option). Super OP and a must-take every game.'
   },
   {
-    question: 'Can I import these into League Client?',
-    answer: 'Yes, use Import Runes on any normal rune page while League Client is open. Only works if you have an open rune page (delete a page you dont use to make space).'
+    question: 'Why not Deathfire Touch?',
+    answer: 'This rune is really really bad on Hwei. On average, it does several hundred damage less than comet/aery. This is due to Hwei having mostly periodic (except EQ/EW) spells. These only proc DFT for 2 seconds each.'
   }
 ];
 
@@ -591,33 +591,6 @@ const RUNE_ICONS = {
   'Triple Tonic': 'images/runes/triple-tonic.png',
   'Biscuit Delivery': 'images/runes/biscuit-delivery.png',
   'Cosmic Insight': 'images/runes/cosmic-insight.png'
-};
-
-const RUNE_STYLE_IDS = {
-  Precision: 8000,
-  Sorcery: 8200,
-  Inspiration: 8300
-};
-
-const RUNE_IDS = {
-  'Summon Aery': 8214,
-  'Arcane Comet': 8229,
-  "Stormraider's Surge": 8230,
-  'Deathfire Touch': 8992,
-  'Axiom Arcanist': 8224,
-  'Manaflow Band': 8226,
-  Transcendence: 8210,
-  Scorch: 8237,
-  'Gathering Storm': 8236,
-  'Legend: Haste': 9105,
-  'Cut Down': 8017
-};
-
-const SHARD_IDS = {
-  'Ability Haste': 5007,
-  'Adaptive Force': 5008,
-  'Scaling Health': 5001,
-  'Flat Health': 5011
 };
 
 const RUNE_DESCRIPTIONS = {
@@ -875,15 +848,13 @@ function setRunePage(pageId) {
   const shards = document.getElementById('rune-shards');
   const useCase = document.getElementById('rune-use-case');
   const swapNote = document.getElementById('rune-swap-note');
-  const importAction = document.querySelector('.rune-import-action');
   const pageContent = document.getElementById('rune-page-content');
   const faqPanel = document.getElementById('rune-faq-panel');
 
   if (pageId === 'faq') {
     if (kicker) kicker.textContent = 'Runes Reference';
     if (title) title.textContent = 'Runes FAQ';
-    if (summary) summary.textContent = 'Answers for choosing, swapping, and importing Hwei rune pages.';
-    if (importAction) importAction.hidden = true;
+    if (summary) summary.textContent = 'Answers for choosing and swapping Hwei rune pages.';
     if (pageContent) pageContent.hidden = true;
     if (faqPanel) {
       faqPanel.hidden = false;
@@ -894,7 +865,6 @@ function setRunePage(pageId) {
   }
 
   const page = HWEI_RUNE_PAGES[pageId] || HWEI_RUNE_PAGES.default;
-  if (importAction) importAction.hidden = false;
   if (pageContent) pageContent.hidden = false;
   if (faqPanel) faqPanel.hidden = true;
 
@@ -908,27 +878,6 @@ function setRunePage(pageId) {
   if (swapNote) swapNote.textContent = page.swapNote;
 }
 
-function buildRuneImportPayload(page) {
-  return {
-    name: `Hwei Guide - ${page.title}`,
-    primaryStyleId: RUNE_STYLE_IDS[page.primary.tree],
-    subStyleId: RUNE_STYLE_IDS[page.secondary.tree],
-    selectedPerkIds: [
-      ...page.primary.runes.map(rune => RUNE_IDS[rune]),
-      ...page.secondary.runes.map(rune => RUNE_IDS[rune]),
-      ...page.shards.map(shard => SHARD_IDS[shard])
-    ]
-  };
-}
-
-function setRuneImportStatus(message, state = '') {
-  const status = document.getElementById('rune-import-status');
-  if (!status) return;
-  status.textContent = message;
-  status.classList.toggle('success', state === 'success');
-  status.classList.toggle('error', state === 'error');
-}
-
 function initRuneSelector() {
   const selector = document.querySelector('.rune-selector');
   if (!selector) return;
@@ -936,44 +885,6 @@ function initRuneSelector() {
   selector.querySelectorAll('.rune-page-option').forEach(option => {
     option.addEventListener('click', () => setRunePage(option.dataset.runePage));
   });
-
-  const copyBtn = document.getElementById('rune-copy-btn');
-  if (copyBtn) {
-    copyBtn.addEventListener('click', async () => {
-      const page = HWEI_RUNE_PAGES[selector.dataset.selectedRunePage] || HWEI_RUNE_PAGES.default;
-      const payload = buildRuneImportPayload(page);
-      const missingIds = payload.selectedPerkIds.some(id => !Number.isInteger(id));
-      if (missingIds || !payload.primaryStyleId || !payload.subStyleId) {
-        setRuneImportStatus('Rune ID mapping is incomplete for this page.', 'error');
-        return;
-      }
-
-      copyBtn.disabled = true;
-      copyBtn.textContent = 'Importing';
-      setRuneImportStatus('Looking for your open League Client...');
-
-      try {
-        const response = await fetch('/api/lcu/runes', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const result = await response.json().catch(() => ({}));
-        if (!response.ok || !result.ok) {
-          throw new Error(result.message || 'Unable to import runes.');
-        }
-        copyBtn.textContent = 'Imported';
-        setRuneImportStatus(result.message || `Imported ${page.title}.`, 'success');
-        setTimeout(() => { copyBtn.textContent = 'Import Runes'; }, 1600);
-      } catch (error) {
-        copyBtn.textContent = 'Import Failed';
-        setRuneImportStatus(error.message || 'Open League Client and try again.', 'error');
-        setTimeout(() => { copyBtn.textContent = 'Import Runes'; }, 1800);
-      } finally {
-        copyBtn.disabled = false;
-      }
-    });
-  }
 
   setRunePage(selector.dataset.selectedRunePage || 'default');
   initRuneTooltips();

@@ -4,7 +4,6 @@ const session = require('express-session');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
 const path = require('path');
-const { importRunePage, lcuErrorResponse } = require('./lcu');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,6 +21,8 @@ const PROTECTED_PAGE_FILES = new Set([
 ]);
 const PROTECTED_ROOT_FILES = new Set(['versions.json']);
 const PROTECTED_STATIC_DIRS = ['css', 'images', 'js', 'shared'];
+const SUPPORTED_TRANSLATION_LANGUAGES = new Set(['en', 'es', 'fr', 'de', 'pt', 'it', 'ro', 'tr', 'pl', 'ru', 'ko', 'ja']);
+const translationCache = new Map();
 
 const IN_PROD = process.env.NODE_ENV === 'production';
 const DEPLOY_MARKER = process.env.RAILWAY_GIT_COMMIT_SHA
@@ -102,6 +103,36 @@ function clearPatreonSession(req, keepReturnTo = false) {
   delete req.session.tokens;
   delete req.session.user;
   if (!keepReturnTo) delete req.session.returnTo;
+}
+
+async function translateBatch(texts, target) {
+  const normalizedTexts = texts.map((text) => String(text || '').replace(/\s+/g, ' ').trim());
+  const cacheKey = `${target}:${JSON.stringify(normalizedTexts)}`;
+  if (translationCache.has(cacheKey)) return translationCache.get(cacheKey);
+
+  const body = new URLSearchParams();
+  body.append('q', normalizedTexts.join('\n'));
+
+  const response = await fetch(
+    `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${encodeURIComponent(target)}&dt=t`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString()
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Translation request failed with status ${response.status}.`);
+  }
+
+  const parsed = await response.json();
+  const combined = (parsed[0] || []).map((part) => part[0]).join('');
+  const translated = combined.split('\n').map((value) => value.trim());
+  const padded = normalizedTexts.map((value, index) => translated[index] || value);
+
+  translationCache.set(cacheKey, padded);
+  return padded;
 }
 
 function rememberReturnTo(req) {
@@ -386,17 +417,24 @@ app.get('/api/me', requireSiteAccess, (req, res) => {
   res.json({ authenticated: true, user: req.session.user });
 });
 
-app.post('/api/lcu/runes', requireSiteAccess, express.json({ limit: '32kb' }), async (req, res) => {
+app.post('/api/translate', requireSiteAccess, express.json({ limit: '128kb' }), async (req, res) => {
+  const target = String(req.body.target || 'en').toLowerCase();
+  const texts = Array.isArray(req.body.texts) ? req.body.texts : [];
+
+  if (!SUPPORTED_TRANSLATION_LANGUAGES.has(target)) {
+    return res.status(400).json({ ok: false, message: 'Unsupported language.' });
+  }
+
+  if (target === 'en') {
+    return res.json({ ok: true, translations: texts.map((text) => String(text || '')) });
+  }
+
   try {
-    const result = await importRunePage(req.body);
-    res.json({
-      ok: true,
-      message: `Imported ${result.page.name} into League Client.`,
-      page: result.page
-    });
+    const translations = await translateBatch(texts.slice(0, 60), target);
+    return res.json({ ok: true, translations });
   } catch (error) {
-    const response = lcuErrorResponse(error);
-    res.status(response.status).json(response.body);
+    console.error(error);
+    return res.status(502).json({ ok: false, message: 'Translation service unavailable.' });
   }
 });
 

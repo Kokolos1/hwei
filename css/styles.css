@@ -1334,51 +1334,6 @@ body {
   margin:0;
 }
 
-.rune-copy-btn {
-  border:1px solid rgba(226,198,111,0.62);
-  background:linear-gradient(180deg,#d4b35e,#a77b2d);
-  color:#15111d;
-  border-radius:999px;
-  padding:9px 14px;
-  font-family:'Inter','Source Serif 4',serif;
-  font-size:0.78rem;
-  font-weight:800;
-  letter-spacing:1px;
-  text-transform:uppercase;
-  cursor:pointer;
-  white-space:nowrap;
-  transition:filter 0.15s ease, transform 0.15s ease;
-}
-
-.rune-copy-btn:hover { filter:brightness(1.08); transform:translateY(-1px); }
-
-.rune-import-action {
-  display:flex;
-  flex-direction:column;
-  align-items:flex-end;
-  gap:7px;
-  min-width:156px;
-}
-
-.rune-copy-btn:disabled {
-  cursor:wait;
-  filter:saturate(0.7);
-  opacity:0.72;
-  transform:none;
-}
-
-.rune-import-status {
-  max-width:230px;
-  min-height:1.2em;
-  color:rgba(255,255,255,0.58);
-  font-size:0.74rem;
-  line-height:1.35;
-  text-align:right;
-}
-
-.rune-import-status.success { color:var(--gold-light); }
-.rune-import-status.error { color:#ffb1a6; }
-
 .rune-tree-grid {
   display:grid;
   grid-template-columns:1fr 1fr;
