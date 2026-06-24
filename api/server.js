@@ -212,7 +212,10 @@ async function sendMagicLinkEmail(email, magicLink) {
       console.log(`Magic login link for ${email}: ${magicLink}`);
       return;
     }
-    throw new Error('Magic link email is not configured.');
+    const error = new Error('Magic link email is not configured.');
+    error.code = 'MAGIC_EMAIL_NOT_CONFIGURED';
+    error.status = 503;
+    throw error;
   }
 
   const response = await fetch('https://api.resend.com/emails', {
@@ -236,8 +239,26 @@ async function sendMagicLinkEmail(email, magicLink) {
 
   if (!response.ok) {
     const detail = await response.text().catch(() => '');
-    throw new Error(`Magic link email failed to send. ${detail}`.trim());
+    const error = new Error(`Magic link email failed to send. ${detail}`.trim());
+    error.code = 'MAGIC_EMAIL_SEND_FAILED';
+    error.status = 503;
+    error.detail = detail;
+    throw error;
   }
+}
+
+function magicEmailErrorMessage(error) {
+  const detail = String(error && (error.detail || error.message) || '').toLowerCase();
+
+  if (error && error.code === 'MAGIC_EMAIL_NOT_CONFIGURED') {
+    return 'Magic login email is not configured yet.';
+  }
+
+  if (detail.includes('domain') || detail.includes('verify') || detail.includes('verified') || detail.includes('sender')) {
+    return 'Magic login email is not ready yet. Finish verifying the sender domain in Resend, then try again.';
+  }
+
+  return 'Magic login could not send a sign-in link. Please try again later.';
 }
 
 function getStripeCustomerId(session) {
@@ -729,7 +750,7 @@ app.post('/auth/magic/request', express.json({ limit: '8kb' }), async (req, res)
     return res.json({ ok: true, message: genericMessage });
   } catch (error) {
     console.error('Magic link request failed:', error);
-    return res.status(500).json({ ok: false, message: 'Magic login could not send a sign-in link.' });
+    return res.status(error.status || 500).json({ ok: false, message: magicEmailErrorMessage(error) });
   }
 });
 
