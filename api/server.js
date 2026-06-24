@@ -53,7 +53,14 @@ const stripe = process.env.STRIPE_SECRET_KEY
   : null;
 const SCOPES = 'identity identity[email] identity.memberships';
 const REQUIRED_TIER_ID = (process.env.PATREON_ALLOWED_TIER_ID || '').trim();
-const REQUIRED_TIER_NAME = (process.env.PATREON_ALLOWED_TIER_NAME || 'Hwei Apprentice').trim();
+const REQUIRED_TIER_NAMES = (
+  process.env.PATREON_ALLOWED_TIER_NAMES
+  || process.env.PATREON_ALLOWED_TIER_NAME
+  || 'Hwei Apprentice'
+)
+  .split(',')
+  .map((tierName) => tierName.trim())
+  .filter(Boolean);
 const ALLOWED_EMAILS = new Set(
   (process.env.PATREON_ALLOWED_EMAILS || '')
     .split(',')
@@ -466,10 +473,11 @@ function extractPatreonAccess(identityJson) {
     entitledTiers.map((tier) => [tier.id || normalizeTierName(tier.title), tier])
   ).values());
 
-  const matchedTier = uniqueEntitledTiers.find((tier) => {
-    if (REQUIRED_TIER_ID) return tier.id === REQUIRED_TIER_ID;
-    return normalizeTierName(tier.title) === normalizeTierName(REQUIRED_TIER_NAME);
-  }) || null;
+  const requiredTierNameSet = new Set(REQUIRED_TIER_NAMES.map(normalizeTierName));
+  const matchedTier = uniqueEntitledTiers.find((tier) => (
+    (REQUIRED_TIER_ID && tier.id === REQUIRED_TIER_ID)
+    || requiredTierNameSet.has(normalizeTierName(tier.title))
+  )) || null;
 
   return {
     entitledTiers: uniqueEntitledTiers,
@@ -617,7 +625,7 @@ app.get('/auth/patreon/callback', async (req, res) => {
       const entitledTierSummary = access.entitledTiers.map((tier) => tier.title || tier.id).filter(Boolean);
       console.warn('Patreon login denied: required tier missing.', {
         requiredTierId: REQUIRED_TIER_ID || null,
-        requiredTierName: REQUIRED_TIER_NAME,
+        requiredTierNames: REQUIRED_TIER_NAMES,
         allowedEmailCount: ALLOWED_EMAILS.size,
         stripeLifetimeAccess: false,
         userEmail: userEmail || null,
