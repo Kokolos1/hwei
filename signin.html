@@ -15,8 +15,13 @@
       --danger-bg: #fff1f2;
       --danger-border: #fecdd3;
       --danger-text: #b42318;
+      --success-bg: #ecfdf3;
+      --success-border: #abefc6;
+      --success-text: #067647;
       --button-bg: #ff3b4a;
       --button-hover: #e12b39;
+      --stripe-bg: #635bff;
+      --stripe-hover: #4f46e5;
     }
 
     * { box-sizing: border-box; }
@@ -69,6 +74,18 @@
     }
 
     .notice.show { display: block; }
+    .notice.success {
+      border-color: var(--success-border);
+      background: var(--success-bg);
+      color: var(--success-text);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
 
     .btn {
       display: inline-block;
@@ -76,14 +93,31 @@
       background: var(--button-bg);
       color: #fff;
       border-radius: 6px;
+      border: 0;
       text-decoration: none;
+      font: inherit;
       font-weight: 700;
       transition: background-color 0.18s ease;
+      cursor: pointer;
     }
 
     .btn:hover,
     .btn:focus-visible {
       background: var(--button-hover);
+    }
+
+    .btn.stripe {
+      background: var(--stripe-bg);
+    }
+
+    .btn.stripe:hover,
+    .btn.stripe:focus-visible {
+      background: var(--stripe-hover);
+    }
+
+    .btn:disabled {
+      cursor: wait;
+      opacity: 0.72;
     }
 
     .footnote {
@@ -98,25 +132,72 @@
     <h1>Sign in to view the HweiGuide</h1>
     <div class="meta">Access is restricted to Patreon members with the Hwei Apprentice tier.</div>
     <div class="notice" id="signin-notice" role="alert"></div>
-    <a class="btn" href="/auth/patreon">Login with Patreon</a>
-    <div class="footnote">After signing in, you&rsquo;ll be redirected to the guide if your Patreon tier matches.</div>
+    <div class="actions">
+      <a class="btn" href="/auth/patreon">Login with Patreon</a>
+      <button class="btn stripe" type="button" id="buy-lifetime-access">Buy Lifetime Access</button>
+    </div>
+    <div class="footnote">After signing in, you&rsquo;ll be redirected to the guide if your Patreon tier matches or your email has lifetime access.</div>
   </div>
 
   <script>
     (function() {
       const messages = {
         tier_required: 'Your Patreon account is signed in, but it does not include the required Hwei Apprentice tier.',
-        oauth_failed: 'Patreon sign-in did not complete successfully. Please try again.'
+        oauth_failed: 'Patreon sign-in did not complete successfully. Please try again.',
+        stripe_checkout_failed: 'Stripe checkout could not be started. Please try again.'
+      };
+
+      const purchaseMessages = {
+        success: {
+          text: 'Purchase complete. Log in with Patreon using the same email you used at checkout to unlock the guide.',
+          state: 'success'
+        },
+        cancelled: {
+          text: 'Checkout was cancelled. You can restart the lifetime access purchase whenever you are ready.',
+          state: 'error'
+        }
       };
 
       const params = new URLSearchParams(window.location.search);
       const error = params.get('error');
+      const purchase = params.get('purchase');
       const notice = document.getElementById('signin-notice');
+      const buyButton = document.getElementById('buy-lifetime-access');
 
-      if (error && messages[error]) {
-        notice.textContent = messages[error];
+      function showNotice(message, state) {
+        notice.textContent = message;
+        notice.classList.toggle('success', state === 'success');
         notice.classList.add('show');
       }
+
+      if (error && messages[error]) {
+        showNotice(messages[error], 'error');
+      } else if (purchase && purchaseMessages[purchase]) {
+        showNotice(purchaseMessages[purchase].text, purchaseMessages[purchase].state);
+      }
+
+      buyButton.addEventListener('click', async () => {
+        const originalText = buyButton.textContent;
+        buyButton.disabled = true;
+        buyButton.textContent = 'Opening Checkout...';
+
+        try {
+          const response = await fetch('/api/stripe/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: '{}'
+          });
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok || !result.ok || !result.url) {
+            throw new Error(result.message || 'Unable to start checkout.');
+          }
+          window.location.href = result.url;
+        } catch (checkoutError) {
+          showNotice(checkoutError.message || messages.stripe_checkout_failed, 'error');
+          buyButton.disabled = false;
+          buyButton.textContent = originalText;
+        }
+      });
     })();
   </script>
 </body>

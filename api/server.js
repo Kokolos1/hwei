@@ -4,6 +4,8 @@ const session = require('express-session');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
 const path = require('path');
+const { Pool } = require('pg');
+const Stripe = require('stripe');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +25,15 @@ const PROTECTED_ROOT_FILES = new Set(['versions.json']);
 const PROTECTED_STATIC_DIRS = ['css', 'images', 'js', 'shared'];
 const SUPPORTED_TRANSLATION_LANGUAGES = new Set(['en', 'es', 'fr', 'de', 'pt', 'it', 'ro', 'tr', 'pl', 'ru', 'ko', 'ja']);
 const translationCache = new Map();
+const DATABASE_URL = process.env.DATABASE_URL;
+const db = DATABASE_URL
+  ? new Pool({
+      connectionString: DATABASE_URL,
+      ssl: DATABASE_URL.includes('sslmode=require') || process.env.PGSSLMODE === 'require'
+        ? { rejectUnauthorized: false }
+        : undefined
+    })
+  : null;
 
 const IN_PROD = process.env.NODE_ENV === 'production';
 const DEPLOY_MARKER = process.env.RAILWAY_GIT_COMMIT_SHA
@@ -32,6 +43,11 @@ const CLIENT_ID = process.env.PATREON_CLIENT_ID;
 const CLIENT_SECRET = process.env.PATREON_CLIENT_SECRET;
 const REDIRECT_URI = process.env.PATREON_REDIRECT_URI;
 const FRONTEND_URL = process.env.FRONTEND_URL || `http://localhost:${PORT}`;
+const STRIPE_PRICE_ID_HWEI_LIFETIME = process.env.STRIPE_PRICE_ID_HWEI_LIFETIME;
+const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY)
+  : null;
 const SCOPES = 'identity identity[email] identity.memberships';
 const REQUIRED_TIER_ID = (process.env.PATREON_ALLOWED_TIER_ID || '').trim();
 const REQUIRED_TIER_NAME = (process.env.PATREON_ALLOWED_TIER_NAME || 'Hwei Apprentice').trim();
@@ -103,6 +119,135 @@ function clearPatreonSession(req, keepReturnTo = false) {
   delete req.session.tokens;
   delete req.session.user;
   if (!keepReturnTo) delete req.session.returnTo;
+}
+
+async function initDatabase() {
+  if (!db) {
+    console.warn('DATABASE_URL is not set; lifetime access storage is disabled.');
+    return;
+  }
+
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS lifetime_access (
+      id SERIAL PRIMARY KEY,
+      email TEXT UNIQUE NOT NULL,
+      source TEXT NOT NULL DEFAULT 'stripe',
+      stripe_customer_id TEXT,
+      stripe_checkout_session_id TEXT UNIQUE,
+      stripe_payment_intent_id TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS stripe_events (
+      id TEXT PRIMARY KEY,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+
+  await db.query(`
+    CREATE UNIQUE INDEX IF NOT EXISTS lifetime_access_email_lower_idx
+      ON lifetime_access (lower(email));
+  `);
+}
+
+async function hasLifetimeAccess(email) {
+  const normalizedEmail = normalizeEmail(email);
+  if (!db || !normalizedEmail) return false;
+
+  const result = await db.query(
+    'SELECT 1 FROM lifetime_access WHERE lower(email) = lower($1) LIMIT 1',
+    [normalizedEmail]
+  );
+  return result.rowCount > 0;
+}
+
+function getCheckoutSessionEmail(session) {
+  return normalizeEmail(
+    session
+      && session.customer_details
+      && session.customer_details.email
+      || session
+      && session.customer_email
+  );
+}
+
+function isLifetimeAccessSession(session) {
+  return Boolean(
+    session
+      && session.mode === 'payment'
+      && session.payment_status === 'paid'
+      && session.metadata
+      && session.metadata.product === 'hwei_lifetime_access'
+  );
+}
+
+async function fulfillStripeCheckoutSession(event) {
+  if (!db) {
+    const error = new Error('Database is not configured.');
+    error.code = 'DATABASE_NOT_CONFIGURED';
+    throw error;
+  }
+
+  const session = event.data && event.data.object;
+  const client = await db.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    const eventInsert = await client.query(
+      'INSERT INTO stripe_events (id) VALUES ($1) ON CONFLICT DO NOTHING RETURNING id',
+      [event.id]
+    );
+
+    if (eventInsert.rowCount === 0) {
+      await client.query('COMMIT');
+      return { processed: false, reason: 'duplicate_event' };
+    }
+
+    if (!isLifetimeAccessSession(session)) {
+      await client.query('COMMIT');
+      return { processed: true, granted: false, reason: 'not_lifetime_access_session' };
+    }
+
+    const email = getCheckoutSessionEmail(session);
+    if (!email) {
+      throw new Error('Stripe checkout session is missing a customer email.');
+    }
+
+    await client.query(
+      `
+        INSERT INTO lifetime_access (
+          email,
+          source,
+          stripe_customer_id,
+          stripe_checkout_session_id,
+          stripe_payment_intent_id
+        )
+        VALUES ($1, 'stripe', $2, $3, $4)
+        ON CONFLICT (email) DO UPDATE SET
+          source = EXCLUDED.source,
+          stripe_customer_id = COALESCE(EXCLUDED.stripe_customer_id, lifetime_access.stripe_customer_id),
+          stripe_checkout_session_id = COALESCE(EXCLUDED.stripe_checkout_session_id, lifetime_access.stripe_checkout_session_id),
+          stripe_payment_intent_id = COALESCE(EXCLUDED.stripe_payment_intent_id, lifetime_access.stripe_payment_intent_id)
+      `,
+      [
+        email,
+        typeof session.customer === 'string' ? session.customer : null,
+        session.id || null,
+        typeof session.payment_intent === 'string' ? session.payment_intent : null
+      ]
+    );
+
+    await client.query('COMMIT');
+    return { processed: true, granted: true, email };
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
 }
 
 async function translateBatch(texts, target) {
@@ -346,13 +491,17 @@ app.get('/auth/patreon/callback', async (req, res) => {
     const access = extractPatreonAccess(identityJson);
     const userEmail = normalizeEmail(identityJson.data && identityJson.data.attributes && identityJson.data.attributes.email);
     const hasEmailAccess = userEmail && ALLOWED_EMAILS.has(userEmail);
+    const hasStripeLifetimeAccess = !access.hasAccess && !hasEmailAccess
+      ? await hasLifetimeAccess(userEmail)
+      : false;
 
-    if (!access.hasAccess && !hasEmailAccess) {
+    if (!access.hasAccess && !hasEmailAccess && !hasStripeLifetimeAccess) {
       const entitledTierSummary = access.entitledTiers.map((tier) => tier.title || tier.id).filter(Boolean);
       console.warn('Patreon login denied: required tier missing.', {
         requiredTierId: REQUIRED_TIER_ID || null,
         requiredTierName: REQUIRED_TIER_NAME,
         allowedEmailCount: ALLOWED_EMAILS.size,
+        stripeLifetimeAccess: false,
         userEmail: userEmail || null,
         entitledTiers: entitledTierSummary
       });
@@ -365,7 +514,7 @@ app.get('/auth/patreon/callback', async (req, res) => {
       attributes: identityJson.data && identityJson.data.attributes,
       entitled_tiers: access.entitledTiers,
       matched_tier: access.matchedTier,
-      access_source: hasEmailAccess ? 'email' : 'tier',
+      access_source: hasEmailAccess ? 'email' : (hasStripeLifetimeAccess ? 'stripe_lifetime' : 'tier'),
       has_access: true,
       raw: identityJson
     };
@@ -377,6 +526,34 @@ app.get('/auth/patreon/callback', async (req, res) => {
     console.error(err);
     clearPatreonSession(req, true);
     res.redirect(buildSigninRedirect('oauth_failed'));
+  }
+});
+
+app.post('/webhooks/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
+  if (!stripe || !STRIPE_WEBHOOK_SECRET) {
+    return res.status(500).json({ ok: false, message: 'Stripe webhook is not configured.' });
+  }
+
+  const signature = req.headers['stripe-signature'];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, signature, STRIPE_WEBHOOK_SECRET);
+  } catch (error) {
+    console.warn('Stripe webhook signature verification failed:', error.message);
+    return res.status(400).send(`Webhook Error: ${error.message}`);
+  }
+
+  try {
+    if (event.type === 'checkout.session.completed') {
+      const result = await fulfillStripeCheckoutSession(event);
+      return res.json({ received: true, ...result });
+    }
+
+    return res.json({ received: true, ignored: true });
+  } catch (error) {
+    console.error('Stripe webhook fulfillment failed:', error);
+    return res.status(500).json({ received: false, message: 'Stripe webhook fulfillment failed.' });
   }
 });
 
@@ -417,6 +594,38 @@ app.get('/api/me', requireSiteAccess, (req, res) => {
   res.json({ authenticated: true, user: req.session.user });
 });
 
+app.post('/api/stripe/create-checkout-session', express.json({ limit: '8kb' }), async (req, res) => {
+  if (!stripe) {
+    return res.status(500).json({ ok: false, message: 'Stripe is not configured.' });
+  }
+
+  if (!STRIPE_PRICE_ID_HWEI_LIFETIME) {
+    return res.status(500).json({ ok: false, message: 'Stripe lifetime price is not configured.' });
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      line_items: [
+        {
+          price: STRIPE_PRICE_ID_HWEI_LIFETIME,
+          quantity: 1
+        }
+      ],
+      success_url: `${FRONTEND_URL}/signin?purchase=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${FRONTEND_URL}/signin?purchase=cancelled`,
+      metadata: {
+        product: 'hwei_lifetime_access'
+      }
+    });
+
+    return res.json({ ok: true, url: session.url });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ ok: false, message: 'Unable to create checkout session.' });
+  }
+});
+
 app.post('/api/translate', requireSiteAccess, express.json({ limit: '128kb' }), async (req, res) => {
   const target = String(req.body.target || 'en').toLowerCase();
   const texts = Array.isArray(req.body.texts) ? req.body.texts : [];
@@ -444,4 +653,11 @@ app.get('/logout', (req, res) => {
   });
 });
 
-app.listen(PORT, () => console.log(`Patreon OAuth API listening on http://localhost:${PORT}`));
+initDatabase()
+  .then(() => {
+    app.listen(PORT, () => console.log(`Patreon OAuth API listening on http://localhost:${PORT}`));
+  })
+  .catch((error) => {
+    console.error('Database initialization failed:', error);
+    process.exit(1);
+  });
