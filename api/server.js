@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 const webRoot = path.join(__dirname, '..');
 const HOME_FILE = path.join(webRoot, 'index.html');
 const SIGNIN_FILE = path.join(webRoot, 'signin.html');
+const POSTHOG_ANALYTICS_FILE = path.join(webRoot, 'js', 'posthog-analytics.js');
 const PROTECTED_PAGE_FILES = new Set([
   'index.html',
   'abilities.html',
@@ -39,6 +40,8 @@ const IN_PROD = process.env.NODE_ENV === 'production';
 const DEPLOY_MARKER = process.env.RAILWAY_GIT_COMMIT_SHA
   || process.env.RAILWAY_DEPLOYMENT_ID
   || 'local';
+const POSTHOG_PUBLIC_KEY = (process.env.POSTHOG_PUBLIC_KEY || process.env.POSTHOG_PROJECT_TOKEN || '').trim();
+const POSTHOG_HOST = (process.env.POSTHOG_HOST || 'https://us.i.posthog.com').trim();
 const CLIENT_ID = process.env.PATREON_CLIENT_ID;
 const CLIENT_SECRET = process.env.PATREON_CLIENT_SECRET;
 const REDIRECT_URI = process.env.PATREON_REDIRECT_URI;
@@ -546,6 +549,15 @@ app.get('/api/deploy-info', (req, res) => {
   });
 });
 
+app.get('/api/posthog-config', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.json({
+    enabled: Boolean(POSTHOG_PUBLIC_KEY),
+    key: POSTHOG_PUBLIC_KEY || null,
+    host: POSTHOG_HOST
+  });
+});
+
 // Start OAuth flow
 app.get('/auth/patreon', (req, res) => {
   if (typeof req.query.next === 'string' && req.query.next.startsWith('/') && !req.query.next.startsWith('//')) {
@@ -818,6 +830,11 @@ app.get('/auth/magic/verify', async (req, res) => {
   } finally {
     client.release();
   }
+});
+
+app.get('/js/posthog-analytics.js', (req, res) => {
+  res.set('Cache-Control', IN_PROD ? 'public, max-age=300' : 'no-store');
+  res.sendFile(POSTHOG_ANALYTICS_FILE);
 });
 
 PROTECTED_STATIC_DIRS.forEach((dirName) => {
