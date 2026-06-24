@@ -6,69 +6,244 @@
   <title>Sign in - HweiGuide</title>
   <style>
     :root {
-      color-scheme: light;
-      --page-bg: #f5efe2;
-      --card-bg: #ffffff;
-      --card-border: #e6e2db;
-      --text-main: #101828;
-      --text-muted: #667085;
-      --danger-bg: #fff1f2;
-      --danger-border: #fecdd3;
-      --danger-text: #b42318;
-      --success-bg: #ecfdf3;
-      --success-border: #abefc6;
-      --success-text: #067647;
-      --button-bg: #ff3b4a;
-      --button-hover: #e12b39;
-      --stripe-bg: #635bff;
-      --stripe-hover: #4f46e5;
+      color-scheme: dark;
+      --navy: #120d1a;
+      --navy-mid: #1b1425;
+      --navy-light: #2a2136;
+      --ink: #fff7df;
+      --text-main: #fff7df;
+      --text-muted: rgba(255, 247, 223, 0.68);
+      --text-soft: rgba(255, 247, 223, 0.50);
+      --gold: #d6ad4c;
+      --gold-light: #f0d77d;
+      --disaster: #d76e46;
+      --serenity: #4db5c6;
+      --torment: #8d6ae3;
+      --danger-bg: rgba(139, 26, 26, 0.22);
+      --danger-border: rgba(239, 120, 100, 0.52);
+      --danger-text: #ffd4ca;
+      --success-bg: rgba(63, 146, 168, 0.18);
+      --success-border: rgba(99, 221, 193, 0.52);
+      --success-text: #cbfff2;
+      --button-bg: #ff4057;
+      --button-hover: #df3044;
+      --stripe-bg: #6f5aa8;
+      --stripe-hover: #8169c2;
     }
 
     * { box-sizing: border-box; }
+    html { min-height: 100%; }
+
     body {
       margin: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: grid;
+      place-items: center;
       min-height: 100vh;
-      padding: 24px;
-      background:
-        radial-gradient(circle at top, rgba(255, 255, 255, 0.82), transparent 38%),
-        linear-gradient(160deg, #f8f1df 0%, #efe3cd 48%, #eadcc8 100%);
+      padding: clamp(18px, 3vw, 40px) clamp(22px, 4vw, 58px);
+      background: #0e0a14;
       color: var(--text-main);
-      font-family: Georgia, 'Times New Roman', serif;
+      font-family: 'Inter', 'Source Serif 4', Georgia, serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    body::before {
+      z-index: -3;
+      inset: -3%;
+      background:
+        linear-gradient(90deg, rgba(8, 5, 13, 0.86), rgba(16, 10, 24, 0.62) 48%, rgba(8, 5, 13, 0.86)),
+        url("images/hwei-login-bg.jpg") center center / cover no-repeat;
+      filter: saturate(1.12) contrast(1.04);
+      transform: scale(1.04);
+      animation: canvasDrift 26s ease-in-out infinite alternate;
+    }
+
+    body::after {
+      z-index: -2;
+      background:
+        radial-gradient(circle at 16% 14%, rgba(63, 146, 168, 0.28), transparent 22rem),
+        radial-gradient(circle at 78% 20%, rgba(185, 93, 61, 0.24), transparent 24rem),
+        radial-gradient(circle at 52% 84%, rgba(111, 90, 168, 0.34), transparent 26rem),
+        linear-gradient(180deg, rgba(12, 8, 18, 0.08), rgba(12, 8, 18, 0.62));
+    }
+
+    @keyframes canvasDrift {
+      from { transform: scale(1.04) translate3d(-1.2%, -0.8%, 0); }
+      to { transform: scale(1.09) translate3d(1.6%, 1%, 0); }
+    }
+
+    @keyframes paintCurrent {
+      0%, 100% { transform: translate3d(-1%, -1%, 0) rotate(0deg); opacity: 0.34; }
+      50% { transform: translate3d(1%, 1%, 0) rotate(2deg); opacity: 0.52; }
+    }
+
+    .auth-stage {
+      width: min(1100px, 100%);
+      position: relative;
+      z-index: 1;
+    }
+
+    .paint-wash {
+      position: fixed;
+      inset: -18%;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        conic-gradient(from 125deg at 28% 42%, transparent 0deg, rgba(63, 146, 168, 0.20) 42deg, transparent 96deg, rgba(214, 109, 70, 0.17) 164deg, transparent 236deg, rgba(141, 106, 227, 0.20) 300deg, transparent 360deg);
+      filter: blur(46px);
+      mix-blend-mode: screen;
+      animation: paintCurrent 18s ease-in-out infinite;
     }
 
     .card {
-      max-width: 760px;
       width: 100%;
-      padding: 40px 36px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10);
-      text-align: center;
+      min-height: 560px;
+      display: grid;
+      grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr);
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(240, 215, 125, 0.26);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(18, 13, 26, 0.94), rgba(27, 20, 37, 0.92)),
+        rgba(18, 13, 26, 0.86);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.42), 0 0 70px rgba(111, 90, 168, 0.20);
+      backdrop-filter: blur(16px);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0 0 auto;
+      height: 3px;
+      background: linear-gradient(90deg, var(--serenity), var(--gold-light), var(--disaster), var(--torment));
+      z-index: 2;
+    }
+
+    .art-rail {
+      position: relative;
+      min-height: 100%;
+      padding: clamp(26px, 3.4vw, 42px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 34px;
+      overflow: hidden;
+      border-right: 1px solid rgba(240, 215, 125, 0.18);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(77, 181, 198, 0.18), transparent 15rem),
+        radial-gradient(circle at 80% 72%, rgba(215, 110, 70, 0.20), transparent 17rem),
+        linear-gradient(160deg, rgba(26, 19, 37, 0.70), rgba(15, 12, 22, 0.92));
+    }
+
+    .art-rail::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(18, 13, 26, 0.18), rgba(18, 13, 26, 0.84)),
+        url("images/hwei-login-bg.jpg") 34% center / cover no-repeat;
+      opacity: 0.52;
+      transform: scale(1.05);
+    }
+
+    .art-rail > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-eyebrow,
+    .auth-kicker,
+    .magic-label {
+      color: var(--gold-light);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .auth-brand {
+      margin-top: 9px;
+      color: var(--ink);
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(2.2rem, 4vw, 3.45rem);
+      font-weight: 800;
+      line-height: 0.96;
+      text-shadow: 0 10px 34px rgba(0, 0, 0, 0.55);
+    }
+
+    .rail-copy {
+      max-width: 280px;
+      margin-top: 16px;
+      color: rgba(255, 247, 223, 0.72);
+      font-size: 0.96rem;
+      line-height: 1.65;
+    }
+
+    .ability-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 46px);
+      gap: 10px;
+    }
+
+    .ability-strip img {
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      border: 1px solid rgba(240, 215, 125, 0.42);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.32);
+      object-fit: cover;
+    }
+
+    .rail-note {
+      width: min(100%, 320px);
+      padding-left: 14px;
+      border-left: 3px solid var(--serenity);
+      color: rgba(255, 247, 223, 0.76);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .auth-panel {
+      padding: clamp(28px, 4vw, 44px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     h1 {
-      margin: 0 0 8px;
-      font-size: clamp(2rem, 3vw, 2.7rem);
-      line-height: 1.1;
+      margin: 12px 0 10px;
+      color: var(--ink);
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(2.2rem, 4.4vw, 3.75rem);
+      line-height: 0.98;
+      letter-spacing: -0.02em;
     }
 
     .meta {
-      margin-bottom: 18px;
+      max-width: 620px;
+      margin: 0 0 22px;
       color: var(--text-muted);
-      font-size: 1.02rem;
+      font-size: 1rem;
+      line-height: 1.65;
     }
 
     .notice {
       display: none;
-      margin: 0 auto 20px;
-      max-width: 520px;
-      padding: 12px 14px;
+      margin: 0 0 22px;
+      padding: 13px 15px;
       border: 1px solid var(--danger-border);
       background: var(--danger-bg);
       color: var(--danger-text);
+      border-radius: 6px;
       font-size: 0.98rem;
       line-height: 1.45;
     }
@@ -83,36 +258,50 @@
     .actions {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
       gap: 12px;
     }
 
     .btn {
-      display: inline-block;
-      padding: 12px 18px;
-      background: var(--button-bg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 20px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.10), transparent),
+        var(--button-bg);
       color: #fff;
       border-radius: 6px;
       border: 0;
       text-decoration: none;
       font: inherit;
-      font-weight: 700;
-      transition: background-color 0.18s ease;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      box-shadow: 0 12px 26px rgba(255, 64, 87, 0.22);
+      transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
       cursor: pointer;
     }
 
     .btn:hover,
     .btn:focus-visible {
       background: var(--button-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 16px 30px rgba(255, 64, 87, 0.28);
     }
 
     .btn.stripe {
-      background: var(--stripe-bg);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.11), transparent),
+        linear-gradient(135deg, var(--stripe-bg), #4f3d86);
+      box-shadow: 0 12px 26px rgba(111, 90, 168, 0.32);
     }
 
     .btn.stripe:hover,
     .btn.stripe:focus-visible {
-      background: var(--stripe-hover);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.13), transparent),
+        linear-gradient(135deg, var(--stripe-hover), #5b4896);
+      box-shadow: 0 16px 30px rgba(111, 90, 168, 0.40);
     }
 
     .btn:disabled {
@@ -124,11 +313,11 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      margin: 28px auto 18px;
-      max-width: 540px;
-      color: #98a2b3;
-      font-size: 0.86rem;
-      letter-spacing: 0.08em;
+      margin: 24px 0 18px;
+      color: var(--text-soft);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
     }
 
@@ -137,88 +326,166 @@
       content: '';
       flex: 1;
       height: 1px;
-      background: var(--card-border);
+      background: linear-gradient(90deg, transparent, rgba(240, 215, 125, 0.38), transparent);
     }
 
     .magic-login {
-      max-width: 540px;
-      margin: 0 auto;
-      padding: 18px;
-      border: 1px solid var(--card-border);
-      background: #fbfaf7;
+      padding: 16px 0 0;
+      border-top: 1px solid rgba(240, 215, 125, 0.14);
       text-align: left;
     }
 
     .magic-login h2 {
-      margin: 0 0 6px;
-      font-size: 1.15rem;
+      margin: 7px 0 8px;
+      color: var(--ink);
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 1.28rem;
       line-height: 1.2;
     }
 
     .magic-login p {
-      margin: 0 0 14px;
+      max-width: 560px;
+      margin: 0 0 16px;
       color: var(--text-muted);
-      font-size: 0.94rem;
+      font-size: 0.95rem;
       line-height: 1.45;
     }
 
     .magic-form {
       display: flex;
-      gap: 10px;
+      gap: 12px;
     }
 
     .magic-form input {
       flex: 1;
       min-width: 0;
-      padding: 12px 13px;
-      border: 1px solid var(--card-border);
+      min-height: 46px;
+      padding: 12px 14px;
+      border: 1px solid rgba(240, 215, 125, 0.26);
       border-radius: 6px;
       color: var(--text-main);
+      background: rgba(8, 5, 13, 0.58);
       font: inherit;
     }
 
+    .magic-form input::placeholder {
+      color: rgba(255, 247, 223, 0.36);
+    }
+
     .magic-form input:focus {
-      outline: 2px solid rgba(99, 91, 255, 0.24);
-      border-color: var(--stripe-bg);
+      outline: 2px solid rgba(77, 181, 198, 0.24);
+      border-color: var(--serenity);
+    }
+
+    .magic-form .btn {
+      white-space: nowrap;
+    }
+
+    .footnote {
+      margin-top: 16px;
+      color: var(--text-soft);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 860px) {
+      body {
+        place-items: start center;
+      }
+
+      .card {
+        grid-template-columns: 1fr;
+      }
+
+      .art-rail {
+        min-height: 270px;
+        border-right: 0;
+        border-bottom: 1px solid rgba(240, 215, 125, 0.18);
+      }
+
+      .auth-brand {
+        max-width: 520px;
+      }
     }
 
     @media (max-width: 620px) {
+      body {
+        padding: 16px;
+      }
+
+      .actions,
       .magic-form {
         flex-direction: column;
       }
 
+      .actions .btn,
       .magic-form .btn {
         width: 100%;
       }
+
+      .ability-strip {
+        grid-template-columns: repeat(5, 38px);
+      }
+
+      .ability-strip img {
+        width: 38px;
+        height: 38px;
+      }
     }
 
-    .footnote {
-      margin-top: 18px;
-      color: #98a2b3;
-      font-size: 0.92rem;
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Sign in to view the HweiGuide</h1>
-    <div class="meta">Access is restricted to Patreon members with the Hwei Apprentice tier.</div>
-    <div class="notice" id="signin-notice" role="alert"></div>
-    <div class="actions">
-      <a class="btn" href="/auth/patreon">Login with Patreon</a>
-      <button class="btn stripe" type="button" id="buy-lifetime-access">Buy Lifetime Access</button>
-    </div>
-    <div class="divider">or</div>
-    <div class="magic-login">
-      <h2>Already bought lifetime access?</h2>
-      <p>Enter the email you used at checkout and we&rsquo;ll send a one-time sign-in link.</p>
-      <form class="magic-form" id="magic-login-form">
-        <input type="email" id="magic-email" name="email" autocomplete="email" placeholder="you@example.com" required>
-        <button class="btn stripe" type="submit" id="magic-login-submit">Email Login Link</button>
-      </form>
-    </div>
-    <div class="footnote">After signing in, you&rsquo;ll be redirected to the guide if your Patreon tier matches or your email has lifetime access.</div>
-  </div>
+  <main class="auth-stage">
+    <div class="paint-wash" aria-hidden="true"></div>
+    <section class="card" aria-labelledby="signin-title">
+      <aside class="art-rail" aria-label="HweiGuide access">
+        <div>
+          <div class="auth-eyebrow">Ultimate Compendium</div>
+          <div class="auth-brand">The HweiGuide</div>
+          <p class="rail-copy">Bot lane/APC theory, matchups, rune pages, itemization, and combo references by evandabank.</p>
+        </div>
+        <div class="ability-strip" aria-hidden="true">
+          <img src="images/abilities/upscaled/hwei-passive.png" alt="">
+          <img src="images/abilities/upscaled/hwei-q.png" alt="">
+          <img src="images/abilities/upscaled/hwei-w.png" alt="">
+          <img src="images/abilities/upscaled/hwei-e.png" alt="">
+          <img src="images/abilities/upscaled/hwei-r.png" alt="">
+        </div>
+        <div class="rail-note">Access unlocks the complete guide experience across every tab.</div>
+      </aside>
+      <div class="auth-panel">
+        <div class="auth-kicker">Members Area</div>
+        <h1 id="signin-title">Sign in to view the HweiGuide</h1>
+        <p class="meta">Access is restricted to Patreon members with the Hwei Apprentice tier. Lifetime access can also be unlocked with the email used at checkout.</p>
+        <div class="notice" id="signin-notice" role="alert"></div>
+        <div class="actions">
+          <a class="btn" href="/auth/patreon">Login with Patreon</a>
+          <button class="btn stripe" type="button" id="buy-lifetime-access">Buy Lifetime Access</button>
+        </div>
+        <div class="divider">or</div>
+        <div class="magic-login">
+          <div class="magic-label">Lifetime Access</div>
+          <h2>Already bought lifetime access?</h2>
+          <p>Enter the email you used at checkout and we&rsquo;ll send a one-time sign-in link.</p>
+          <form class="magic-form" id="magic-login-form">
+            <input type="email" id="magic-email" name="email" autocomplete="email" placeholder="you@example.com" required>
+            <button class="btn stripe" type="submit" id="magic-login-submit">Email Login Link</button>
+          </form>
+        </div>
+        <div class="footnote">After signing in, you&rsquo;ll be redirected to the guide if your Patreon tier matches or your email has lifetime access.</div>
+      </div>
+    </section>
+  </main>
 
   <script>
     (function() {
