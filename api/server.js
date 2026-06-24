@@ -45,6 +45,9 @@ const REDIRECT_URI = process.env.PATREON_REDIRECT_URI;
 const FRONTEND_URL = process.env.FRONTEND_URL || `http://localhost:${PORT}`;
 const STRIPE_PRICE_ID_HWEI_LIFETIME = process.env.STRIPE_PRICE_ID_HWEI_LIFETIME;
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const MAGIC_LINK_FROM = process.env.MAGIC_LINK_FROM || 'HweiGuide <login@hweiguide.evandabank.com>';
+const MAGIC_LINK_TTL_MINUTES = Number(process.env.MAGIC_LINK_TTL_MINUTES || 20);
 const stripe = process.env.STRIPE_SECRET_KEY
   ? new Stripe(process.env.STRIPE_SECRET_KEY)
   : null;
@@ -150,6 +153,24 @@ async function initDatabase() {
     CREATE UNIQUE INDEX IF NOT EXISTS lifetime_access_email_lower_idx
       ON lifetime_access (lower(email));
   `);
+
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS magic_login_tokens (
+      id SERIAL PRIMARY KEY,
+      email TEXT NOT NULL,
+      token_hash TEXT UNIQUE NOT NULL,
+      expires_at TIMESTAMPTZ NOT NULL,
+      consumed_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+
+  await db.query(`
+    CREATE INDEX IF NOT EXISTS magic_login_tokens_email_idx
+      ON magic_login_tokens (lower(email));
+  `);
+
+  await db.query('DELETE FROM magic_login_tokens WHERE expires_at < NOW() - INTERVAL \'1 day\';');
 }
 
 async function hasLifetimeAccess(email) {
@@ -163,6 +184,70 @@ async function hasLifetimeAccess(email) {
   return result.rowCount > 0;
 }
 
+async function hasMagicLoginAccess(email) {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) return false;
+  if (ALLOWED_EMAILS.has(normalizedEmail)) return true;
+  return hasLifetimeAccess(normalizedEmail);
+}
+
+function createMagicToken() {
+  const token = crypto.randomBytes(32).toString('base64url');
+  const hash = crypto.createHash('sha256').update(token).digest('hex');
+  return { token, hash };
+}
+
+async function sendMagicLinkEmail(email, magicLink) {
+  const subject = 'Your HweiGuide login link';
+  const text = [
+    'Use this link to sign in to HweiGuide:',
+    '',
+    magicLink,
+    '',
+    `This link expires in ${MAGIC_LINK_TTL_MINUTES} minutes. If you did not request it, you can ignore this email.`
+  ].join('\n');
+
+  if (!RESEND_API_KEY) {
+    if (!IN_PROD) {
+      console.log(`Magic login link for ${email}: ${magicLink}`);
+      return;
+    }
+    throw new Error('Magic link email is not configured.');
+  }
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      from: MAGIC_LINK_FROM,
+      to: email,
+      subject,
+      text,
+      html: `
+        <p>Use this link to sign in to HweiGuide:</p>
+        <p><a href="${magicLink}">Sign in to HweiGuide</a></p>
+        <p>This link expires in ${MAGIC_LINK_TTL_MINUTES} minutes. If you did not request it, you can ignore this email.</p>
+      `
+    })
+  });
+
+  if (!response.ok) {
+    const detail = await response.text().catch(() => '');
+    throw new Error(`Magic link email failed to send. ${detail}`.trim());
+  }
+}
+
+function getStripeCustomerId(session) {
+  return typeof session.customer === 'string' ? session.customer : null;
+}
+
+function getStripePaymentIntentId(session) {
+  return typeof session.payment_intent === 'string' ? session.payment_intent : null;
+}
+
 function getCheckoutSessionEmail(session) {
   return normalizeEmail(
     session
@@ -171,6 +256,45 @@ function getCheckoutSessionEmail(session) {
       || session
       && session.customer_email
   );
+}
+
+async function upsertLifetimeAccessFromCheckoutSession(session, client = db) {
+  if (!client) {
+    const error = new Error('Database is not configured.');
+    error.code = 'DATABASE_NOT_CONFIGURED';
+    throw error;
+  }
+
+  const email = getCheckoutSessionEmail(session);
+  if (!email) {
+    throw new Error('Stripe checkout session is missing a customer email.');
+  }
+
+  await client.query(
+    `
+      INSERT INTO lifetime_access (
+        email,
+        source,
+        stripe_customer_id,
+        stripe_checkout_session_id,
+        stripe_payment_intent_id
+      )
+      VALUES ($1, 'stripe', $2, $3, $4)
+      ON CONFLICT (email) DO UPDATE SET
+        source = EXCLUDED.source,
+        stripe_customer_id = COALESCE(EXCLUDED.stripe_customer_id, lifetime_access.stripe_customer_id),
+        stripe_checkout_session_id = COALESCE(EXCLUDED.stripe_checkout_session_id, lifetime_access.stripe_checkout_session_id),
+        stripe_payment_intent_id = COALESCE(EXCLUDED.stripe_payment_intent_id, lifetime_access.stripe_payment_intent_id)
+    `,
+    [
+      email,
+      getStripeCustomerId(session),
+      session.id || null,
+      getStripePaymentIntentId(session)
+    ]
+  );
+
+  return email;
 }
 
 function isLifetimeAccessSession(session) {
@@ -211,34 +335,7 @@ async function fulfillStripeCheckoutSession(event) {
       return { processed: true, granted: false, reason: 'not_lifetime_access_session' };
     }
 
-    const email = getCheckoutSessionEmail(session);
-    if (!email) {
-      throw new Error('Stripe checkout session is missing a customer email.');
-    }
-
-    await client.query(
-      `
-        INSERT INTO lifetime_access (
-          email,
-          source,
-          stripe_customer_id,
-          stripe_checkout_session_id,
-          stripe_payment_intent_id
-        )
-        VALUES ($1, 'stripe', $2, $3, $4)
-        ON CONFLICT (email) DO UPDATE SET
-          source = EXCLUDED.source,
-          stripe_customer_id = COALESCE(EXCLUDED.stripe_customer_id, lifetime_access.stripe_customer_id),
-          stripe_checkout_session_id = COALESCE(EXCLUDED.stripe_checkout_session_id, lifetime_access.stripe_checkout_session_id),
-          stripe_payment_intent_id = COALESCE(EXCLUDED.stripe_payment_intent_id, lifetime_access.stripe_payment_intent_id)
-      `,
-      [
-        email,
-        typeof session.customer === 'string' ? session.customer : null,
-        session.id || null,
-        typeof session.payment_intent === 'string' ? session.payment_intent : null
-      ]
-    );
+    const email = await upsertLifetimeAccessFromCheckoutSession(session, client);
 
     await client.query('COMMIT');
     return { processed: true, granted: true, email };
@@ -557,6 +654,143 @@ app.post('/webhooks/stripe', express.raw({ type: 'application/json' }), async (r
   }
 });
 
+app.get('/auth/stripe/success', async (req, res) => {
+  if (!stripe) {
+    return res.redirect(buildSigninRedirect('stripe_checkout_failed'));
+  }
+
+  const sessionId = typeof req.query.session_id === 'string' ? req.query.session_id : '';
+  if (!sessionId) {
+    return res.redirect(buildSigninRedirect('stripe_checkout_failed'));
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    if (!isLifetimeAccessSession(session)) {
+      return res.redirect(buildSigninRedirect('stripe_checkout_failed'));
+    }
+
+    const email = await upsertLifetimeAccessFromCheckoutSession(session);
+
+    req.session.user = {
+      id: getStripeCustomerId(session) || `stripe:${email}`,
+      attributes: { email },
+      entitled_tiers: [],
+      matched_tier: null,
+      access_source: 'stripe_lifetime',
+      has_access: true,
+      stripe_customer_id: getStripeCustomerId(session),
+      stripe_checkout_session_id: session.id
+    };
+
+    const dest = consumeReturnTo(req) || '/';
+    return res.redirect(dest);
+  } catch (error) {
+    console.error('Stripe checkout success verification failed:', error);
+    return res.redirect(buildSigninRedirect('stripe_checkout_failed'));
+  }
+});
+
+app.post('/auth/magic/request', express.json({ limit: '8kb' }), async (req, res) => {
+  const email = normalizeEmail(req.body && req.body.email);
+  const genericMessage = 'If that email has lifetime access, a sign-in link has been sent.';
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ ok: false, message: 'Enter a valid email address.' });
+  }
+
+  try {
+    const canUseMagicLogin = await hasMagicLoginAccess(email);
+    if (!canUseMagicLogin) {
+      return res.json({ ok: true, message: genericMessage });
+    }
+
+    if (!db) {
+      return res.status(503).json({ ok: false, message: 'Magic login is not configured.' });
+    }
+
+    const { token, hash } = createMagicToken();
+    const magicLink = `${FRONTEND_URL}/auth/magic/verify?token=${encodeURIComponent(token)}`;
+
+    await db.query(
+      'UPDATE magic_login_tokens SET consumed_at = NOW() WHERE lower(email) = lower($1) AND consumed_at IS NULL',
+      [email]
+    );
+    await db.query(
+      `
+        INSERT INTO magic_login_tokens (email, token_hash, expires_at)
+        VALUES ($1, $2, NOW() + ($3::text || ' minutes')::interval)
+      `,
+      [email, hash, MAGIC_LINK_TTL_MINUTES]
+    );
+
+    await sendMagicLinkEmail(email, magicLink);
+    return res.json({ ok: true, message: genericMessage });
+  } catch (error) {
+    console.error('Magic link request failed:', error);
+    return res.status(500).json({ ok: false, message: 'Magic login could not send a sign-in link.' });
+  }
+});
+
+app.get('/auth/magic/verify', async (req, res) => {
+  const token = typeof req.query.token === 'string' ? req.query.token : '';
+  if (!token || !db) {
+    return res.redirect(buildSigninRedirect('magic_failed'));
+  }
+
+  const hash = crypto.createHash('sha256').update(token).digest('hex');
+  const client = await db.connect();
+
+  try {
+    await client.query('BEGIN');
+    const result = await client.query(
+      `
+        SELECT email, expires_at, consumed_at
+        FROM magic_login_tokens
+        WHERE token_hash = $1
+        FOR UPDATE
+      `,
+      [hash]
+    );
+
+    const tokenRow = result.rows[0];
+    if (!tokenRow || tokenRow.consumed_at || new Date(tokenRow.expires_at) < new Date()) {
+      await client.query('ROLLBACK');
+      return res.redirect(buildSigninRedirect('magic_failed'));
+    }
+
+    const email = normalizeEmail(tokenRow.email);
+    const canUseMagicLogin = await hasMagicLoginAccess(email);
+    if (!canUseMagicLogin) {
+      await client.query('UPDATE magic_login_tokens SET consumed_at = NOW() WHERE token_hash = $1', [hash]);
+      await client.query('COMMIT');
+      return res.redirect(buildSigninRedirect('magic_failed'));
+    }
+
+    await client.query('UPDATE magic_login_tokens SET consumed_at = NOW() WHERE token_hash = $1', [hash]);
+    await client.query('COMMIT');
+
+    req.session.user = {
+      id: `magic:${email}`,
+      attributes: { email },
+      entitled_tiers: [],
+      matched_tier: null,
+      access_source: 'magic_lifetime',
+      has_access: true
+    };
+
+    const dest = consumeReturnTo(req) || '/';
+    return res.redirect(dest);
+  } catch (error) {
+    await client.query('ROLLBACK').catch(() => {});
+    console.error('Magic link verification failed:', error);
+    return res.redirect(buildSigninRedirect('magic_failed'));
+  } finally {
+    client.release();
+  }
+});
+
 PROTECTED_STATIC_DIRS.forEach((dirName) => {
   app.use(`/${dirName}`, requireSiteAccess, express.static(path.join(webRoot, dirName)));
 });
@@ -612,7 +846,7 @@ app.post('/api/stripe/create-checkout-session', express.json({ limit: '8kb' }), 
           quantity: 1
         }
       ],
-      success_url: `${FRONTEND_URL}/signin?purchase=success&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${FRONTEND_URL}/auth/stripe/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${FRONTEND_URL}/signin?purchase=cancelled`,
       metadata: {
         product: 'hwei_lifetime_access'

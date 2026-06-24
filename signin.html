@@ -120,6 +120,78 @@
       opacity: 0.72;
     }
 
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 28px auto 18px;
+      max-width: 540px;
+      color: #98a2b3;
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--card-border);
+    }
+
+    .magic-login {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 18px;
+      border: 1px solid var(--card-border);
+      background: #fbfaf7;
+      text-align: left;
+    }
+
+    .magic-login h2 {
+      margin: 0 0 6px;
+      font-size: 1.15rem;
+      line-height: 1.2;
+    }
+
+    .magic-login p {
+      margin: 0 0 14px;
+      color: var(--text-muted);
+      font-size: 0.94rem;
+      line-height: 1.45;
+    }
+
+    .magic-form {
+      display: flex;
+      gap: 10px;
+    }
+
+    .magic-form input {
+      flex: 1;
+      min-width: 0;
+      padding: 12px 13px;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      color: var(--text-main);
+      font: inherit;
+    }
+
+    .magic-form input:focus {
+      outline: 2px solid rgba(99, 91, 255, 0.24);
+      border-color: var(--stripe-bg);
+    }
+
+    @media (max-width: 620px) {
+      .magic-form {
+        flex-direction: column;
+      }
+
+      .magic-form .btn {
+        width: 100%;
+      }
+    }
+
     .footnote {
       margin-top: 18px;
       color: #98a2b3;
@@ -136,6 +208,15 @@
       <a class="btn" href="/auth/patreon">Login with Patreon</a>
       <button class="btn stripe" type="button" id="buy-lifetime-access">Buy Lifetime Access</button>
     </div>
+    <div class="divider">or</div>
+    <div class="magic-login">
+      <h2>Already bought lifetime access?</h2>
+      <p>Enter the email you used at checkout and we&rsquo;ll send a one-time sign-in link.</p>
+      <form class="magic-form" id="magic-login-form">
+        <input type="email" id="magic-email" name="email" autocomplete="email" placeholder="you@example.com" required>
+        <button class="btn stripe" type="submit" id="magic-login-submit">Email Login Link</button>
+      </form>
+    </div>
     <div class="footnote">After signing in, you&rsquo;ll be redirected to the guide if your Patreon tier matches or your email has lifetime access.</div>
   </div>
 
@@ -144,12 +225,13 @@
       const messages = {
         tier_required: 'Your Patreon account is signed in, but it does not include the required Hwei Apprentice tier.',
         oauth_failed: 'Patreon sign-in did not complete successfully. Please try again.',
-        stripe_checkout_failed: 'Stripe checkout could not be started. Please try again.'
+        stripe_checkout_failed: 'Stripe checkout could not be completed. Please try again or contact support.',
+        magic_failed: 'That sign-in link is invalid or expired. Request a new link below.'
       };
 
       const purchaseMessages = {
         success: {
-          text: 'Purchase complete. Log in with Patreon using the same email you used at checkout to unlock the guide.',
+          text: 'Purchase complete. You are being signed in with lifetime access.',
           state: 'success'
         },
         cancelled: {
@@ -163,6 +245,9 @@
       const purchase = params.get('purchase');
       const notice = document.getElementById('signin-notice');
       const buyButton = document.getElementById('buy-lifetime-access');
+      const magicForm = document.getElementById('magic-login-form');
+      const magicEmail = document.getElementById('magic-email');
+      const magicSubmit = document.getElementById('magic-login-submit');
 
       function showNotice(message, state) {
         notice.textContent = message;
@@ -196,6 +281,32 @@
           showNotice(checkoutError.message || messages.stripe_checkout_failed, 'error');
           buyButton.disabled = false;
           buyButton.textContent = originalText;
+        }
+      });
+
+      magicForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const originalText = magicSubmit.textContent;
+        magicSubmit.disabled = true;
+        magicSubmit.textContent = 'Sending...';
+
+        try {
+          const response = await fetch('/auth/magic/request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: magicEmail.value })
+          });
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok || !result.ok) {
+            throw new Error(result.message || 'Unable to send sign-in link.');
+          }
+          showNotice(result.message || 'If that email has lifetime access, a sign-in link has been sent.', 'success');
+        } catch (magicError) {
+          showNotice(magicError.message || 'Unable to send sign-in link.', 'error');
+        } finally {
+          magicSubmit.disabled = false;
+          magicSubmit.textContent = originalText;
         }
       });
     })();
