@@ -272,6 +272,7 @@
       padding:18px;
       box-shadow:0 16px 34px rgba(10,8,15,0.24);
     }
+    .matchup-detail-card[hidden] { display:none !important; }
     .matchup-detail-card.easy { border-left-color:var(--serenity); }
     .matchup-detail-card.medium { border-left-color:var(--gold); }
     .matchup-detail-card.hard { border-left-color:var(--disaster); }
@@ -477,6 +478,7 @@
   </div>
   <nav class="topnav-nav">
     <a href="index.html" class="nav-item">Intro / Home</a>
+    <a href="identity.html" class="nav-item">Hwei Identity</a>
     <a href="abilities.html" class="nav-item">Abilities</a>
     <a href="pregame.html" class="nav-item">Pregame</a>
     <a href="laning.html" class="nav-item">Laning / Early Game</a>
@@ -1565,7 +1567,7 @@
               </div>
             </article>
           </div>
-          <div class="matchup-card-empty" id="matchup-card-empty">No matchup cards match that search.</div>
+          <div class="matchup-card-empty" id="matchup-card-empty" aria-live="polite">No matchup cards match that search.</div>
         </div>
       </div>
     </div>
@@ -1611,7 +1613,7 @@
 
       let visibleCount = 0;
       cards.forEach(card => {
-        const isMatch = getCardName(card).toLowerCase().includes(query);
+        const isMatch = !query || getCardName(card).toLowerCase().includes(query);
         card.hidden = !isMatch;
         if (isMatch) visibleCount += 1;
         grid.appendChild(card);
@@ -1621,6 +1623,7 @@
     }
 
     searchInput.addEventListener('input', applyMatchupControls);
+    searchInput.addEventListener('search', applyMatchupControls);
     sortSelect.addEventListener('change', applyMatchupControls);
     applyMatchupControls();
   })();

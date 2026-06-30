@@ -15,6 +15,7 @@ const SIGNIN_FILE = path.join(webRoot, 'signin.html');
 const POSTHOG_ANALYTICS_FILE = path.join(webRoot, 'js', 'posthog-analytics.js');
 const PROTECTED_PAGE_FILES = new Set([
   'index.html',
+  'identity.html',
   'abilities.html',
   'laning.html',
   'lategame.html',

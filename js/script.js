@@ -1108,6 +1108,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const navMap = {
     'home': 'Intro / Home',
     'index': 'Intro / Home',
+    'identity': 'Hwei Identity',
     'abilities': 'Abilities',
     'laning': 'Laning / Early Game',
     'pregame': 'Pregame',
