@@ -1865,9 +1865,15 @@ body {
 
 .identity-hero-grid {
   display:grid;
-  grid-template-columns:minmax(0,1.08fr) minmax(260px,.92fr);
+  grid-template-columns:minmax(280px,.92fr) minmax(0,1.08fr);
   gap:18px;
   align-items:stretch;
+}
+
+.identity-hero-grid > .theory-panel.dark {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
 }
 
 .identity-portrait {
@@ -1887,11 +1893,34 @@ body {
   display:block;
 }
 
-.identity-pill-row {
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:18px;
+.identity-copy-stack {
+  display:grid;
+  gap:14px;
+  margin-top:14px;
+  padding-left:18px;
+  border-left:3px solid rgba(226,198,111,0.56);
+  background:
+    linear-gradient(90deg, rgba(226,198,111,0.08), transparent 62%),
+    linear-gradient(180deg, rgba(112,79,166,0.08), transparent);
+}
+
+.identity-copy-stack p {
+  color:rgba(246,240,229,0.78);
+  font-size:.94rem;
+  line-height:1.62;
+  margin:0;
+}
+
+.identity-copy-stack p:first-child {
+  color:rgba(255,248,232,0.92);
+  font-size:1rem;
+  line-height:1.55;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(226,198,111,0.18);
+}
+
+.identity-copy-stack p:last-child {
+  padding-top:2px;
 }
 
 .identity-pill {
@@ -1984,19 +2013,48 @@ body {
 
 .breakpoint-table {
   display:grid;
-  gap:8px;
+  gap:10px;
   margin-top:16px;
+  padding:12px;
+  border:1px solid rgba(112,79,166,0.2);
+  border-radius:10px;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(112,79,166,0.14), transparent 26%),
+    radial-gradient(circle at 90% 18%, rgba(226,198,111,0.18), transparent 24%),
+    linear-gradient(135deg, rgba(255,255,255,0.72), rgba(247,238,219,0.5));
+  box-shadow:0 14px 32px rgba(18,14,25,0.08);
 }
 
 .breakpoint-row {
+  position:relative;
+  overflow:hidden;
   display:grid;
   grid-template-columns:minmax(150px,.7fr) minmax(0,1fr) minmax(160px,.8fr);
-  gap:10px;
+  gap:14px;
   align-items:center;
-  border:1px solid rgba(226,198,111,0.14);
+  border:1px solid rgba(112,79,166,0.13);
   border-radius:8px;
-  background:rgba(255,255,255,0.66);
-  padding:12px 14px;
+  background:
+    linear-gradient(90deg, rgba(112,79,166,0.08), transparent 32%),
+    rgba(255,255,255,0.82);
+  padding:15px 16px 15px 18px;
+  color:#343040;
+  box-shadow:0 7px 18px rgba(18,14,25,0.05);
+}
+
+.breakpoint-row::before {
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:4px;
+  background:linear-gradient(180deg,#704fa6,#d86f4e,#e2c66f);
+  opacity:.72;
+}
+
+.breakpoint-row:nth-child(odd):not(.header) {
+  background:
+    linear-gradient(90deg, rgba(216,111,78,0.08), transparent 32%),
+    rgba(255,252,245,0.88);
 }
 
 .breakpoint-table.caster-breakpoints .breakpoint-row {
@@ -2004,17 +2062,60 @@ body {
 }
 
 .breakpoint-row.header {
-  background:linear-gradient(180deg,#211a2b,#15111d);
+  border-color:rgba(226,198,111,0.36);
+  background:
+    linear-gradient(90deg, rgba(216,111,78,0.22), transparent 34%),
+    linear-gradient(180deg,#271f34,#15111d);
   color:var(--gold-light);
   font-size:.68rem;
   font-weight:900;
   letter-spacing:1.3px;
   text-transform:uppercase;
+  box-shadow:0 10px 24px rgba(18,14,25,0.18);
+}
+
+.breakpoint-row.header::before {
+  background:linear-gradient(180deg,#60cbbd,#704fa6,#e2c66f);
+  opacity:1;
+}
+
+.breakpoint-row:not(.header) span {
+  line-height:1.28;
 }
 
 .breakpoint-row:not(.header) strong {
   color:var(--navy);
   font-family:'Playfair Display',serif;
+  font-size:1rem;
+  line-height:1.2;
+}
+
+.breakpoint-row:not(.header) strong::after {
+  content:"";
+  display:block;
+  width:38px;
+  height:2px;
+  margin-top:8px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#704fa6,#e2c66f);
+  opacity:.75;
+}
+
+.breakpoint-split .theory-panel.dark {
+  display:flex;
+  flex-direction:column;
+}
+
+.breakpoint-split .theory-copy {
+  min-height:88px;
+}
+
+.breakpoint-split .breakpoint-table {
+  margin-top:18px;
+}
+
+.identity-video-wrap {
+  margin-top:18px;
 }
 
 .identity-pros-cons-grid {
@@ -2751,6 +2852,7 @@ iframe.abl-video {
   .support-type-grid,
   .identity-pros-cons-grid,
   .breakpoint-row,
+  .breakpoint-table.caster-breakpoints .breakpoint-row,
   .synergy-mini-grid {
     grid-template-columns:1fr;
   }
@@ -2761,6 +2863,9 @@ iframe.abl-video {
   .theory-panel,
   .synergy-brief {
     padding:16px;
+  }
+  .breakpoint-split .theory-copy {
+    min-height:0;
   }
   .build-step {
     min-height:0;
