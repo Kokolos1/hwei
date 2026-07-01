@@ -72,7 +72,6 @@
         <div class="subnav-item active" onclick="subnavScroll(this,'why-hwei-sec')">Why Hwei</div>
         <div class="subnav-item" onclick="subnavScroll(this,'draft-sec')">Draft</div>
         <div class="subnav-item" onclick="subnavScroll(this,'support-sec')">Supports</div>
-        <div class="subnav-item" onclick="subnavScroll(this,'breakpoints-sec')">Breakpoints</div>
       </div>
 
       <div class="page-body">
@@ -208,54 +207,6 @@
             <p class="theory-copy">Coordinated teams are behind the curve on how strong Hwei is competitive. Hwei is an absolute monster when vision, objective setup, and coordination matter. Hwei's kit is literally perfect for competitive play (even if pro teams don't yet draft him). Watch the video for context on how to draft Hwei.</p>
             <div class="abl-video-wrap identity-video-wrap">
               <iframe class="abl-video" src="https://www.youtube.com/embed/82ITqqgKy3k" title="Hwei in competitive" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            </div>
-          </div>
-        </div>
-
-        <div id="breakpoints-sec" class="guide-section guide-addition">
-          <div class="section-head"><h3>Damage and Waveclear Breakpoints</h3><div class="section-rule"></div></div>
-          <div class="section-sub">Item and level breakpoints for standard Comet + Primary BFT Hwei</div>
-
-          <div class="theory-panel">
-            <div class="theory-kicker">Assumptions</div>
-            <h4 class="theory-title">These numbers are practical breakpoints. I didn't include scenarios which are NEVER going to happen.</h4>
-            <p class="theory-copy">The math was rechecked against patch 16.13.1 values: Doran's Ring, Lost Chapter, Blackfire Torch, Cosmic Drive, and Shadowflame. It assumes Default Comet with one Adaptive Force shard, Q max first, E max second, and the Primary BFT path. Important correction: QE uses Molten Fissure's lower base values, not QQ's base values. Blackfire rows count one full Baleful Blaze burn; if minions walk out early, treat the breakpoint as one tier later.</p>
-          </div>
-
-          <div class="theory-panel" style="margin-top:16px">
-            <div class="theory-kicker">Caster minions</div>
-            <h4 class="theory-title">Standard caster minion breakpoints.</h4>
-            <div class="breakpoint-table caster-breakpoints" aria-label="Hwei waveclear breakpoint framework">
-              <div class="breakpoint-row header"><span>Breakpoint</span><span>Item state</span><span>Target timestamp</span><span>What it means</span></div>
-              <div class="breakpoint-row"><strong>QQ + EE kills casters</strong><span>Level 8 Q5 with Lost Chapter + Doran's + shard is the first clean burst breakpoint, about 360 damage into a normal ~325-330 HP caster wave.</span><span>~8:30-9:30 with Lost Chapter; ~11:00-12:30 with Blackfire.</span><span>This is the earliest reliable full-HP caster delete if QQ's explosion tags the caster line. QQ + EE is the higher raw two-spell caster burst.</span></div>
-              <div class="breakpoint-row"><strong>QE + EE kills casters</strong><span>Not a clean Lost Chapter breakpoint. Blackfire + level 9 E2 is the first stable full-HP caster breakpoint. Before then, you usually need caster chip, an extra amp tome, or the wave to already be damaged.</span><span>Stable around ~11:00-12:30 with Blackfire. Treat Lost Chapter attempts as opportunistic, not reliable.</span><span>Use this because QE covers the wave and EE groups the melees, not because it outdamages QQ + EE.</span></div>
-              <div class="breakpoint-row"><strong>QE alone kills casters</strong><span>Do not expect this at Lost Chapter or first Blackfire. BFT + Cosmic is close but conditional; Shadowflame or extra AP/chip makes it stable.</span><span>Conditional around Cosmic at ~16:00-18:00; stable around Shadowflame/third AP item at ~19:00-22:00.</span><span>This is the true one-Q caster breakpoint. If you are deleting casters earlier with QE alone, they were chipped, the wave was early, or you had extra AP.</span></div>
-            </div>
-          </div>
-
-          <div class="theory-grid two breakpoint-split" style="margin-top:16px">
-            <div class="theory-panel dark">
-              <div class="theory-kicker">Entire wave</div>
-              <h4 class="theory-title">Melee minions are the real gate.</h4>
-              <p class="theory-copy">Caster minions are much easier than the melee line. With Blackfire at level 9, Q5/E2 QE + EE is a strong clear but not a guaranteed full-HP melee delete unless the wave is softened or WE is added. Blackfire + Cosmic is the first stable two-spell full-wave breakpoint.</p>
-              <div class="breakpoint-table" aria-label="Hwei full wave breakpoint framework">
-                <div class="breakpoint-row header"><span>Pattern</span><span>Practical result</span><span>Guide rule</span></div>
-                <div class="breakpoint-row"><strong>QE + EE full wave</strong><span>Blackfire can clear softened waves, but Blackfire + Cosmic is the stable full-wave breakpoint when every QE tick and one Blackfire burn completes.</span><span>This is the default full-wave clear. If melees live, they usually missed ticks, were full HP, or need one auto/WE.</span></div>
-                <div class="breakpoint-row"><strong>QQ + EE full wave</strong><span>Lost Chapter/BFT kills casters, but melee minions usually live. Around Blackfire + Cosmic it becomes close on grouped or softened waves; Shadowflame makes it much more stable.</span><span>Use it when the wave is stacked and you need instant burst rather than broad QE coverage.</span></div>
-                <div class="breakpoint-row"><strong>WE + QE + EE</strong><span>The stabilizer from Blackfire onward. WE adds about 36 at Blackfire and about 47 at Cosmic to affected minions when it procs through the wave.</span><span>If you must instantly clear before Cosmic, add WE and make sure the melee line stays in QE.</span></div>
-              </div>
-            </div>
-            <div class="theory-panel dark">
-              <div class="theory-kicker">Cannon minions</div>
-              <h4 class="theory-title">Do not judge cannon last-hits like caster breakpoints.</h4>
-              <p class="theory-copy">Cannon minions are not one-spell breakpoints. The useful check is how much HP a full rotation can cover. With Q5/E2 Blackfire, QE + EE + QQ covers roughly 870 HP after accounting for QQ's percent-health hit; adding WE raises it to about 905 HP. Blackfire + Cosmic + WE raises that cutoff to about 1,170 HP.</p>
-              <div class="breakpoint-table" aria-label="Hwei cannon minion breakpoint framework">
-                <div class="breakpoint-row header"><span>Item state</span><span>Cannon plan</span><span>Reminder</span></div>
-                <div class="breakpoint-row"><strong>Before Blackfire</strong><span>Use autos, tower setup, or one spell to secure. Do not dump the whole kit for one cannon unless the lane is safe.</span><span>Mana matters more than speed.</span></div>
-                <div class="breakpoint-row"><strong>Blackfire</strong><span>Full QE + EE + QQ can finish only early or softened cannons. Buffer an auto because missed ticks or a late QQ leaves it alive.</span><span>This is not a reason to throw your whole kit if the lane is unsafe.</span></div>
-                <div class="breakpoint-row"><strong>Blackfire + Cosmic</strong><span>WE + QE + EE + QQ covers cannons up to roughly 1,170 HP. Without WE, the cutoff is about 1,120 HP.</span><span>This is the first practical cannon-delete state, but only if the whole rotation lands.</span></div>
-                <div class="breakpoint-row"><strong>Shadowflame / Deathcap</strong><span>At three core, a full rotation covers roughly 1,430 HP before Shadowflame crit logic; WE pushes it near 1,500 HP.</span><span>Still confirm the cannon is taking QE ticks before walking away.</span></div>
-              </div>
             </div>
           </div>
         </div>
