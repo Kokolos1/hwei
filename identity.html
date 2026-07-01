@@ -7,6 +7,105 @@
   <meta name="description" content="Hwei bot/APC identity guide covering pick conditions, support synergy, champion-specific tips, competitive identity, and waveclear breakpoints.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .skin-tier-list {
+      display:grid;
+      gap:8px;
+      margin-top:18px;
+      overflow:hidden;
+      border:1px solid rgba(226,198,111,0.2);
+      border-radius:8px;
+      background:rgba(21,17,29,0.08);
+    }
+
+    .skin-tier-row {
+      display:grid;
+      grid-template-columns:82px minmax(0,1fr);
+      min-height:68px;
+      background:rgba(255,255,255,0.66);
+    }
+
+    .skin-tier-rank {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--white);
+      font-size:1.05rem;
+      font-weight:900;
+      letter-spacing:1px;
+      border-right:1px solid rgba(21,17,29,0.12);
+    }
+
+    .skin-tier-rank.s-plus,
+    .skin-tier-rank.s { background:linear-gradient(180deg,#356b65,#1e3f41); }
+    .skin-tier-rank.a { background:linear-gradient(180deg,#6f5aa8,#4d3b78); }
+    .skin-tier-rank.b { background:linear-gradient(180deg,#92600a,#654109); }
+    .skin-tier-rank.c { background:linear-gradient(180deg,#6f6678,#433d4c); }
+    .skin-tier-rank.d { background:linear-gradient(180deg,#8b3e32,#582620); }
+    .skin-tier-rank.f { background:linear-gradient(180deg,#5a2222,#321516); }
+
+    .skin-tier-items {
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:10px;
+      padding:14px;
+      min-width:0;
+    }
+
+    .skin-tier-chip {
+      display:block;
+      width:112px;
+      height:112px;
+      border:1px solid rgba(226,198,111,0.32);
+      border-radius:6px;
+      overflow:hidden;
+      background:var(--navy);
+      box-shadow:var(--shadow);
+    }
+
+    .skin-tier-chip img {
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
+    }
+
+    .skin-tier-empty {
+      color:var(--text-light);
+      font-size:.78rem;
+      font-weight:800;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+    }
+
+    @media(max-width:768px) {
+      .skin-tier-row {
+        grid-template-columns:58px minmax(0,1fr);
+      }
+
+      .skin-tier-rank {
+        font-size:.9rem;
+      }
+
+      .skin-tier-chip {
+        width:92px;
+        height:92px;
+      }
+    }
+
+    @media(max-width:420px) {
+      .skin-tier-row {
+        grid-template-columns:1fr;
+      }
+
+      .skin-tier-rank {
+        min-height:42px;
+        border-right:0;
+        border-bottom:1px solid rgba(21,17,29,0.12);
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -207,6 +306,42 @@
             <p class="theory-copy">Coordinated teams are behind the curve on how strong Hwei is competitive. Hwei is an absolute monster when vision, objective setup, and coordination matter. Hwei's kit is literally perfect for competitive play (even if pro teams don't yet draft him). Watch the video for context on how to draft Hwei.</p>
             <div class="abl-video-wrap identity-video-wrap">
               <iframe class="abl-video" src="https://www.youtube.com/embed/82ITqqgKy3k" title="Hwei in competitive" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+
+        <div id="skin-tier-sec" class="guide-section guide-addition">
+          <div class="section-head"><h3>Hwei Skin Tier List</h3><div class="section-rule"></div></div>
+          <div class="section-sub">Personal skin rankings</div>
+
+          <div class="skin-tier-list" aria-label="Hwei skin tier list">
+            <div class="skin-tier-row">
+              <div class="skin-tier-rank s-plus">S+</div>
+              <div class="skin-tier-items"><div class="skin-tier-chip" title="Winterblessed Hwei"><img src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/hwei/skins/skin1/images/hwei_splash_tile_1.jpg" alt="Winterblessed Hwei"></div></div>
+            </div>
+            <div class="skin-tier-row">
+              <div class="skin-tier-rank s">S</div>
+              <div class="skin-tier-items"><div class="skin-tier-chip" title="Spirit Blossom Hwei"><img src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/hwei/skins/skin11/images/hwei_splash_tile_11.jpg" alt="Spirit Blossom Hwei"></div></div>
+            </div>
+            <div class="skin-tier-row">
+              <div class="skin-tier-rank a">A</div>
+              <div class="skin-tier-items"></div>
+            </div>
+            <div class="skin-tier-row">
+              <div class="skin-tier-rank b">B</div>
+              <div class="skin-tier-items"><div class="skin-tier-chip" title="Base Hwei"><img src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/hwei/skins/skin0/images/hwei_splash_tile_0.jpg" alt="Base Hwei"></div></div>
+            </div>
+            <div class="skin-tier-row">
+              <div class="skin-tier-rank c">C</div>
+              <div class="skin-tier-items"></div>
+            </div>
+            <div class="skin-tier-row">
+              <div class="skin-tier-rank d">D</div>
+              <div class="skin-tier-items"><div class="skin-tier-chip" title="Sinful Shores Hwei"><img src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/hwei/skins/skin21/images/hwei_splash_tile_21.skins_hwei_skin21.jpg" alt="Sinful Shores Hwei"></div></div>
+            </div>
+            <div class="skin-tier-row">
+              <div class="skin-tier-rank f">F</div>
+              <div class="skin-tier-items"></div>
             </div>
           </div>
         </div>
