@@ -160,6 +160,23 @@
       font-size:1.08rem;
       line-height:1.1;
     }
+    .wave-clear-combined {
+      margin-top:18px;
+    }
+    .wave-clear-copy-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:0;
+    }
+    .wave-clear-copy {
+      min-width:0;
+      padding-right:24px;
+    }
+    .wave-clear-copy + .wave-clear-copy {
+      border-left:1px solid rgba(21,17,29,.16);
+      padding-right:0;
+      padding-left:24px;
+    }
     .ward-section {
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
@@ -204,7 +221,18 @@
     .ward-warning { margin-bottom:20px; }
     @media (max-width: 860px) {
       .guide-split,
-      .ward-section { grid-template-columns:1fr; }
+      .ward-section,
+      .wave-clear-copy-grid { grid-template-columns:1fr; }
+      .wave-clear-copy {
+        padding-right:0;
+      }
+      .wave-clear-copy + .wave-clear-copy {
+        margin-top:18px;
+        padding-top:18px;
+        padding-left:0;
+        border-left:0;
+        border-top:1px solid rgba(21,17,29,.16);
+      }
       .ward-img-wrap { height:260px; }
     }
   </style>
@@ -441,30 +469,21 @@ In high-elo, both supports will often be roaming, and this is our time to shove 
           <div class="section-head"><h3>Hwei Farming Guide</h3><div class="section-rule"></div></div>
           <div class="section-sub">How to clear waves, manage mana efficiently & optimize wave management</div>
 
-          <div class="theory-grid">
-            <div class="theory-panel">
-              <div class="theory-kicker">Standard Wave Clear Pattern</div>
-              <h4 class="theory-title">QE + EE and Autos</h4>
-              <p class="theory-copy">Hwei can farm incredibly safe and use EE to zone enemies. Standard clearing pattern is QE + EE. Secures prio in essentially every matchup.</p>
-              <div class="wave-video-slot" aria-label="Video placeholder for QE plus EE wave clear">
-                <div class="wave-video-play"></div>
-                <div class="wave-video-text">
-                  <span>Video Placeholder</span>
-                  <strong>QE + EE and Autos</strong>
-                </div>
+          <div class="theory-panel wave-clear-combined">
+            <div class="wave-clear-copy-grid">
+              <div class="wave-clear-copy">
+                <div class="theory-kicker">Standard Wave Clear Pattern</div>
+                <h4 class="theory-title">QE + EE and Autos</h4>
+                <p class="theory-copy">Hwei can farm incredibly safe and use EE to zone enemies. Standard clearing pattern is QE + EE. Secures prio in essentially every matchup.</p>
+              </div>
+              <div class="wave-clear-copy">
+                <div class="theory-kicker">Fastest Clear Pattern</div>
+                <h4 class="theory-title">QQ + EE and Autos</h4>
+                <p class="theory-copy">Hwei typically doesn't use this combo unless NOBODY is around. This is the fastest way to clear waves, but typically not a feasible pattern.</p>
               </div>
             </div>
-            <div class="theory-panel">
-              <div class="theory-kicker">Fastest Clear Pattern</div>
-              <h4 class="theory-title">QQ + EE and Autos</h4>
-              <p class="theory-copy">Hwei typically doesn't use this combo unless NOBODY is around. This is the fastest way to clear waves, but typically not a feasible pattern.</p>
-              <div class="wave-video-slot" aria-label="Video placeholder for QQ plus EE wave clear">
-                <div class="wave-video-play"></div>
-                <div class="wave-video-text">
-                  <span>Video Placeholder</span>
-                  <strong>QQ + EE and Autos</strong>
-                </div>
-              </div>
+            <div class="abl-video-wrap">
+              <iframe class="abl-video" src="https://www.youtube.com/embed/AXGhP4rGGp0" title="Hwei wave clear combos" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
             </div>
           </div>
 

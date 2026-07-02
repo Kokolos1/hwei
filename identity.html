@@ -79,6 +79,22 @@
       text-transform:uppercase;
     }
 
+    .skin-notes-grid {
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      margin-top:18px;
+    }
+
+    .support-grade.grade-d {
+      border-color:rgba(216,111,78,0.46);
+      color:#ffd0c2;
+    }
+
+    @media(max-width:1100px) {
+      .skin-notes-grid {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
     @media(max-width:768px) {
       .skin-tier-row {
         grid-template-columns:58px minmax(0,1fr);
@@ -91,6 +107,10 @@
       .skin-tier-chip {
         width:92px;
         height:92px;
+      }
+
+      .skin-notes-grid {
+        grid-template-columns:1fr;
       }
     }
 
@@ -343,6 +363,25 @@
               <div class="skin-tier-rank f">F</div>
               <div class="skin-tier-items"></div>
             </div>
+          </div>
+
+          <div class="support-type-grid skin-notes-grid" aria-label="Hwei skin notes">
+            <article class="support-type-card">
+              <div class="support-type-head"><h4>Winterblessed Hwei</h4><span class="support-grade grade-s-plus">S+</span></div>
+              <p>My favorite Hwei skin. The aesthetic of Winterblessed just fits Hwei's artistic theme so damn well. Everything feels very fluid and easy to play with. Love the animations and love the aesthetic.</p>
+            </article>
+            <article class="support-type-card">
+              <div class="support-type-head"><h4>Spirit Blossom Hwei</h4><span class="support-grade grade-s">S</span></div>
+              <p>Second only to Winterblessed. Would be an easy S+ on most other champions. The Spirit Blossom skinline is honestly so goated, but Winterblessed Hwei is just on another level.</p>
+            </article>
+            <article class="support-type-card">
+              <div class="support-type-head"><h4>Base Skin</h4><span class="support-grade grade-b">B</span></div>
+              <p>Hwei has one of the best skins in the game. Playing base skin on a champ like Twitch or Lucian is so painful. Base skin Hwei looks amazing and really doesn't need a skin at all.</p>
+            </article>
+            <article class="support-type-card">
+              <div class="support-type-head"><h4>Sinful Shores Hwei</h4><span class="support-grade grade-d">D</span></div>
+              <p>Sinful Shores Hwei is just not it for me. The QE is so loud and the spell effects are weird. I also don't think the skin line makes any sense for Hwei and just looks out of place.</p>
+            </article>
           </div>
         </div>
 
